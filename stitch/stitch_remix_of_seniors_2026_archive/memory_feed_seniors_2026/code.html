@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,700;0,900;1,400&amp;family=Manrope:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-secondary": "#ffffff",
+                    "on-primary-fixed": "#3e0500",
+                    "error": "#ba1a1a",
+                    "inverse-surface": "#31302d",
+                    "error-container": "#ffdad6",
+                    "on-primary": "#ffffff",
+                    "surface-container-highest": "#e5e2dd",
+                    "surface-container": "#f0ede8",
+                    "secondary-fixed-dim": "#c7bfff",
+                    "tertiary-container": "#d2a500",
+                    "primary-fixed": "#ffdad3",
+                    "surface-variant": "#e5e2dd",
+                    "secondary-fixed": "#e4dfff",
+                    "on-tertiary-container": "#4f3d00",
+                    "surface-dim": "#dcdad5",
+                    "surface-bright": "#fcf9f4",
+                    "on-tertiary-fixed-variant": "#584400",
+                    "tertiary-fixed-dim": "#f0c12c",
+                    "on-primary-fixed-variant": "#802918",
+                    "on-background": "#1c1c19",
+                    "surface": "#fcf9f4",
+                    "inverse-on-surface": "#f3f0eb",
+                    "on-surface": "#1c1c19",
+                    "outline-variant": "#ddc0ba",
+                    "tertiary-fixed": "#ffdf90",
+                    "on-tertiary": "#ffffff",
+                    "primary": "#9f402d",
+                    "surface-tint": "#9f402d",
+                    "on-primary-container": "#5a0d02",
+                    "tertiary": "#755b00",
+                    "on-error": "#ffffff",
+                    "surface-container-low": "#f6f3ee",
+                    "on-error-container": "#93000a",
+                    "inverse-primary": "#ffb4a5",
+                    "on-secondary-container": "#413886",
+                    "secondary": "#5d54a4",
+                    "primary-fixed-dim": "#ffb4a5",
+                    "on-secondary-fixed-variant": "#453b8a",
+                    "on-secondary-fixed": "#18065e",
+                    "background": "#fcf9f4",
+                    "on-tertiary-fixed": "#241a00",
+                    "secondary-container": "#b0a6fd",
+                    "primary-container": "#e2725b",
+                    "outline": "#89726d",
+                    "surface-container-high": "#ebe8e3",
+                    "surface-container-lowest": "#ffffff",
+                    "on-surface-variant": "#56423e"
+            },
+            "borderRadius": {
+                    "DEFAULT": "1rem",
+                    "lg": "2rem",
+                    "xl": "3rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Noto Serif"],
+                    "body": ["Manrope"],
+                    "label": ["Manrope"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Manrope', sans-serif; background-color: #fcf9f4; color: #1c1c19; }
+        .serif-headline { font-family: 'Noto Serif', serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .glass-overlay { background: rgba(255, 255, 255, 0.65); backdrop-filter: blur(20px); }
+        .editorial-shadow { box-shadow: 0 32px 64px -12px rgba(28, 28, 25, 0.06); }
+        .primary-gradient { background: linear-gradient(135deg, #9f402d 0%, #e2725b 100%); }
+        .image-parallax-container { overflow: hidden; position: relative; }
+        .image-parallax-container img { transform: scale(1.05); }
+    </style>
+</head>
+<body class="bg-surface text-on-surface">
+<!-- TopNavBar Shell -->
+<header class="bg-stone-50/70 dark:bg-stone-900/70 backdrop-blur-xl shadow-sm dark:shadow-none docked full-width top-0 sticky z-50">
+<div class="flex justify-between items-center w-full px-8 py-4 max-w-full mx-auto">
+<div class="text-2xl font-black italic text-stone-900 dark:text-stone-50">Seniors 2026</div>
+<!-- Desktop Navigation -->
+<nav class="hidden md:flex items-center gap-8">
+<a class="text-stone-600 dark:text-stone-400 font-medium hover:text-stone-900 dark:hover:text-stone-100 hover:bg-stone-200/50 dark:hover:bg-stone-800/50 transition-colors duration-300" href="#">Home</a>
+<a class="text-stone-600 dark:text-stone-400 font-medium hover:text-stone-900 dark:hover:text-stone-100 hover:bg-stone-200/50 dark:hover:bg-stone-800/50 transition-colors duration-300" href="#">Directory</a>
+<a class="text-stone-600 dark:text-stone-400 font-medium hover:text-stone-900 dark:hover:text-stone-100 hover:bg-stone-200/50 dark:hover:bg-stone-800/50 transition-colors duration-300" href="#">The Wall</a>
+<a class="text-orange-800 dark:text-orange-300 font-bold border-b-2 border-orange-500 pb-1" href="#">Memory Feed</a>
+<a class="text-stone-600 dark:text-stone-400 font-medium hover:text-stone-900 dark:hover:text-stone-100 hover:bg-stone-200/50 dark:hover:bg-stone-800/50 transition-colors duration-300" href="#">Awards</a>
+<a class="text-stone-600 dark:text-stone-400 font-medium hover:text-stone-900 dark:hover:text-stone-100 hover:bg-stone-200/50 dark:hover:bg-stone-800/50 transition-colors duration-300" href="#">Hall of Thanks</a>
+</nav>
+<div class="flex items-center gap-4">
+<button class="p-2 rounded-full hover:bg-stone-200/50 dark:hover:bg-stone-800/50 transition-all active:scale-95">
+<span class="material-symbols-outlined text-stone-700 dark:text-stone-300">person</span>
+</button>
+<button class="p-2 rounded-full hover:bg-stone-200/50 dark:hover:bg-stone-800/50 transition-all active:scale-95">
+<span class="material-symbols-outlined text-stone-700 dark:text-stone-300">logout</span>
+</button>
+</div>
+</div>
+</header>
+<main class="max-w-4xl mx-auto px-4 md:px-0 py-12 pb-32">
+<!-- Feed Header -->
+<div class="mb-16 flex flex-col md:flex-row md:items-end justify-between gap-6">
+<div class="space-y-2">
+<h1 class="serif-headline text-5xl md:text-6xl font-black tracking-tight text-on-surface">Memory Feed</h1>
+<p class="text-on-surface-variant text-lg max-w-md font-medium">A curated living archive of the moments that defined our journey to 2026.</p>
+</div>
+<button class="primary-gradient text-on-primary px-8 py-4 rounded-full font-bold flex items-center gap-2 editorial-shadow transition-transform hover:scale-105 active:scale-95">
+<span class="material-symbols-outlined">add_a_photo</span>
+                Share a Memory
+            </button>
+</div>
+<!-- Editorial Feed Grid -->
+<section class="flex flex-col gap-24">
+<!-- Post 1: Cinematic Video Style -->
+<article class="group relative">
+<div class="image-parallax-container aspect-[16/10] rounded-xl editorial-shadow bg-surface-container-low">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="high-quality cinematic wide shot of graduating seniors throwing caps in the air at sunset with golden warm lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAyiK7d7sOZdzJc-VsKR5B0RgVyCl9KYueuAq0MZeep0pzRubX5md90L3GwHnw2ZEJqqVBqMXxzO6qcPi14i7PfxQW56hMGGNYvfuS6elfB4lR9PHF1IGEGdzuAlSY12hqLvK4nJDAM_xRBNP8o1rlBmw1vtSLVdgoliP1dtZP2oZtqePSirVLZrf1neJb_MVLOJSJXnY0So7aZ3KbDXTv1BSvhnL6YCvs19wNMn6dIzQwtUSpNRSwPcouzSI8_o5O3fu1-EUS6HGpS"/>
+<!-- Top Badge Overlay -->
+<div class="absolute top-6 left-6 flex gap-3">
+<div class="glass-overlay px-4 py-2 rounded-full flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-sm" style="font-variation-settings: 'FILL' 1;">verified</span>
+<span class="text-xs font-bold tracking-widest uppercase text-on-surface">Approved for Graduation Video</span>
+</div>
+</div>
+<!-- Bottom Content Overlay -->
+<div class="absolute bottom-6 left-6 right-6 glass-overlay p-8 rounded-lg">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+<div class="space-y-2">
+<h2 class="serif-headline text-2xl md:text-3xl font-bold leading-tight">The Final Sunset at North Field</h2>
+<p class="text-on-surface-variant font-medium">Capture by <span class="text-primary font-bold">Marcus Holloway</span></p>
+</div>
+<div class="flex items-center gap-4">
+<span class="text-xs text-on-surface-variant/60 font-bold uppercase tracking-widest">May 14, 2026</span>
+</div>
+</div>
+<div class="mt-4 pt-4 border-t border-on-surface-variant/10">
+<p class="serif-headline italic text-lg leading-relaxed text-on-surface/80">"We talked for hours about where we'd be in ten years. The sky was the exact color of an orange, and for a second, time just stopped."</p>
+</div>
+</div>
+</div>
+</article>
+<!-- Post 2: Portrait Memory -->
+<article class="grid grid-cols-1 md:grid-cols-12 gap-12 items-center">
+<div class="md:col-span-7 group">
+<div class="image-parallax-container aspect-[4/5] rounded-xl editorial-shadow bg-surface-container-low">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="artistic close-up of a student smiling while studying in a classic library with soft natural light coming through tall windows" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCyB5nWVCAqEVeCD-mpRfiEU3gfH5UtUewuqfYkTku3A8YQyop54TjF_crITZ5zQKkMkS3NZI3gQ72gYAfRFBgzAYV5ydTzNHEeKeEFmY3FOsJKY7mSNJpx0JQdpZ6ZBPrOztJHm0lY6hRzgUPA-Vns8hUrWbuziRdhyZxqzJF67B5-k6PP9taU9yorGpa5C-2J83tuUgKpMkY6tjIsytGOmxB7RIKGCwuMFvLs42aQemHvguNxFE7jJh4MZ9F9YU_97AqVrnFIcpd8"/>
+</div>
+</div>
+<div class="md:col-span-5 space-y-6">
+<div class="space-y-2">
+<span class="text-secondary font-bold tracking-widest uppercase text-xs">Late Night Archives</span>
+<h2 class="serif-headline text-4xl font-bold text-on-surface">Silence in the Stacks</h2>
+</div>
+<p class="text-on-surface-variant text-lg leading-relaxed italic">
+                        The library became our second home. This was during finals week when Elena actually fell asleep on her open chemistry textbook.
+                    </p>
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full overflow-hidden bg-surface-container-highest">
+<img class="w-full h-full object-cover" data-alt="portrait of a young woman with a friendly smile, natural lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC00Hlq9duS2r7AAnOwqhoM86IT_u0jNYm37evOxgJndEpFUe_v0_pac0zIrWZN0janB95s2hsUmyDsY9mCJG-4Oa1hfplTIkHZPgSUSD-DqF-_m7lj0oZRGcs4J0_TWu7BGEeWPU7GiRHyD-_qs7dUyUfiMfrWvCwQ0fDOdfsyx8E140tucnnFlN2B5T0vCxN_ZRNXnRiGze8u7eTLpQqa2wILOjm4X7Ao6ZPdv4UODZm_FqrRGti-oKhvH6yP8oIRxcYFaNo4TZ-M"/>
+</div>
+<div>
+<p class="font-bold text-on-surface">Sarah Jenkins</p>
+<p class="text-xs text-on-surface-variant/70 uppercase font-semibold">Digital Curator</p>
+</div>
+</div>
+</div>
+</article>
+<!-- Post 3: Asymmetric Grid Element -->
+<article class="group relative flex justify-end">
+<div class="w-full md:w-5/6 relative">
+<div class="image-parallax-container aspect-[16/9] rounded-xl editorial-shadow bg-surface-container-low">
+<img class="w-full h-full object-cover" data-alt="candid shot of students laughing backstage at a theatre production with dramatic colorful stage lights in the background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDJsfmNXhnt-vvllhCo6n3g3oTMDEM9vAdvShptP07xgPA-KQlPuqLhwpplKguhq1PPDDJLvqoUkjwFZu19V6Kirzel1J-E3TISkpNiz0sKM9nkZ3z_k9dnCvxIP8SfX1Xsr-FN6gXpeHeiNCFGV7f_Qik_suXR963p9WZWbaCaVA34rV4x8sL2a9b4y1YngofAJ2f6ZD3VQZrcYa6nHz6DLXCsq4qjs7EEQG8BfxAQ4c4HvIO6L6TUNboUlPpj-kCSha8xc09PFjt1"/>
+<div class="absolute -bottom-12 -left-12 hidden md:block w-64 h-64 glass-overlay rounded-xl p-6 editorial-shadow z-10 border border-white/20">
+<div class="h-full flex flex-col justify-between">
+<span class="material-symbols-outlined text-primary text-4xl" style="font-variation-settings: 'FILL' 1;">format_quote</span>
+<p class="serif-headline text-lg font-bold leading-snug">Curtain call wasn't the end, just a new beginning.</p>
+<p class="text-xs font-bold text-on-surface-variant">THEATRE TROUPE 2026</p>
+</div>
+</div>
+</div>
+<div class="mt-8 flex justify-between items-start md:pl-64">
+<div class="space-y-1">
+<h2 class="serif-headline text-3xl font-bold text-on-surface">Backstage Chaos</h2>
+<p class="text-on-surface-variant font-medium">Shared by <span class="text-primary font-bold">Liam Chen</span></p>
+</div>
+<div class="glass-overlay px-4 py-2 rounded-full flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-sm" style="font-variation-settings: 'FILL' 1;">verified</span>
+<span class="text-xs font-bold tracking-widest uppercase text-on-surface">Grad Video Shortlist</span>
+</div>
+</div>
+</div>
+</article>
+<!-- Post 4: The "Memory Orb" Visual -->
+<article class="relative py-12">
+<div class="max-w-2xl mx-auto text-center space-y-8">
+<div class="inline-flex items-center justify-center w-32 h-32 rounded-full primary-gradient editorial-shadow text-on-primary">
+<span class="material-symbols-outlined text-5xl">auto_awesome</span>
+</div>
+<h2 class="serif-headline text-4xl font-black">"The hardest part about moving on is not looking back."</h2>
+<p class="text-on-surface-variant text-xl italic">— Class of 2026 Motto</p>
+<div class="pt-8">
+<div class="h-[1px] w-32 mx-auto bg-outline-variant/30"></div>
+</div>
+</div>
+</article>
+<!-- Post 5: Collaborative Memory -->
+<article class="group relative">
+<div class="image-parallax-container aspect-[21/9] rounded-xl editorial-shadow bg-surface-container-low">
+<img class="w-full h-full object-cover" data-alt="dynamic wide shot of a crowded high school gym with students celebrating a sports victory with banners and confetti" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD8Qrh5HW_CVur-eZk1N41eDA3SJ4erwlfUNiEAGJJ4lZ0Tky5Pt6kmzMUpI9a1udGRHKdVru8-B1MHssSOc4sMCNKwAVSo0OeETxphHGOjEkYAkd1y2XiMXqcvLBBKhOxpdnPtARPh1fimG8oyqn5XVoZ3-EKaFqqCdmSVn7LIKB5DJiNv06qYCX5SCfgVJDkRGQJk3EV6k5s38KCm6hj12Wh7X3XWQEUDhMzuohzYQPgPCxtULgNN5G617ww4r_bEi2lZdaMoG-WS"/>
+<div class="absolute inset-0 bg-gradient-to-t from-on-surface/60 to-transparent"></div>
+<div class="absolute bottom-10 left-10 text-white space-y-2">
+<h2 class="serif-headline text-4xl md:text-5xl font-black">The Championship Roar</h2>
+<div class="flex items-center gap-3">
+<div class="flex -space-x-3">
+<div class="w-8 h-8 rounded-full border-2 border-surface bg-stone-300"></div>
+<div class="w-8 h-8 rounded-full border-2 border-surface bg-stone-400"></div>
+<div class="w-8 h-8 rounded-full border-2 border-surface bg-stone-500"></div>
+</div>
+<p class="text-sm font-bold tracking-wide">Shared by Javi, Mia, and 12 others</p>
+</div>
+</div>
+</div>
+</article>
+</section>
+<!-- Footer / Load More -->
+<div class="mt-24 text-center">
+<button class="px-12 py-5 rounded-full border-2 border-primary/20 text-primary font-bold text-lg hover:bg-primary/5 transition-all">
+                Load Older Memories
+            </button>
+<p class="mt-8 text-on-surface-variant/50 text-sm font-semibold tracking-widest uppercase">End of recent updates • Re-visiting 2024</p>
+</div>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-[100] flex justify-around items-center px-4 py-3 border-t border-stone-200/10 bg-stone-50/80 dark:bg-stone-900/80 backdrop-blur-2xl shadow-[0_-8px_30px_rgb(0,0,0,0.04)] pb-safe">
+<a class="flex flex-col items-center justify-center text-stone-400 dark:text-stone-500 px-4 py-2 hover:opacity-80 transition-opacity" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="text-[10px] font-semibold uppercase tracking-widest mt-1">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-stone-400 dark:text-stone-500 px-4 py-2 hover:opacity-80 transition-opacity" href="#">
+<span class="material-symbols-outlined">dashboard_customize</span>
+<span class="text-[10px] font-semibold uppercase tracking-widest mt-1">Wall</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-orange-100 dark:bg-orange-950/40 text-orange-900 dark:text-orange-200 rounded-full px-6 py-2 hover:opacity-80 transition-opacity" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+<span class="text-[10px] font-semibold uppercase tracking-widest mt-1">Memories</span>
+</a>
+<a class="flex flex-col items-center justify-center text-stone-400 dark:text-stone-500 px-4 py-2 hover:opacity-80 transition-opacity" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="text-[10px] font-semibold uppercase tracking-widest mt-1">Profile</span>
+</a>
+</nav>
+<!-- Contextual FAB (Only on main scroll screens) -->
+<button class="fixed bottom-24 right-8 md:bottom-12 md:right-12 w-16 h-16 rounded-full primary-gradient text-on-primary shadow-xl flex items-center justify-center z-40 transition-transform hover:scale-110 active:scale-95">
+<span class="material-symbols-outlined text-3xl">edit_square</span>
+</button>
+</body></html>

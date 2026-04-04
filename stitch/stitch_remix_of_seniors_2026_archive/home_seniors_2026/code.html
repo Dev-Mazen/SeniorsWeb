@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Seniors 2026 | The Digital Curator</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&amp;family=Manrope:wght@200..800&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary": "#ffffff",
+                        "on-primary-fixed": "#3e0500",
+                        "error": "#ba1a1a",
+                        "inverse-surface": "#31302d",
+                        "error-container": "#ffdad6",
+                        "on-primary": "#ffffff",
+                        "surface-container-highest": "#e5e2dd",
+                        "surface-container": "#f0ede8",
+                        "secondary-fixed-dim": "#c7bfff",
+                        "tertiary-container": "#d2a500",
+                        "primary-fixed": "#ffdad3",
+                        "surface-variant": "#e5e2dd",
+                        "secondary-fixed": "#e4dfff",
+                        "on-tertiary-container": "#4f3d00",
+                        "surface-dim": "#dcdad5",
+                        "surface-bright": "#fcf9f4",
+                        "on-tertiary-fixed-variant": "#584400",
+                        "tertiary-fixed-dim": "#f0c12c",
+                        "on-primary-fixed-variant": "#802918",
+                        "on-background": "#1c1c19",
+                        "surface": "#fcf9f4",
+                        "inverse-on-surface": "#f3f0eb",
+                        "on-surface": "#1c1c19",
+                        "outline-variant": "#ddc0ba",
+                        "tertiary-fixed": "#ffdf90",
+                        "on-tertiary": "#ffffff",
+                        "primary": "#9f402d",
+                        "surface-tint": "#9f402d",
+                        "on-primary-container": "#5a0d02",
+                        "tertiary": "#755b00",
+                        "on-error": "#ffffff",
+                        "surface-container-low": "#f6f3ee",
+                        "on-error-container": "#93000a",
+                        "inverse-primary": "#ffb4a5",
+                        "on-secondary-container": "#413886",
+                        "secondary": "#5d54a4",
+                        "primary-fixed-dim": "#ffb4a5",
+                        "on-secondary-fixed-variant": "#453b8a",
+                        "on-secondary-fixed": "#18065e",
+                        "background": "#fcf9f4",
+                        "on-tertiary-fixed": "#241a00",
+                        "secondary-container": "#b0a6fd",
+                        "primary-container": "#e2725b",
+                        "outline": "#89726d",
+                        "surface-container-high": "#ebe8e3",
+                        "surface-container-lowest": "#ffffff",
+                        "on-surface-variant": "#56423e"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Noto Serif"],
+                        "body": ["Manrope"],
+                        "label": ["Manrope"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Manrope', sans-serif; }
+        h1, h2, h3, .serif-heading { font-family: 'Noto Serif', serif; }
+        .glass-nav { backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
+        .hero-gradient { background: linear-gradient(to bottom, rgba(252, 249, 244, 0) 0%, #fcf9f4 100%); }
+    </style>
+</head>
+<body class="bg-surface text-on-surface selection:bg-primary-container selection:text-on-primary-container">
+<!-- TopNavBar -->
+<header class="bg-stone-50/70 dark:bg-stone-900/70 backdrop-blur-xl shadow-sm dark:shadow-none fixed top-0 w-full z-50">
+<div class="flex justify-between items-center w-full px-8 py-4 max-w-full mx-auto">
+<div class="text-2xl font-black italic text-stone-900 dark:text-stone-50">
+                Seniors 2026
+            </div>
+<nav class="hidden md:flex items-center space-x-8">
+<a class="text-orange-800 dark:text-orange-300 font-bold border-b-2 border-orange-500 pb-1" href="#">Home</a>
+<a class="text-stone-600 dark:text-stone-400 font-medium hover:text-stone-900 dark:hover:text-stone-100 transition-colors duration-300" href="#">Directory</a>
+<a class="text-stone-600 dark:text-stone-400 font-medium hover:text-stone-900 dark:hover:text-stone-100 transition-colors duration-300" href="#">The Wall</a>
+<a class="text-stone-600 dark:text-stone-400 font-medium hover:text-stone-900 dark:hover:text-stone-100 transition-colors duration-300" href="#">Memory Feed</a>
+<a class="text-stone-600 dark:text-stone-400 font-medium hover:text-stone-900 dark:hover:text-stone-100 transition-colors duration-300" href="#">Awards</a>
+<a class="text-stone-600 dark:text-stone-400 font-medium hover:text-stone-900 dark:hover:text-stone-100 transition-colors duration-300" href="#">Hall of Thanks</a>
+</nav>
+<div class="flex items-center space-x-4">
+<button class="p-2 hover:bg-stone-200/50 dark:hover:bg-stone-800/50 rounded-full transition-all active:scale-95">
+<span class="material-symbols-outlined text-stone-700 dark:text-stone-300" data-icon="person">person</span>
+</button>
+<button class="p-2 hover:bg-stone-200/50 dark:hover:bg-stone-800/50 rounded-full transition-all active:scale-95">
+<span class="material-symbols-outlined text-stone-700 dark:text-stone-300" data-icon="logout">logout</span>
+</button>
+</div>
+</div>
+</header>
+<main class="pt-16">
+<!-- Hero Section -->
+<section class="relative h-[870px] w-full overflow-hidden">
+<div class="absolute inset-0 bg-stone-900">
+<img alt="Senior Year Hero" class="w-full h-full object-cover opacity-60 scale-105" data-alt="atmospheric wide shot of empty sunlit high school hallway with dust motes dancing in the light and dramatic long shadows" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAbPuhB3bYWhqrMrzvc-8yZgSGE-2nThZaFp4lUSACilmqpzkuTlnBU7IVBFxERz2BJzTKDObiAdT9P4ia8yeLq9rkdav-LX9gFU1m6aKFNvzw3w6QJTmWPPCGYsCrceYvwfcTu8OEe4duPXeKqcM0Wy-Y6007K2alL5YYOzGRqN_riADaAcy-GJg7Wxe1kTB1S2VWMpj6I-h59IGi6arC_9l678bsq2UzGIGxeJx1i9p70VgVHpFoyN_xTUsBhS7XpnkEFMa-5H3Sm"/>
+</div>
+<div class="absolute inset-0 hero-gradient"></div>
+<div class="relative z-10 h-full flex flex-col items-center justify-center text-center px-4">
+<span class="text-primary font-body tracking-[0.3em] uppercase text-sm mb-6 font-bold">The Final Chapter</span>
+<h1 class="text-6xl md:text-8xl lg:text-9xl text-on-surface font-black tracking-tight leading-[0.9] serif-heading mb-8">
+                    Welcome,<br/>Class of 2026
+                </h1>
+<p class="max-w-2xl text-on-surface-variant text-lg md:text-xl font-body leading-relaxed mb-12">
+                    A curated digital archive for our final journey together. Preserving moments, celebrating milestones, and counting down to the beginning of forever.
+                </p>
+<div class="flex flex-wrap justify-center gap-6">
+<button class="px-8 py-4 bg-gradient-to-r from-primary to-primary-container text-on-primary font-bold rounded-full text-lg shadow-xl hover:scale-105 transition-transform active:scale-95">
+                        Start Curating
+                    </button>
+<button class="px-8 py-4 bg-surface-container-highest text-on-surface font-bold rounded-full text-lg hover:bg-surface-container-high transition-colors active:scale-95">
+                        Watch Trailer
+                    </button>
+</div>
+</div>
+</section>
+<!-- Countdown Section -->
+<section class="py-24 px-8 bg-surface-container-low">
+<div class="max-w-7xl mx-auto">
+<div class="flex flex-col md:flex-row items-center justify-between gap-12">
+<div class="max-w-md">
+<h2 class="text-4xl md:text-5xl font-black serif-heading text-on-surface leading-tight mb-4">The Final Countdown</h2>
+<p class="text-on-surface-variant font-body">Until the day we walk across the stage. Every second counts, every memory matters.</p>
+</div>
+<div class="flex flex-wrap justify-center gap-6 md:gap-12">
+<div class="flex flex-col items-center">
+<div class="w-24 h-24 md:w-32 md:h-32 rounded-full border-2 border-primary/20 flex items-center justify-center bg-surface-container-lowest shadow-sm relative overflow-hidden group">
+<span class="text-3xl md:text-5xl font-black serif-heading text-primary relative z-10">248</span>
+<div class="absolute inset-0 bg-primary/5 translate-y-full group-hover:translate-y-0 transition-transform duration-700"></div>
+</div>
+<span class="mt-4 font-label tracking-widest text-xs uppercase font-bold text-on-surface-variant">Days</span>
+</div>
+<div class="flex flex-col items-center">
+<div class="w-24 h-24 md:w-32 md:h-32 rounded-full border-2 border-primary/20 flex items-center justify-center bg-surface-container-lowest shadow-sm relative overflow-hidden group">
+<span class="text-3xl md:text-5xl font-black serif-heading text-primary relative z-10">14</span>
+<div class="absolute inset-0 bg-primary/5 translate-y-full group-hover:translate-y-0 transition-transform duration-700"></div>
+</div>
+<span class="mt-4 font-label tracking-widest text-xs uppercase font-bold text-on-surface-variant">Hours</span>
+</div>
+<div class="flex flex-col items-center">
+<div class="w-24 h-24 md:w-32 md:h-32 rounded-full border-2 border-primary/20 flex items-center justify-center bg-surface-container-lowest shadow-sm relative overflow-hidden group">
+<span class="text-3xl md:text-5xl font-black serif-heading text-primary relative z-10">42</span>
+<div class="absolute inset-0 bg-primary/5 translate-y-full group-hover:translate-y-0 transition-transform duration-700"></div>
+</div>
+<span class="mt-4 font-label tracking-widest text-xs uppercase font-bold text-on-surface-variant">Mins</span>
+</div>
+<div class="flex flex-col items-center">
+<div class="w-24 h-24 md:w-32 md:h-32 rounded-full border-2 border-primary/20 flex items-center justify-center bg-surface-container-lowest shadow-sm relative overflow-hidden group">
+<span class="text-3xl md:text-5xl font-black serif-heading text-primary relative z-10">09</span>
+<div class="absolute inset-0 bg-primary/5 translate-y-full group-hover:translate-y-0 transition-transform duration-700"></div>
+</div>
+<span class="mt-4 font-label tracking-widest text-xs uppercase font-bold text-on-surface-variant">Secs</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Navigation Cards (Asymmetric Editorial Grid) -->
+<section class="py-32 px-8 max-w-full overflow-hidden">
+<div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-12 items-end">
+<!-- Card 1: Directory -->
+<div class="md:col-span-4 group cursor-pointer">
+<div class="relative overflow-hidden rounded-xl h-[500px] shadow-xl transition-all duration-500 hover:-translate-y-4">
+<img alt="Browse Directory" class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" data-alt="a stack of vintage leather yearbooks on a wooden desk with a single graduate cap resting on top and soft morning light" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAOi-gHTGx7loiAFVHWosnHiv2vg2MgKFWV7yUw9DYKkTarcjNLkX7l8XYpbe4SR0UDnCsBx75mf4ZKkkAf6_phIcXmdI5tI71nzLzxvK4Yz9_CFgBmzaPlFQUde_IX-BCWfeoGTa5Hg41n0W8ddzOQ4pnw__zdrggFT2apW9UC1hUjXgPBso-owJFF6wQQGRimfxH8mCOZmUNTuKLe0nA3HTJMrKmauS5wxEHP6a91dFbYsC3mgfAGx6GMxKw5tsGoK4TO8rjCNy3Z"/>
+<div class="absolute inset-0 bg-gradient-to-t from-on-surface/90 via-on-surface/20 to-transparent"></div>
+<div class="absolute bottom-0 left-0 p-8 w-full">
+<div class="flex items-center gap-2 mb-2">
+<span class="w-8 h-[1px] bg-primary"></span>
+<span class="text-primary-fixed text-xs font-bold tracking-[0.2em] uppercase">Connect</span>
+</div>
+<h3 class="text-3xl font-bold text-surface-container-lowest serif-heading mb-4">Browse Directory</h3>
+<p class="text-surface-variant/80 text-sm font-body leading-relaxed mb-6 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                                Find your friends, browse by club, and see where everyone is heading next.
+                            </p>
+<span class="material-symbols-outlined text-surface-container-lowest" data-icon="arrow_forward">arrow_forward</span>
+</div>
+</div>
+</div>
+<!-- Card 2: The Wall (Centerpiece) -->
+<div class="md:col-span-5 group cursor-pointer pb-20">
+<div class="relative overflow-hidden rounded-xl h-[600px] shadow-2xl transition-all duration-500 hover:-translate-y-4">
+<img alt="View The Wall" class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" data-alt="group of joyful diverse graduating students in gowns throwing caps into a clear blue sky at sunset with golden flares" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAkiDeTL8chelLeqxR2lojGHXDtAY4GOggN_MXHyU-OxenF6NFOVeKvyTBcCw3HoPVt1NXFO_FA9QxPuWKZ04oMQcS9vPnPxu--p8jQ8GHw6brEMGwAmbM5TFNVAMhFWWcD5yUd7IX8rr_hnorbYFNrarYVikfwq3cIycKuS5_alwpagWV5jPP2NZAeyJRkNmvRUrD9nP1ejtLEHcMkMTmy5OUVsJphQeZVGwJbKTPTnfavKxLMWOi2FvgruVo10AwTcMGe0inZA0QW"/>
+<div class="absolute inset-0 bg-gradient-to-t from-secondary/90 via-secondary/20 to-transparent"></div>
+<div class="absolute bottom-0 left-0 p-10 w-full">
+<div class="flex items-center gap-2 mb-2">
+<span class="w-8 h-[1px] bg-secondary-container"></span>
+<span class="text-secondary-fixed text-xs font-bold tracking-[0.2em] uppercase">Collaborate</span>
+</div>
+<h3 class="text-4xl font-black text-surface-container-lowest serif-heading mb-4">View The Wall</h3>
+<p class="text-surface-variant/80 text-base font-body leading-relaxed mb-6">
+                                Leave your mark. Sign yearbooks digitally, post notes of gratitude, and see the collective pulse of the class.
+                            </p>
+<div class="flex items-center gap-4">
+<div class="flex -space-x-3">
+<div class="w-10 h-10 rounded-full border-2 border-surface bg-stone-300 overflow-hidden">
+<img alt="User" data-alt="portrait of a young woman smiling" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA7qs4rQX9y2rceRLInQgzUMov9KV_7CC0jWxKfIB5wLfQoh9FkW3TE6IRZLXu05f4IWxGmHe1zSAMhaXAjjY71iU21ZHSuROryHEVgakIIsLvyFCNsmZlfw5sk0qnY5YIhO1JAStmm3WOCjcPWQGYfZluXAXN9QbuCOaFeMc_LRxcNLzf1_awm7b_yhtz3gOEQhAE2rLHLoMyZXw23Nnv0kSK8dtN2wzzrX5qiJan4Bmoz967ycjVRSANXG3MmcVU9ftaaNrBasV_G"/>
+</div>
+<div class="w-10 h-10 rounded-full border-2 border-surface bg-stone-400 overflow-hidden">
+<img alt="User" data-alt="portrait of a young man smiling" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA5w9kUi1FlHVoTHuiOAUMZXKx0JzR2XpZuDv5mchTysluM12S8vEKlMiEVb_bFTgy0r9SLYbBmtmxgcWWWrtw7dpoii1sesV_RmIuJMR7N-isnd9mwUV4EZxHpjAMMsrrJcDl2dctsT9bhUWItdwuSNKVvwUMYKK1LoDm6RfA6-lrAGTksBNSE7ToZ1RZRJEwv5l_-vW44v2BlS6VV1I0SOuVxpd_3rtE22nxBTkUVXEPSU_qfRHJ-kaYdsfol9-yJTaZHmT6w18cB"/>
+</div>
+<div class="w-10 h-10 rounded-full border-2 border-surface bg-primary text-on-primary flex items-center justify-center text-[10px] font-bold">+240</div>
+</div>
+<span class="text-surface-variant/80 text-sm font-medium">Just posted today</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Card 3: Memory Feed -->
+<div class="md:col-span-3 group cursor-pointer pt-32">
+<div class="relative overflow-hidden rounded-xl h-[450px] shadow-lg transition-all duration-500 hover:-translate-y-4">
+<img alt="Memory Feed" class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" data-alt="candid polaroid photos pinned to a corkboard with string lights and nostalgic warm room lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCuUTCzqRpnFNXBd_1PG2SmOK0nv0YqDZK4ozKYoUo0q5YrMQ2l9pntY4opGEVNRta90E_gySPeGpLCmf_Cw51nwMTWTjqiTx0W1vO0ABFqY66SvlgrPRCmmaTfBwr0iQbpSuujDu_OZVpiuq26aUyvNcD0tShSSSFO0iWMknot8K1VuHCL3svEbKp067ySsUmU_ck-VoAeJzWuZIBFgMSOY_C-tQiYfFFydhYnpd54VX9AtZFqV9LzejXiYOpJ5StLWp3CJZ0Pvflk"/>
+<div class="absolute inset-0 bg-gradient-to-t from-tertiary/90 via-tertiary/20 to-transparent"></div>
+<div class="absolute bottom-0 left-0 p-6 w-full">
+<div class="flex items-center gap-2 mb-2">
+<span class="w-8 h-[1px] bg-tertiary-fixed"></span>
+<span class="text-tertiary-fixed text-xs font-bold tracking-[0.2em] uppercase">Archive</span>
+</div>
+<h3 class="text-2xl font-bold text-surface-container-lowest serif-heading mb-4">Memory Feed</h3>
+<span class="material-symbols-outlined text-surface-container-lowest bg-surface-container-lowest/10 p-3 rounded-full" data-icon="auto_awesome">auto_awesome</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Signature Editorial Quote -->
+<section class="py-24 bg-surface flex flex-col items-center justify-center text-center px-8 border-y border-outline-variant/10">
+<span class="material-symbols-outlined text-primary mb-8" data-icon="format_quote" style="font-variation-settings: 'FILL' 1;">format_quote</span>
+<blockquote class="text-3xl md:text-5xl font-black serif-heading text-on-surface max-w-4xl leading-tight mb-8">
+                "Yesterday is but today's memory, and tomorrow is today's dream."
+            </blockquote>
+<cite class="not-italic font-label tracking-widest text-sm uppercase text-primary font-bold">— Khalil Gibran</cite>
+</section>
+<!-- Memory Orb (Signature Component) -->
+<div class="fixed bottom-10 right-10 z-[100] group">
+<button class="w-20 h-20 rounded-full bg-gradient-to-tr from-secondary to-secondary-container shadow-2xl flex items-center justify-center text-on-secondary transition-all hover:scale-110 active:scale-95 group">
+<span class="material-symbols-outlined text-3xl" data-icon="add_a_photo">add_a_photo</span>
+<div class="absolute -top-12 right-0 bg-on-surface text-surface text-xs py-2 px-4 rounded-full opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+                    Capture a Memory
+                </div>
+</button>
+<!-- Ambient shadow for floating element as per design system -->
+<div class="absolute inset-0 rounded-full bg-on-surface/10 blur-2xl -z-10 scale-150"></div>
+</div>
+</main>
+<!-- BottomNavBar (Mobile only) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-[100] flex justify-around items-center px-4 py-3 border-t border-stone-200/10 bg-stone-50/80 dark:bg-stone-900/80 backdrop-blur-2xl shadow-[0_-8px_30px_rgb(0,0,0,0.04)] pb-safe rounded-t-[3rem]">
+<a class="flex flex-col items-center justify-center bg-orange-100 dark:bg-orange-950/40 text-orange-900 dark:text-orange-200 rounded-full px-6 py-2" href="#">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="text-[10px] font-semibold uppercase tracking-widest mt-1 font-body">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-stone-400 dark:text-stone-500 px-4 py-2 hover:opacity-80 transition-opacity" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard_customize">dashboard_customize</span>
+<span class="text-[10px] font-semibold uppercase tracking-widest mt-1 font-body">Wall</span>
+</a>
+<a class="flex flex-col items-center justify-center text-stone-400 dark:text-stone-500 px-4 py-2 hover:opacity-80 transition-opacity" href="#">
+<span class="material-symbols-outlined" data-icon="auto_awesome">auto_awesome</span>
+<span class="text-[10px] font-semibold uppercase tracking-widest mt-1 font-body">Memories</span>
+</a>
+<a class="flex flex-col items-center justify-center text-stone-400 dark:text-stone-500 px-4 py-2 hover:opacity-80 transition-opacity" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="text-[10px] font-semibold uppercase tracking-widest mt-1 font-body">Profile</span>
+</a>
+</nav>
+<!-- Footer -->
+<footer class="bg-surface-container-highest py-20 px-8">
+<div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start gap-12">
+<div class="max-w-xs">
+<div class="text-xl font-black italic text-stone-900 mb-6">
+                    Seniors 2026
+                </div>
+<p class="text-on-surface-variant font-body text-sm leading-relaxed">
+                    Designed for the dreamers, the achievers, and the legends in the making. Our time is now.
+                </p>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-3 gap-12">
+<div>
+<h4 class="font-label font-bold text-xs uppercase tracking-widest mb-6">Explore</h4>
+<ul class="space-y-3 text-sm text-on-surface-variant font-body">
+<li><a class="hover:text-primary transition-colors" href="#">Directory</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">The Wall</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Memory Feed</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-label font-bold text-xs uppercase tracking-widest mb-6">Resources</h4>
+<ul class="space-y-3 text-sm text-on-surface-variant font-body">
+<li><a class="hover:text-primary transition-colors" href="#">Awards</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Calendar</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Help Desk</a></li>
+</ul>
+</div>
+<div class="col-span-2 md:col-span-1">
+<h4 class="font-label font-bold text-xs uppercase tracking-widest mb-6">Social</h4>
+<div class="flex gap-4">
+<div class="w-10 h-10 rounded-full bg-surface flex items-center justify-center hover:bg-primary hover:text-on-primary transition-all cursor-pointer">
+<span class="material-symbols-outlined text-lg" data-icon="public">public</span>
+</div>
+<div class="w-10 h-10 rounded-full bg-surface flex items-center justify-center hover:bg-primary hover:text-on-primary transition-all cursor-pointer">
+<span class="material-symbols-outlined text-lg" data-icon="mail">mail</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="max-w-7xl mx-auto mt-20 pt-8 border-t border-outline-variant/20 text-center md:text-left">
+<p class="text-xs text-on-surface-variant/60 font-label tracking-wide">© 2024 Class of 2026. All rights reserved. The Digital Curator Editorial System.</p>
+</div>
+</footer>
+</body></html>

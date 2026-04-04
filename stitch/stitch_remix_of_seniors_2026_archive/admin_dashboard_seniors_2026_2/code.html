@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Admin Dashboard | Seniors '26</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,700;1,400&amp;family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface": "#fcf9f4",
+                        "on-error": "#ffffff",
+                        "on-secondary-fixed-variant": "#453b8a",
+                        "on-secondary-container": "#413886",
+                        "background": "#fcf9f4",
+                        "surface-container-lowest": "#ffffff",
+                        "primary": "#9f402d",
+                        "surface-bright": "#fcf9f4",
+                        "error-container": "#ffdad6",
+                        "on-tertiary-container": "#4f3d00",
+                        "on-secondary-fixed": "#18065e",
+                        "on-primary-fixed": "#3e0500",
+                        "secondary-container": "#b0a6fd",
+                        "on-tertiary-fixed-variant": "#584400",
+                        "on-tertiary-fixed": "#241a00",
+                        "on-primary-fixed-variant": "#802918",
+                        "on-surface": "#1c1c19",
+                        "inverse-primary": "#ffb4a5",
+                        "outline": "#89726d",
+                        "primary-container": "#e2725b",
+                        "surface-variant": "#e5e2dd",
+                        "on-tertiary": "#ffffff",
+                        "tertiary-fixed": "#ffdf90",
+                        "tertiary-container": "#d2a500",
+                        "secondary-fixed": "#e4dfff",
+                        "primary-fixed-dim": "#ffb4a5",
+                        "tertiary": "#755b00",
+                        "primary-fixed": "#ffdad3",
+                        "on-surface-variant": "#56423e",
+                        "on-primary": "#ffffff",
+                        "surface-container-high": "#ebe8e3",
+                        "on-background": "#1c1c19",
+                        "surface-container-highest": "#e5e2dd",
+                        "secondary": "#5d54a4",
+                        "on-secondary": "#ffffff",
+                        "outline-variant": "#ddc0ba",
+                        "inverse-surface": "#31302d",
+                        "surface-dim": "#dcdad5",
+                        "surface-container-low": "#f6f3ee",
+                        "secondary-fixed-dim": "#c7bfff",
+                        "on-error-container": "#93000a",
+                        "error": "#ba1a1a",
+                        "surface-tint": "#9f402d",
+                        "surface-container": "#f0ede8",
+                        "inverse-on-surface": "#f3f0eb",
+                        "tertiary-fixed-dim": "#f0c12c",
+                        "on-primary-container": "#5a0d02"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Noto Serif"],
+                        "body": ["Manrope"],
+                        "label": ["Manrope"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Manrope', sans-serif; background-color: #fcf9f4; color: #1c1c19; }
+        .editorial-text { font-family: 'Noto Serif', serif; }
+        .glass-card { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(20px); }
+    </style>
+</head>
+<body class="bg-surface text-on-surface overflow-x-hidden">
+<!-- Sidebar Navigation -->
+<aside class="fixed left-0 top-0 h-screen w-72 bg-[#fcf9f4] dark:bg-[#1c1c19] shadow-2xl shadow-[#1c1c19]/5 flex flex-col py-8 gap-4 rounded-r-[3rem] z-50">
+<div class="px-8 mb-8">
+<h1 class="font-['Noto_Serif'] text-xl font-black text-[#9f402d]">Seniors '26</h1>
+<p class="text-xs font-bold tracking-widest uppercase opacity-50">Admin Center</p>
+</div>
+<nav class="flex flex-col gap-2">
+<a class="bg-gradient-to-r from-[#9f402d] to-[#e2725b] text-white rounded-full mx-4 px-6 py-3 flex items-center gap-3" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-medium">Overview</span>
+</a>
+<a class="text-[#1c1c19]/70 dark:text-[#fcf9f4]/70 mx-4 px-6 py-3 flex items-center gap-3 hover:bg-[#f6f3ee] dark:hover:bg-[#2a2a26] rounded-full transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span class="font-medium">Users</span>
+</a>
+<a class="text-[#1c1c19]/70 dark:text-[#fcf9f4]/70 mx-4 px-6 py-3 flex items-center gap-3 hover:bg-[#f6f3ee] dark:hover:bg-[#2a2a26] rounded-full transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="verified_user">verified_user</span>
+<span class="font-medium">Moderation</span>
+</a>
+<a class="text-[#1c1c19]/70 dark:text-[#fcf9f4]/70 mx-4 px-6 py-3 flex items-center gap-3 hover:bg-[#f6f3ee] dark:hover:bg-[#2a2a26] rounded-full transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="tune">tune</span>
+<span class="font-medium">Feature Toggles</span>
+</a>
+</nav>
+<div class="mt-auto px-4">
+<div class="bg-surface-container-low p-6 rounded-xl flex flex-col gap-3">
+<span class="text-sm font-semibold opacity-60">Graduation Countdown</span>
+<div class="text-2xl editorial-text font-bold text-primary">May 24, 2026</div>
+<button class="text-xs underline text-left opacity-70">Edit Schedule</button>
+</div>
+<a class="mt-4 text-[#1c1c19]/70 dark:text-[#fcf9f4]/70 mx-4 px-6 py-3 flex items-center gap-3 hover:bg-[#f6f3ee] dark:hover:bg-[#2a2a26] rounded-full transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-medium">Settings</span>
+</a>
+</div>
+</aside>
+<main class="ml-72 min-h-screen p-8">
+<!-- Top App Bar Content -->
+<header class="flex justify-between items-end mb-12">
+<div>
+<h2 class="editorial-text text-4xl font-bold tracking-tight mb-2">Command Center</h2>
+<p class="text-on-surface-variant">Class of 2026 Digital Archive Management</p>
+</div>
+<div class="flex items-center gap-4">
+<div class="bg-surface-container-low px-4 py-2 rounded-full flex items-center gap-3">
+<span class="material-symbols-outlined text-primary" data-icon="search">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm w-48" placeholder="Search archive..." type="text"/>
+</div>
+<button class="w-12 h-12 rounded-full bg-surface-container-high flex items-center justify-center hover:scale-105 transition-transform">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<div class="w-12 h-12 rounded-full bg-primary-container overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="professional portrait of a university administrator in a modern office" src="https://lh3.googleusercontent.com/aida-public/AB6AXuADeC_vAct0AdPFJlTnz9hu2G10kXbL4P6yuT8QfQW-xlymFOljYf6HZSKlmKLQAcv0r_AWqQT3tYitsFZobiT17Q7cOnvdC3OvSV7sHQXxbtSqsctmVau1Y86RoO5z4MM07Zg9bLXHVf7zAfsrCwEoZXDyKKUsOxPcnn61VvSh9-eng4Yi777CKdzeqy2eeXB8yA4eIMKRcTShFIla3GopzTSpW-i85DMSZrL4uS1FjiMpvqMs93tAd3nrXAkUAey-oJyeO5s7wV3A"/>
+</div>
+</div>
+</header>
+<!-- Bento Grid Dashboard -->
+<div class="grid grid-cols-12 gap-6">
+<!-- Active Stats -->
+<div class="col-span-8 grid grid-cols-3 gap-6">
+<div class="bg-surface-container-lowest p-8 rounded-xl shadow-sm">
+<span class="material-symbols-outlined text-secondary text-3xl mb-4" data-icon="auto_stories">auto_stories</span>
+<div class="text-3xl font-extrabold editorial-text">1,402</div>
+<div class="text-sm font-medium opacity-60">Memories Posted</div>
+</div>
+<div class="bg-surface-container-lowest p-8 rounded-xl shadow-sm border-l-4 border-primary">
+<span class="material-symbols-outlined text-primary text-3xl mb-4" data-icon="pending_actions" style="font-variation-settings: 'FILL' 1;">pending_actions</span>
+<div class="text-3xl font-extrabold editorial-text">48</div>
+<div class="text-sm font-medium opacity-60">Pending Moderation</div>
+</div>
+<div class="bg-surface-container-lowest p-8 rounded-xl shadow-sm">
+<span class="material-symbols-outlined text-tertiary-container text-3xl mb-4" data-icon="how_to_reg">how_to_reg</span>
+<div class="text-3xl font-extrabold editorial-text">89%</div>
+<div class="text-sm font-medium opacity-60">Senior Activation</div>
+</div>
+</div>
+<!-- Feature Toggles Card -->
+<div class="col-span-4 bg-surface-container-high p-8 rounded-xl row-span-2">
+<h3 class="text-xl font-bold editorial-text mb-6">Site Permissions</h3>
+<div class="flex flex-col gap-6">
+<div class="flex items-center justify-between">
+<div>
+<div class="font-bold">Awards Voting</div>
+<div class="text-xs opacity-60">Enable students to cast votes</div>
+</div>
+<div class="w-12 h-6 bg-primary rounded-full relative flex items-center px-1">
+<div class="w-4 h-4 bg-white rounded-full translate-x-6"></div>
+</div>
+</div>
+<div class="flex items-center justify-between">
+<div>
+<div class="font-bold">The Wall Posts</div>
+<div class="text-xs opacity-60">Allow new public wall uploads</div>
+</div>
+<div class="w-12 h-6 bg-primary rounded-full relative flex items-center px-1">
+<div class="w-4 h-4 bg-white rounded-full translate-x-6"></div>
+</div>
+</div>
+<div class="flex items-center justify-between">
+<div>
+<div class="font-bold">Secret Reveal</div>
+<div class="text-xs opacity-60">Reveal "Time Capsule" early</div>
+</div>
+<div class="w-12 h-6 bg-surface-variant rounded-full relative flex items-center px-1">
+<div class="w-4 h-4 bg-white rounded-full"></div>
+</div>
+</div>
+</div>
+<div class="mt-12 p-6 bg-surface-container-lowest rounded-lg">
+<div class="text-xs font-black uppercase tracking-widest opacity-40 mb-2">Graduation Date</div>
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary" data-icon="calendar_month">calendar_month</span>
+<span class="font-bold">Saturday, May 24, 2026</span>
+</div>
+<button class="mt-4 w-full py-3 bg-on-surface text-surface rounded-full text-sm font-bold">Update Schedule</button>
+</div>
+</div>
+<!-- Content Moderation Queue -->
+<div class="col-span-8 bg-surface-container-lowest p-8 rounded-xl shadow-sm">
+<div class="flex justify-between items-center mb-8">
+<h3 class="text-xl font-bold editorial-text">Moderation Queue</h3>
+<button class="text-primary text-sm font-bold flex items-center gap-1">
+                        View All <span class="material-symbols-outlined text-sm" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+<div class="space-y-6">
+<!-- Mod Item -->
+<div class="flex items-center gap-4 p-4 hover:bg-surface-container-low rounded-xl transition-colors group">
+<div class="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="vibrant photo of graduates throwing caps in the air during sunset" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCmSRHMSKK2mxx-vdNzNfcANXfPUlSDUUxaFbXyaFoPD6iIFhiiAxK5X_t081vu5WHhq_a0uQwAzSsBKiPKk9k-6wjrBNQJp-oQbgx_f8YfYd5Jl8HrsqtuDipAIbPLB207rmKVVGqY-qj_ay5BsMkMHu9cyAkUbYc5rQAyiImiJiJor_HcpPRPqnZNhCRpmk9lxce78eFtBpKyjrbO7QhiNyShlyuyQF3wSyckb1u1yCeM6Ia0eu12QhQziSVDT1CF0U4G0yOySwZX"/>
+</div>
+<div class="flex-grow">
+<div class="text-sm font-bold">"Last Friday on the Quad"</div>
+<div class="text-xs text-on-surface-variant mb-2">Posted by Sarah J. • 2 mins ago</div>
+<div class="flex gap-2">
+<span class="px-2 py-0.5 bg-secondary-container/20 text-secondary text-[10px] font-bold rounded">THE WALL</span>
+<span class="px-2 py-0.5 bg-surface-container-high text-on-surface-variant text-[10px] font-bold rounded">IMAGE</span>
+</div>
+</div>
+<div class="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="w-10 h-10 rounded-full bg-error-container text-on-error-container flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="close">close</span>
+</button>
+<button class="w-10 h-10 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="check">check</span>
+</button>
+</div>
+</div>
+<div class="flex items-center gap-4 p-4 hover:bg-surface-container-low rounded-xl transition-colors group">
+<div class="w-20 h-20 rounded-lg bg-surface-container-high flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="description">description</span>
+</div>
+<div class="flex-grow">
+<div class="text-sm font-bold">"A letter to my younger self..."</div>
+<div class="text-xs text-on-surface-variant mb-2">Posted by Alex K. • 15 mins ago</div>
+<div class="flex gap-2">
+<span class="px-2 py-0.5 bg-tertiary-container/20 text-tertiary text-[10px] font-bold rounded">TIME CAPSULE</span>
+<span class="px-2 py-0.5 bg-surface-container-high text-on-surface-variant text-[10px] font-bold rounded">TEXT</span>
+</div>
+</div>
+<div class="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="w-10 h-10 rounded-full bg-error-container text-on-error-container flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="close">close</span>
+</button>
+<button class="w-10 h-10 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="check">check</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- User Management Quick Table -->
+<div class="col-span-12 bg-surface-container-lowest p-8 rounded-xl shadow-sm mt-4">
+<div class="flex justify-between items-center mb-8">
+<h3 class="text-xl font-bold editorial-text">User Directory</h3>
+<div class="flex gap-3">
+<button class="px-6 py-2 bg-surface-container-high rounded-full text-sm font-bold">Export CSV</button>
+<button class="px-6 py-2 bg-primary text-white rounded-full text-sm font-bold">+ Add Senior</button>
+</div>
+</div>
+<table class="w-full text-left">
+<thead>
+<tr class="text-xs font-black uppercase tracking-widest opacity-40 border-b border-surface-variant">
+<th class="pb-4">Student</th>
+<th class="pb-4">Email Address</th>
+<th class="pb-4">Status</th>
+<th class="pb-4">Archive Contributions</th>
+<th class="pb-4 text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="text-sm">
+<tr class="border-b border-surface-container-low hover:bg-surface-container-low transition-colors">
+<td class="py-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-secondary-fixed flex items-center justify-center font-bold text-on-secondary-fixed">MB</div>
+<span class="font-bold">Marcus Bennett</span>
+</div>
+</td>
+<td class="py-4 opacity-70">m.bennett26@university.edu</td>
+<td class="py-4">
+<span class="px-3 py-1 bg-green-100 text-green-800 text-[10px] font-black rounded-full">ACTIVE</span>
+</td>
+<td class="py-4 font-bold">12 posts</td>
+<td class="py-4 text-right">
+<button class="p-2 hover:bg-surface-container-high rounded-full transition-colors">
+<span class="material-symbols-outlined text-sm" data-icon="edit">edit</span>
+</button>
+<button class="p-2 hover:bg-surface-container-high rounded-full transition-colors ml-2">
+<span class="material-symbols-outlined text-sm" data-icon="lock_reset">lock_reset</span>
+</button>
+</td>
+</tr>
+<tr class="border-b border-surface-container-low hover:bg-surface-container-low transition-colors">
+<td class="py-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-primary-fixed flex items-center justify-center font-bold text-on-primary-fixed">LC</div>
+<span class="font-bold">Leila Chen</span>
+</div>
+</td>
+<td class="py-4 opacity-70">l.chen26@university.edu</td>
+<td class="py-4">
+<span class="px-3 py-1 bg-green-100 text-green-800 text-[10px] font-black rounded-full">ACTIVE</span>
+</td>
+<td class="py-4 font-bold">24 posts</td>
+<td class="py-4 text-right">
+<button class="p-2 hover:bg-surface-container-high rounded-full transition-colors">
+<span class="material-symbols-outlined text-sm" data-icon="edit">edit</span>
+</button>
+<button class="p-2 hover:bg-surface-container-high rounded-full transition-colors ml-2">
+<span class="material-symbols-outlined text-sm" data-icon="lock_reset">lock_reset</span>
+</button>
+</td>
+</tr>
+<tr class="border-b border-surface-container-low hover:bg-surface-container-low transition-colors">
+<td class="py-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-tertiary-fixed flex items-center justify-center font-bold text-on-tertiary-fixed">DR</div>
+<span class="font-bold">Daniel Rodriguez</span>
+</div>
+</td>
+<td class="py-4 opacity-70">d.rod26@university.edu</td>
+<td class="py-4">
+<span class="px-3 py-1 bg-surface-container-high text-on-surface-variant text-[10px] font-black rounded-full">PENDING</span>
+</td>
+<td class="py-4 font-bold">0 posts</td>
+<td class="py-4 text-right">
+<button class="p-2 hover:bg-surface-container-high rounded-full transition-colors">
+<span class="material-symbols-outlined text-sm" data-icon="edit">edit</span>
+</button>
+<button class="p-2 hover:bg-surface-container-high rounded-full transition-colors ml-2">
+<span class="material-symbols-outlined text-sm" data-icon="lock_reset">lock_reset</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<footer class="mt-20 border-t-2 border-surface-container-low pt-8 flex justify-between text-xs font-medium opacity-40">
+<div>© 2026 Seniors Digital Archive Admin Cluster</div>
+<div class="flex gap-6">
+<a href="#">Privacy Policy</a>
+<a href="#">System Logs</a>
+<a href="#">API Documentation</a>
+</div>
+</footer>
+</main>
+<!-- Post Moderation FAB -->
+<button class="fixed bottom-8 right-8 bg-gradient-to-tr from-primary to-primary-container text-white px-8 py-4 rounded-full shadow-[0_32px_64px_rgba(28,28,25,0.15)] flex items-center gap-3 hover:scale-105 active:scale-95 transition-all">
+<span class="material-symbols-outlined" data-icon="fact_check" style="font-variation-settings: 'FILL' 1;">fact_check</span>
+<span class="font-bold">Process Batch (48)</span>
+</button>
+</body></html>

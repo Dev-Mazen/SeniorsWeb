@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>The Wall | Seniors 2026</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&amp;family=Manrope:wght@200..800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary": "#ffffff",
+                        "on-primary-fixed": "#3e0500",
+                        "error": "#ba1a1a",
+                        "inverse-surface": "#31302d",
+                        "error-container": "#ffdad6",
+                        "on-primary": "#ffffff",
+                        "surface-container-highest": "#e5e2dd",
+                        "surface-container": "#f0ede8",
+                        "secondary-fixed-dim": "#c7bfff",
+                        "tertiary-container": "#d2a500",
+                        "primary-fixed": "#ffdad3",
+                        "surface-variant": "#e5e2dd",
+                        "secondary-fixed": "#e4dfff",
+                        "on-tertiary-container": "#4f3d00",
+                        "surface-dim": "#dcdad5",
+                        "surface-bright": "#fcf9f4",
+                        "on-tertiary-fixed-variant": "#584400",
+                        "tertiary-fixed-dim": "#f0c12c",
+                        "on-primary-fixed-variant": "#802918",
+                        "on-background": "#1c1c19",
+                        "surface": "#fcf9f4",
+                        "inverse-on-surface": "#f3f0eb",
+                        "on-surface": "#1c1c19",
+                        "outline-variant": "#ddc0ba",
+                        "tertiary-fixed": "#ffdf90",
+                        "on-tertiary": "#ffffff",
+                        "primary": "#9f402d",
+                        "surface-tint": "#9f402d",
+                        "on-primary-container": "#5a0d02",
+                        "tertiary": "#755b00",
+                        "on-error": "#ffffff",
+                        "surface-container-low": "#f6f3ee",
+                        "on-error-container": "#93000a",
+                        "inverse-primary": "#ffb4a5",
+                        "on-secondary-container": "#413886",
+                        "secondary": "#5d54a4",
+                        "primary-fixed-dim": "#ffb4a5",
+                        "on-secondary-fixed-variant": "#453b8a",
+                        "on-secondary-fixed": "#18065e",
+                        "background": "#fcf9f4",
+                        "on-tertiary-fixed": "#241a00",
+                        "secondary-container": "#b0a6fd",
+                        "primary-container": "#e2725b",
+                        "outline": "#89726d",
+                        "surface-container-high": "#ebe8e3",
+                        "surface-container-lowest": "#ffffff",
+                        "on-surface-variant": "#56423e"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Noto Serif"],
+                        "body": ["Manrope"],
+                        "label": ["Manrope"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Manrope', sans-serif; }
+        h1, h2, h3 { font-family: 'Noto Serif', serif; }
+        .masonry-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            grid-auto-rows: 10px;
+            gap: 2rem;
+        }
+        .wall-note {
+            transition: transform 0.3s ease-out, box-shadow 0.3s ease-out;
+            break-inside: avoid;
+        }
+        .wall-note:hover {
+            transform: scale(1.02) rotate(0deg) !important;
+            z-index: 10;
+        }
+        .paper-texture {
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3%3Ffilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            opacity: 0.03;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface min-h-screen relative overflow-x-hidden">
+<!-- Paper Texture Overlay -->
+<div class="fixed inset-0 paper-texture z-0"></div>
+<!-- TopAppBar Shell -->
+<nav class="bg-stone-50/70 dark:bg-stone-900/70 backdrop-blur-xl shadow-sm dark:shadow-none docked full-width top-0 sticky z-50">
+<div class="flex justify-between items-center w-full px-8 py-4 max-w-full mx-auto">
+<div class="text-2xl font-black italic text-stone-900 dark:text-stone-50">
+                Seniors 2026
+            </div>
+<!-- Desktop Navigation -->
+<div class="hidden md:flex items-center space-x-8">
+<a class="text-stone-600 dark:text-stone-400 font-medium hover:text-stone-900 dark:hover:text-stone-100 hover:bg-stone-200/50 dark:hover:bg-stone-800/50 transition-colors duration-300" href="#">Home</a>
+<a class="text-stone-600 dark:text-stone-400 font-medium hover:text-stone-900 dark:hover:text-stone-100 hover:bg-stone-200/50 dark:hover:bg-stone-800/50 transition-colors duration-300" href="#">Directory</a>
+<a class="text-orange-800 dark:text-orange-300 font-bold border-b-2 border-orange-500 pb-1" href="#">The Wall</a>
+<a class="text-stone-600 dark:text-stone-400 font-medium hover:text-stone-900 dark:hover:text-stone-100 hover:bg-stone-200/50 dark:hover:bg-stone-800/50 transition-colors duration-300" href="#">Memory Feed</a>
+<a class="text-stone-600 dark:text-stone-400 font-medium hover:text-stone-900 dark:hover:text-stone-100 hover:bg-stone-200/50 dark:hover:bg-stone-800/50 transition-colors duration-300" href="#">Awards</a>
+<a class="text-stone-600 dark:text-stone-400 font-medium hover:text-stone-900 dark:hover:text-stone-100 hover:bg-stone-200/50 dark:hover:bg-stone-800/50 transition-colors duration-300" href="#">Hall of Thanks</a>
+</div>
+<!-- Trailing Actions -->
+<div class="flex items-center space-x-4">
+<button class="bg-gradient-to-br from-primary to-primary-container text-on-primary px-6 py-2.5 rounded-full font-bold text-sm shadow-lg hover:scale-[0.97] transition-all flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">edit_note</span>
+                    Post to The Wall
+                </button>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-stone-600 dark:text-stone-400 cursor-pointer p-2 rounded-full hover:bg-stone-200/50">person</span>
+<span class="material-symbols-outlined text-stone-600 dark:text-stone-400 cursor-pointer p-2 rounded-full hover:bg-stone-200/50">logout</span>
+</div>
+</div>
+</div>
+</nav>
+<main class="relative z-10 max-w-7xl mx-auto px-6 pt-12 pb-32">
+<!-- Editorial Header -->
+<header class="mb-16 text-center max-w-3xl mx-auto">
+<h1 class="text-5xl md:text-7xl font-black tracking-tighter text-on-background mb-4 italic">
+                The Living Wall
+            </h1>
+<p class="text-xl font-body text-on-surface-variant leading-relaxed">
+                A collective archive of the moments that defined our four years. Scrawled, remembered, and curated for the Class of 2026.
+            </p>
+</header>
+<!-- Masonry-like Grid Canvas -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+<!-- Sticky Note 1: Memory (Sage) -->
+<div class="wall-note bg-[#f2f8f2] p-8 rounded-lg shadow-xl shadow-stone-900/5 rotate-[-1.5deg] border-t-4 border-[#c5d8c5]">
+<div class="flex justify-between items-start mb-4">
+<span class="text-xs font-bold uppercase tracking-widest text-[#5d735d]">Hallway Chaos</span>
+<span class="material-symbols-outlined text-[#5d735d] text-lg">push_pin</span>
+</div>
+<p class="font-headline text-2xl leading-snug text-on-surface italic mb-6">
+                    "Remember when the bio lab frog escaped and ended up in the Principal's coffee mug?"
+                </p>
+<div class="flex items-center gap-3">
+<img class="w-8 h-8 rounded-full" data-alt="Close up portrait of a smiling young man with curly hair in a school hallway background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCNj1yKCmNof-DZ3WT5bGBUx5vt8PtpntxeRTeBWfDAfVFCZzyU2mtmKncCEDP8q_Vo2Q3jT8KTCeljKAs3x7dEubOEDtkgHeUodPlR-WXuBF2DRQiUH-DRdNQhDYGSRxuSqwcPgfJs0RHiMj4Zur_rgeGIi66iqN18a4oUsxSTz4n3sMwCzgh8we_MWj7KajAj3sI80OR-qaogNRjv9YxAUWaL7b7i-7N2UaMXzQ_wiEfzQD9YHQs_fL_zeHtYaH46dQjpF6RqIxuT"/>
+<div>
+<p class="text-sm font-bold text-on-surface">Jordan M.</p>
+<p class="text-[10px] text-on-surface-variant uppercase tracking-tighter">Spring '24</p>
+</div>
+</div>
+</div>
+<!-- Sticky Note 2: Pending Post (Cream) -->
+<div class="wall-note bg-surface-container-lowest p-8 rounded-lg shadow-xl shadow-stone-900/5 rotate-[1.2deg] relative">
+<div class="absolute -top-3 -right-3 bg-secondary text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest shadow-md">
+                    Pending Approval
+                </div>
+<div class="flex justify-between items-start mb-4">
+<span class="text-xs font-bold uppercase tracking-widest text-outline">Late Night Grinds</span>
+<span class="material-symbols-outlined text-outline text-lg">schedule</span>
+</div>
+<p class="font-body text-lg font-medium text-on-surface mb-6">
+                    Three 24-hour diners, six pots of coffee, and one AP Calculus project. We actually survived.
+                </p>
+<div class="flex items-center gap-3 opacity-50">
+<div class="w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center">
+<span class="material-symbols-outlined text-xs">person</span>
+</div>
+<div>
+<p class="text-sm font-bold">You</p>
+<p class="text-[10px] uppercase tracking-tighter">Just now</p>
+</div>
+</div>
+</div>
+<!-- Sticky Note 3: Quote (Lavender) -->
+<div class="wall-note bg-[#f6f2fc] p-8 rounded-lg shadow-xl shadow-stone-900/5 rotate-[-0.8deg] border-b-8 border-[#e4daef]">
+<p class="font-headline text-3xl font-black text-[#5d54a4] mb-8 text-center">
+                    "Don't cry because it's over, smile because it happened... but mostly cry."
+                </p>
+<div class="flex flex-col items-center">
+<p class="text-xs font-bold uppercase tracking-widest text-[#5d54a4] mb-1">Senior Quote</p>
+<p class="text-sm italic text-on-surface-variant">— Alex Rivera</p>
+</div>
+</div>
+<!-- Sticky Note 4: Image Attachment (Peach) -->
+<div class="wall-note bg-[#fff5f0] p-4 rounded-lg shadow-xl shadow-stone-900/5 rotate-[2deg]">
+<div class="relative mb-4 overflow-hidden rounded-md group">
+<img class="w-full aspect-square object-cover transition-transform duration-500 group-hover:scale-110" data-alt="group of high school seniors sitting on stadium bleachers laughing during a sunset" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDIWcYz7Vq4FjzXWBv6jO9FpaTbFZ27VvYR00xfxlQ3gCmlu0YpMmCTA6qkw16FHY00akLyi5KwRnJ-VB43YLEORWabw0tQYMrzt7VguApZd6wfhj9Pb8Q7rV0gN150Oi1LEVVCQ2CeTSo9yBXe7wdZGX_YkZUZvabXCDRUYG8qHHd6Fy2Olck-nCiBe1fkYc8lpiD0Dogr5o7_R0Ng_jEGuKoQnnZW2Fq8dBCF3fwNCbeLKpP3FXOfIso9UgoyJ00iFxbUeqG0VZui"/>
+<div class="absolute inset-0 bg-primary/10 mix-blend-multiply"></div>
+</div>
+<div class="px-2 pb-2">
+<p class="font-body text-sm font-semibold text-[#802918] mb-2 italic">Golden Hour at the Bleachers.</p>
+<div class="flex items-center justify-between">
+<div class="flex -space-x-2">
+<div class="w-6 h-6 rounded-full border-2 border-[#fff5f0] bg-stone-400"></div>
+<div class="w-6 h-6 rounded-full border-2 border-[#fff5f0] bg-stone-500"></div>
+</div>
+<span class="text-[10px] font-bold text-[#802918]/60 uppercase tracking-widest">Oct 2025</span>
+</div>
+</div>
+</div>
+<!-- Sticky Note 5: Short Moment (Ivory) -->
+<div class="wall-note bg-surface-container-lowest p-8 rounded-lg shadow-xl shadow-stone-900/5 rotate-[-1.1deg]">
+<div class="flex justify-between items-start mb-6">
+<div class="bg-tertiary-fixed text-on-tertiary-fixed text-[10px] font-black px-2 py-0.5 rounded uppercase">Inside Joke</div>
+</div>
+<p class="font-headline text-xl text-on-surface leading-snug">
+                    "The Great Senior Prank of 2026: 1,000 rubber ducks in the indoor pool."
+                </p>
+<div class="mt-8 flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-primary" data-weight="fill">favorite</span>
+<span class="text-xs font-bold text-on-surface-variant">84 classmates loved this</span>
+</div>
+</div>
+<!-- Sticky Note 6: Funny Moment (Sage) -->
+<div class="wall-note bg-[#f2f8f2] p-8 rounded-lg shadow-xl shadow-stone-900/5 rotate-[0.5deg]">
+<p class="font-body text-lg text-[#3e4d3e] leading-relaxed mb-4">
+                    "I still have Mr. Henderson's borrowed pen from freshman year. Should I return it at graduation?"
+                </p>
+<div class="pt-4 border-t border-dotted border-[#c5d8c5]">
+<p class="text-sm font-bold text-[#5d735d]">Anonymous Senior</p>
+</div>
+</div>
+<!-- Sticky Note 7: Large Memory (Peach) -->
+<div class="wall-note bg-[#fff5f0] p-8 rounded-lg shadow-xl shadow-stone-900/5 rotate-[-0.4deg] md:col-span-2">
+<div class="grid md:grid-cols-2 gap-6 items-center">
+<div>
+<span class="material-symbols-outlined text-primary mb-4" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+<h3 class="font-headline text-3xl font-black mb-4 leading-tight text-on-primary-fixed-variant">The Night We Won State</h3>
+<p class="font-body text-on-surface-variant leading-relaxed">
+                            The atmosphere was electric. We didn't just win a trophy; we proved that our class had heart. I'll never forget the sound of that buzzer and the immediate rush to the field.
+                        </p>
+</div>
+<div class="rounded-xl overflow-hidden shadow-inner">
+<img class="w-full h-48 object-cover opacity-80" data-alt="blurred bright stadium lights at night with a celebratory crowd atmosphere" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDalsmSH1WcwGQ8wOXAErlmmsBRvYO7DK-TR5tNYpSMncRFW6tLlUoxzgmLeXpUtvtdZ4nex2l5IYr-xZhJdsQ47m2SHGSGN4bxoq20GRzvIOlI3Z_j13kJwm3bhCRcab3dPZy_hHkuTaAHDYEiWFnC8DeByJI6ZcMvsJUsFpQ5RISzDvW6-gHDqFncPdMmJKCUW53-ciToTH8g2QhJHZ93o5lkb6L3cmzRTHnpWsgod5jeSs4jUPFtdY_dEvxBdS0_sLGclvv2Q1aX"/>
+</div>
+</div>
+</div>
+<!-- Sticky Note 8: Farewell (Lavender) -->
+<div class="wall-note bg-[#f6f2fc] p-8 rounded-lg shadow-xl shadow-stone-900/5 rotate-[1.8deg]">
+<div class="flex justify-center mb-6">
+<span class="material-symbols-outlined text-4xl text-secondary" style="font-variation-settings: 'FILL' 1;">favorite</span>
+</div>
+<p class="text-center font-headline text-xl italic text-on-surface mb-4">
+                    "Counting down the days, but wishing we could start all over again."
+                </p>
+<p class="text-center text-xs font-bold uppercase tracking-[0.2em] text-secondary">Class of 2026 Forever</p>
+</div>
+</div>
+<!-- Pagination / Footer Breathing Room -->
+<div class="mt-24 flex flex-col items-center gap-6">
+<button class="bg-surface-container-high text-on-surface font-bold py-4 px-12 rounded-full hover:bg-surface-container-highest transition-colors shadow-sm">
+                Load More Memories
+            </button>
+<p class="text-stone-400 text-sm font-medium">Showing 42 of 812 notes</p>
+</div>
+</main>
+<!-- Floating Memory Orb -->
+<button class="fixed bottom-10 right-10 z-[110] w-16 h-16 rounded-full bg-gradient-to-tr from-secondary to-secondary-container text-white shadow-[0_32px_64px_rgba(93,84,164,0.3)] flex items-center justify-center hover:scale-110 transition-transform md:hidden">
+<span class="material-symbols-outlined text-3xl">add</span>
+</button>
+<!-- Bottom Navigation (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-[100] flex justify-around items-center px-4 py-3 bg-stone-50/80 dark:bg-stone-900/80 backdrop-blur-2xl border-t border-stone-200/10 shadow-[0_-8px_30px_rgb(0,0,0,0.04)] rounded-t-[3rem] pb-safe">
+<a class="flex flex-col items-center justify-center text-stone-400 dark:text-stone-500 px-4 py-2 hover:opacity-80 transition-opacity" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="text-[10px] font-semibold uppercase tracking-widest mt-1">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-orange-100 dark:bg-orange-950/40 text-orange-900 dark:text-orange-200 rounded-full px-6 py-2" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">dashboard_customize</span>
+<span class="text-[10px] font-semibold uppercase tracking-widest mt-1">Wall</span>
+</a>
+<a class="flex flex-col items-center justify-center text-stone-400 dark:text-stone-500 px-4 py-2 hover:opacity-80 transition-opacity" href="#">
+<span class="material-symbols-outlined">auto_awesome</span>
+<span class="text-[10px] font-semibold uppercase tracking-widest mt-1">Memories</span>
+</a>
+<a class="flex flex-col items-center justify-center text-stone-400 dark:text-stone-500 px-4 py-2 hover:opacity-80 transition-opacity" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="text-[10px] font-semibold uppercase tracking-widest mt-1">Profile</span>
+</a>
+</nav>
+</body></html>

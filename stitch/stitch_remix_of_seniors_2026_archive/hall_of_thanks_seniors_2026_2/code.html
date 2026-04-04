@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,700;1,400&amp;family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface": "#fcf9f4",
+                    "on-error": "#ffffff",
+                    "on-secondary-fixed-variant": "#453b8a",
+                    "on-secondary-container": "#413886",
+                    "background": "#fcf9f4",
+                    "surface-container-lowest": "#ffffff",
+                    "primary": "#9f402d",
+                    "surface-bright": "#fcf9f4",
+                    "error-container": "#ffdad6",
+                    "on-tertiary-container": "#4f3d00",
+                    "on-secondary-fixed": "#18065e",
+                    "on-primary-fixed": "#3e0500",
+                    "secondary-container": "#b0a6fd",
+                    "on-tertiary-fixed-variant": "#584400",
+                    "on-tertiary-fixed": "#241a00",
+                    "on-primary-fixed-variant": "#802918",
+                    "on-surface": "#1c1c19",
+                    "inverse-primary": "#ffb4a5",
+                    "outline": "#89726d",
+                    "primary-container": "#e2725b",
+                    "surface-variant": "#e5e2dd",
+                    "on-tertiary": "#ffffff",
+                    "tertiary-fixed": "#ffdf90",
+                    "tertiary-container": "#d2a500",
+                    "secondary-fixed": "#e4dfff",
+                    "primary-fixed-dim": "#ffb4a5",
+                    "tertiary": "#755b00",
+                    "primary-fixed": "#ffdad3",
+                    "on-surface-variant": "#56423e",
+                    "on-primary": "#ffffff",
+                    "surface-container-high": "#ebe8e3",
+                    "on-background": "#1c1c19",
+                    "surface-container-highest": "#e5e2dd",
+                    "secondary": "#5d54a4",
+                    "on-secondary": "#ffffff",
+                    "outline-variant": "#ddc0ba",
+                    "inverse-surface": "#31302d",
+                    "surface-dim": "#dcdad5",
+                    "surface-container-low": "#f6f3ee",
+                    "secondary-fixed-dim": "#c7bfff",
+                    "on-error-container": "#93000a",
+                    "error": "#ba1a1a",
+                    "surface-tint": "#9f402d",
+                    "surface-container": "#f0ede8",
+                    "inverse-on-surface": "#f3f0eb",
+                    "tertiary-fixed-dim": "#f0c12c",
+                    "on-primary-container": "#5a0d02"
+            },
+            "borderRadius": {
+                    "DEFAULT": "1rem",
+                    "lg": "2rem",
+                    "xl": "3rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Noto Serif"],
+                    "body": ["Manrope"],
+                    "label": ["Manrope"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .tonal-shift { background-color: #f6f3ee; }
+        .parallax-hover:hover { transform: translateY(-4px); }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body selection:bg-primary-container selection:text-on-primary-container">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-[#fcf9f4]/80 backdrop-blur-xl shadow-[0_32px_64px_rgba(28,28,25,0.06)] px-8 py-4 flex justify-between items-center">
+<div class="font-headline italic text-2xl text-primary">Seniors '26</div>
+<div class="hidden md:flex gap-8 items-center font-headline text-sm tracking-tight">
+<a class="text-[#1c1c19]/60 font-medium hover:text-primary transition-colors duration-300" href="#">Home</a>
+<a class="text-[#1c1c19]/60 font-medium hover:text-primary transition-colors duration-300" href="#">Directory</a>
+<a class="text-[#1c1c19]/60 font-medium hover:text-primary transition-colors duration-300" href="#">The Wall</a>
+<a class="text-[#1c1c19]/60 font-medium hover:text-primary transition-colors duration-300" href="#">Memory Feed</a>
+<a class="text-[#1c1c19]/60 font-medium hover:text-primary transition-colors duration-300" href="#">Awards</a>
+<a class="text-primary font-bold border-b-2 border-primary pb-1" href="#">Time Capsule</a>
+</div>
+<div class="flex items-center gap-4 text-primary">
+<span class="material-symbols-outlined cursor-pointer hover:scale-95 duration-200">notifications</span>
+<span class="material-symbols-outlined cursor-pointer hover:scale-95 duration-200">account_circle</span>
+</div>
+</nav>
+<main class="pt-32 pb-20 max-w-7xl mx-auto px-6">
+<!-- Hero Section -->
+<header class="mb-20 text-center space-y-4">
+<h1 class="font-headline text-5xl md:text-7xl font-bold tracking-tight text-on-surface">
+                Hall of Thanks
+            </h1>
+<p class="text-xl text-on-surface-variant max-w-2xl mx-auto leading-relaxed">
+                They didn't just teach us subjects; they shaped our stories. Say something nice to the mentors who made 2026 possible.
+            </p>
+</header>
+<!-- Editorial Grid for Teachers -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-8 mb-20">
+<!-- Teacher Card 1: Large Asymmetric -->
+<div class="md:col-span-7 group">
+<div class="bg-surface-container-lowest rounded-xl p-8 shadow-2xl shadow-on-surface/5 flex flex-col md:flex-row gap-8 items-start hover:shadow-primary/5 transition-all duration-500">
+<div class="w-full md:w-1/2 aspect-[4/5] overflow-hidden rounded-lg">
+<img class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" data-alt="Warm portrait of an elderly teacher in a sunlit classroom, soft focus library background, wearing a vintage tweed blazer" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBD8RIcvn-KtqrWkeDMzNVQkm_NY2ruC3DxgTdgNp_15iiwhKGCAsJm8BDcQ0i8FpqGcAE5dxCa35kGVioVlB1PQVvqz4X6O8l5tYm3eka-60EE5ccJHwZuOec7lzjVRmkhX0S8NCpzAbtNv4prqcALHc6F4e8LO9X5I96NOmJXUfTXRAR23YPzEGcNBsUWCdpts9UF1P79VFMggv5KB_H6zbg5tI4p0qEbPrnN9yhu6rNstmgtgUB1_aaEwWr5l2LzCjQROLF9OWa-"/>
+</div>
+<div class="w-full md:w-1/2 space-y-6">
+<div>
+<span class="text-primary font-bold tracking-widest text-xs uppercase">Department Head</span>
+<h2 class="font-headline text-3xl mt-2">Dr. Samy Mahmoud</h2>
+<p class="text-on-surface-variant italic">"The one who made Physics feel like poetry."</p>
+</div>
+<div class="bg-surface-container-low rounded-lg p-5 space-y-4">
+<h3 class="font-bold text-sm">Say something nice</h3>
+<textarea class="w-full bg-surface-container-lowest border-none rounded-lg focus:ring-1 focus:ring-primary text-sm p-4 placeholder:italic" placeholder="Write an anonymous note..."></textarea>
+<button class="w-full bg-gradient-to-r from-primary to-primary-container text-white py-3 rounded-full font-bold text-sm flex items-center justify-center gap-2">
+                                Send Thanks
+                                <span class="material-symbols-outlined text-sm">send</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Stats/Featured Section -->
+<div class="md:col-span-5 flex flex-col gap-8">
+<div class="bg-secondary-container/20 rounded-xl p-10 flex flex-col justify-center items-center text-center space-y-4">
+<span class="material-symbols-outlined text-5xl text-secondary" style="font-variation-settings: 'FILL' 1;">favorite</span>
+<h3 class="font-headline text-4xl font-bold">1,402</h3>
+<p class="font-medium text-secondary">Messages of gratitude sent so far</p>
+</div>
+<div class="bg-surface-container-high rounded-xl p-8 relative overflow-hidden group">
+<div class="relative z-10 space-y-4">
+<h3 class="font-headline text-2xl italic">The Wall of Wisdom</h3>
+<p class="text-sm leading-relaxed text-on-surface-variant">
+                            "Education is the most powerful weapon which you can use to change the world." — Our common room mural.
+                        </p>
+</div>
+<div class="absolute -bottom-10 -right-10 w-40 h-40 bg-primary/5 rounded-full blur-3xl group-hover:bg-primary/10 transition-all"></div>
+</div>
+</div>
+<!-- Teacher Card 2 -->
+<div class="md:col-span-4 group">
+<div class="bg-surface-container-lowest rounded-xl p-6 shadow-xl shadow-on-surface/5 flex flex-col gap-6 hover:translate-y-[-8px] transition-transform duration-500">
+<div class="aspect-square rounded-full overflow-hidden w-32 mx-auto ring-4 ring-surface-container-low ring-offset-4 ring-offset-surface">
+<img class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all" data-alt="Candid photo of a young smiling female teacher holding a stack of books, soft outdoor sunlight, warm cream and brown tones" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBlIGlkZ9mjXckpIZ4u6GAtCvImW0Ft-K8NOwweADmZRTKgvFCdnRdAeuC7c1IhRXpq_rFJdcF9b026u9QF8wG5XhlOL0tpoUAVfLZQj0ckQ1d5NzKwXwyIVl5cFYsB_Qyx3rQH0MEiz_uo73K5XghLYRY4B9UObIaO0BsSAdEVMp0e985okAnqiqHMK5BAKj8mdxOKV4M68FgqDTLKb09HTZwwGWxiIhRtt6IHcNiWEA4nZqhgNZOZAKueVmkBvt6SOxTaLKTnbCZC"/>
+</div>
+<div class="text-center">
+<h2 class="font-headline text-2xl">Ms. Layla Hassan</h2>
+<p class="text-sm text-primary font-bold mt-1">Literature &amp; Arts</p>
+</div>
+<div class="bg-surface-container-low rounded-lg p-4 space-y-3">
+<div class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary text-sm" style="font-variation-settings: 'FILL' 1;">format_quote</span>
+<p class="text-xs italic text-on-surface-variant">"Thank you Ms. Layla for always listening and understanding us."</p>
+</div>
+<div class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary text-sm" style="font-variation-settings: 'FILL' 1;">format_quote</span>
+<p class="text-xs italic text-on-surface-variant">"Best literature teacher ever! We will miss your classes."</p>
+</div>
+</div>
+<button class="text-primary font-bold text-sm border-b border-primary/20 pb-1 self-center hover:border-primary transition-all">Leave a message</button>
+</div>
+</div>
+<!-- Teacher Card 3 -->
+<div class="md:col-span-4 group">
+<div class="bg-surface-container-lowest rounded-xl p-6 shadow-xl shadow-on-surface/5 flex flex-col gap-6 hover:translate-y-[-8px] transition-transform duration-500">
+<div class="aspect-square rounded-full overflow-hidden w-32 mx-auto ring-4 ring-surface-container-low ring-offset-4 ring-offset-surface">
+<img class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all" data-alt="Focused portrait of a male teacher in a science lab, microscopes in blurred background, cinematic teal and orange lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC4cq6G3cmBw0fJP8YYKIpBaRA7uhTbgqDftIP2NsyIEhT4nNyhlgwBmieWQznm1S-0IRf1Rv_egsf-V6PK2rOHkYdyHbrdRmfKfPPTl2u2j6FDTScP4Lg4zLog6nZqbvH9WMHS2pYtsRVwlA23j1gw1J_UGHbn83e5lqORFCZAbP5wr5tFVoLxwdt5bmEafIgquYgler8NySy3kcGoQjyjgOc7fqp8xp0g_WbuQRE4iQcgaDTXX3fEgOIy9ZKeBxFVxomGEwJQoy6V"/>
+</div>
+<div class="text-center">
+<h2 class="font-headline text-2xl">Mr. Ahmed Fawzy</h2>
+<p class="text-sm text-primary font-bold mt-1">Chemistry</p>
+</div>
+<div class="bg-surface-container-low rounded-lg p-4 space-y-3">
+<div class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary text-sm" style="font-variation-settings: 'FILL' 1;">format_quote</span>
+<p class="text-xs italic text-on-surface-variant">"Master of the lab. Thanks for the patience!"</p>
+</div>
+<div class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary text-sm" style="font-variation-settings: 'FILL' 1;">format_quote</span>
+<p class="text-xs italic text-on-surface-variant">"Chemistry was tough but you made it look easy."</p>
+</div>
+</div>
+<button class="text-primary font-bold text-sm border-b border-primary/20 pb-1 self-center hover:border-primary transition-all">Leave a message</button>
+</div>
+</div>
+<!-- Teacher Card 4 -->
+<div class="md:col-span-4 group">
+<div class="bg-surface-container-lowest rounded-xl p-6 shadow-xl shadow-on-surface/5 flex flex-col gap-6 hover:translate-y-[-8px] transition-transform duration-500">
+<div class="aspect-square rounded-full overflow-hidden w-32 mx-auto ring-4 ring-surface-container-low ring-offset-4 ring-offset-surface">
+<img class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all" data-alt="Portrait of a mathematics teacher writing equations on a chalkboard, dusty atmosphere, warm incandescent lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBUh42PEhcFSij5OzRE12f7X5jiEtOtQa1NYU32xen54uwbSEjJSBRPqY1B_a5Y4A1P2iqHq3YKKvk_fc4UNVLGMoLcfe4aafSDegLY2TXPm098ReRW1LOlqXYT6YwGksc9Ew0fNU8tBTrhPIg8YqSWNi24O0DxrS3sgQUeaIlNB5yXDYs5F5pBkwK2iQQqwrqelu0hfZlfP8fIZyVhyyxhkvI-YnngcrtxtrW2pUyAl3HZxisplrAjQDranbTgJcL7EF-4_2YOumVH"/>
+</div>
+<div class="text-center">
+<h2 class="font-headline text-2xl">Coach Sherif</h2>
+<p class="text-sm text-primary font-bold mt-1">Sports &amp; Athletics</p>
+</div>
+<div class="bg-surface-container-low rounded-lg p-4 space-y-3">
+<div class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary text-sm" style="font-variation-settings: 'FILL' 1;">format_quote</span>
+<p class="text-xs italic text-on-surface-variant">"Thanks for pushing us to our limits, Coach."</p>
+</div>
+<div class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary text-sm" style="font-variation-settings: 'FILL' 1;">format_quote</span>
+<p class="text-xs italic text-on-surface-variant">"The best coach we could have asked for."</p>
+</div>
+</div>
+<button class="text-primary font-bold text-sm border-b border-primary/20 pb-1 self-center hover:border-primary transition-all">Leave a message</button>
+</div>
+</div>
+</div>
+<!-- Section for General Appreciation -->
+<section class="bg-primary/5 rounded-xl p-12 text-center space-y-8 relative overflow-hidden">
+<div class="relative z-10">
+<h2 class="font-headline text-4xl font-bold">Group Thank You</h2>
+<p class="text-on-surface-variant max-w-xl mx-auto">Have a general message for the entire teaching staff of 2026? Post it on the public thank you board.</p>
+<div class="mt-8 flex flex-col md:flex-row gap-4 justify-center items-center">
+<input class="w-full md:w-96 bg-surface-container-lowest border-none rounded-full px-6 py-4 shadow-sm focus:ring-2 focus:ring-primary/20" placeholder="Write a public shoutout..." type="text"/>
+<button class="bg-on-surface text-surface px-8 py-4 rounded-full font-bold hover:scale-95 duration-200">Post Publicly</button>
+</div>
+</div>
+<!-- Decorative circle -->
+<div class="absolute -top-20 -left-20 w-64 h-64 bg-primary/5 rounded-full blur-3xl"></div>
+</section>
+</main>
+<!-- SideNavBar (Hidden on Mobile) -->
+<aside class="fixed left-0 top-0 h-screen w-72 bg-[#fcf9f4] shadow-2xl shadow-[#1c1c19]/5 rounded-r-[3rem] hidden lg:flex flex-col py-8 gap-4 z-40 transform -translate-x-full transition-transform duration-500 hover:translate-x-0">
+<div class="px-8 mb-8">
+<div class="font-headline text-xl font-black text-primary mb-1">Class of 2026</div>
+<div class="text-xs text-on-surface-variant/70 uppercase tracking-widest">The Living Archive</div>
+</div>
+<div class="flex flex-col h-full gap-2">
+<a class="text-[#1c1c19]/70 mx-4 px-6 py-3 hover:bg-[#f6f3ee] rounded-full transition-all flex items-center gap-4" href="#">
+<span class="material-symbols-outlined">home</span> Home
+            </a>
+<a class="text-[#1c1c19]/70 mx-4 px-6 py-3 hover:bg-[#f6f3ee] rounded-full transition-all flex items-center gap-4" href="#">
+<span class="material-symbols-outlined">edit_note</span> The Wall
+            </a>
+<a class="text-[#1c1c19]/70 mx-4 px-6 py-3 hover:bg-[#f6f3ee] rounded-full transition-all flex items-center gap-4" href="#">
+<span class="material-symbols-outlined">emoji_events</span> Awards
+            </a>
+<a class="bg-gradient-to-r from-primary to-primary-container text-white rounded-full mx-4 px-6 py-3 shadow-lg shadow-primary/20 flex items-center gap-4" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">favorite</span> Thanks
+            </a>
+<div class="mt-auto border-t border-outline-variant/10 pt-4">
+<a class="text-[#1c1c19]/70 mx-4 px-6 py-3 hover:bg-[#f6f3ee] rounded-full transition-all flex items-center gap-4" href="#">
+<span class="material-symbols-outlined">settings</span> Settings
+                </a>
+<div class="mx-4 mt-4 px-6 py-4 bg-surface-container-high rounded-xl flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center text-white font-bold">JD</div>
+<div>
+<div class="text-sm font-bold">John Doe</div>
+<div class="text-[10px] text-on-surface-variant">Class Representative</div>
+</div>
+</div>
+</div>
+</div>
+</aside>
+<!-- Floating Action Button -->
+<button class="fixed bottom-8 right-8 w-16 h-16 bg-gradient-to-tr from-primary to-primary-container text-white rounded-full shadow-[0_32px_64px_rgba(159,64,45,0.3)] flex items-center justify-center z-50 hover:scale-110 transition-transform active:scale-95 group">
+<span class="material-symbols-outlined text-3xl group-hover:rotate-12 transition-transform">edit_note</span>
+<div class="absolute right-20 bg-on-surface text-surface px-4 py-2 rounded-lg text-sm font-bold opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">Post Memory</div>
+</button>
+<!-- BottomNavBar (Mobile) -->
+<nav class="fixed bottom-0 w-full bg-[#fcf9f4]/95 backdrop-blur-md md:hidden flex justify-around py-4 z-50 shadow-[0_-10px_30px_rgba(28,28,25,0.05)] px-6">
+<div class="flex flex-col items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined">home</span>
+<span class="text-[10px] font-medium">Home</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined">edit_note</span>
+<span class="text-[10px] font-medium">Wall</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">favorite</span>
+<span class="text-[10px] font-bold">Thanks</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined">account_circle</span>
+<span class="text-[10px] font-medium">Profile</span>
+</div>
+</nav>
+<!-- Footer Decoration -->
+<footer class="py-12 bg-surface-container-low mt-20 text-center border-t border-outline-variant/10">
+<div class="max-w-7xl mx-auto px-6">
+<h2 class="font-headline italic text-2xl text-primary/40 mb-4">Seniors 2026 — The Living Archive</h2>
+<p class="text-on-surface-variant/60 text-sm italic">Keep the memories alive.</p>
+</div>
+</footer>
+</body></html>
