@@ -1,5 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
-import MemoryFeedClient from "./MemoryFeedClient";
+import MemoryFeedExperience from "@/components/memory-feed/MemoryFeedExperience";
 
 export default async function MemoryFeedPage() {
   const supabase = await createClient();
@@ -10,5 +10,19 @@ export default async function MemoryFeedPage() {
     .select("*, profiles(full_name, photo_url)")
     .eq("status", "approved")
     .order("created_at", { ascending: false });
-  return <MemoryFeedClient items={items ?? []} uploadsEnabled={settings?.uploads_enabled ?? true} userId={user!.id} />;
+  const { data: likes } = await supabase.from("memory_likes").select("memory_id, user_id");
+  const { data: comments } = await supabase
+    .from("memory_comments")
+    .select("id, memory_id, content, created_at, user_id, profiles:user_id(full_name, photo_url)")
+    .order("created_at", { ascending: true });
+
+  return (
+    <MemoryFeedExperience
+      items={items ?? []}
+      uploadsEnabled={settings?.uploads_enabled ?? true}
+      userId={user!.id}
+      initialLikes={likes ?? []}
+      initialComments={comments ?? []}
+    />
+  );
 }

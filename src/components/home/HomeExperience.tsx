@@ -35,9 +35,24 @@ function useCountdown(targetDate: string) {
 export default function HomeExperience({
   settings,
   profile,
+  stats,
+  recentMemories,
 }: {
   settings: PlatformSettings | null;
   profile: Pick<Profile, "full_name" | "role"> | null;
+  stats: {
+    memories: number;
+    wallPosts: number;
+    classmates: number;
+  };
+  recentMemories: Array<{
+    id: string;
+    caption: string | null;
+    media_url: string;
+    media_type: string;
+    created_at: string;
+    profiles: { full_name: string | null; photo_url: string | null } | { full_name: string | null; photo_url: string | null }[] | null;
+  }>;
 }) {
   const grad = settings?.graduation_date ?? "2026-05-24";
   const timer = useCountdown(grad);
@@ -118,6 +133,11 @@ export default function HomeExperience({
     { href: "/wall", label: "Post on the wall", icon: "edit_square" },
     { href: "/memory-feed", label: "Open memories", icon: "photo_library" },
     { href: "/time-capsule", label: "Write to future me", icon: "hourglass_top" },
+  ];
+  const socialStats = [
+    { label: "Classmates", value: stats.classmates, tone: "text-primary" },
+    { label: "Memories", value: stats.memories, tone: "text-secondary" },
+    { label: "Wall Posts", value: stats.wallPosts, tone: "text-tertiary" },
   ];
 
   const staggerContainer: Variants = {
@@ -308,6 +328,64 @@ export default function HomeExperience({
               </Link>
             ))}
           </motion.div>
+        </div>
+      </motion.section>
+
+      <motion.section
+        initial={{ opacity: 0, y: 24 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.2 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+        className="px-4 py-8 md:px-8"
+      >
+        <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
+          <div className="section-shell rounded-[2rem] px-6 py-8 md:px-8">
+            <p className="section-kicker mb-4">Live pulse</p>
+            <h2 className="serif-heading text-4xl font-semibold text-on-surface">The app should feel active the second it opens.</h2>
+            <p className="mt-4 text-base leading-7 text-on-surface-variant">
+              These numbers now come from the actual platform so the homepage reads like a living space, not a static poster.
+            </p>
+            <div className="mt-6 grid gap-4 sm:grid-cols-3 lg:grid-cols-1">
+              {socialStats.map((stat) => (
+                <div key={stat.label} className="spotlight-card rounded-[1.5rem] border border-outline-variant/15 px-5 py-5">
+                  <p className="text-[11px] font-extrabold uppercase tracking-[0.24em] text-on-surface-variant">{stat.label}</p>
+                  <p className={`mt-3 text-4xl font-black ${stat.tone}`}>{stat.value}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="section-shell rounded-[2rem] px-6 py-8 md:px-8">
+            <div className="mb-6 flex items-center justify-between">
+              <div>
+                <p className="section-kicker mb-3">Fresh moments</p>
+                <h2 className="serif-heading text-4xl font-semibold text-on-surface">What classmates posted recently</h2>
+              </div>
+              <Link href="/memory-feed" className="rounded-full bg-stone-900 px-5 py-3 text-xs font-black uppercase tracking-[0.18em] text-white">
+                Open feed
+              </Link>
+            </div>
+            <div className="grid gap-4 md:grid-cols-3">
+              {recentMemories.map((memory) => {
+                const author = Array.isArray(memory.profiles) ? memory.profiles[0] : memory.profiles;
+                return (
+                  <Link key={memory.id} href="/memory-feed" className="group overflow-hidden rounded-[1.5rem] bg-white">
+                    <div className="relative h-56 overflow-hidden">
+                      {memory.media_type === "video" ? (
+                        <video src={memory.media_url} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" muted autoPlay loop playsInline />
+                      ) : (
+                        <img src={memory.media_url} alt={memory.caption ?? author?.full_name ?? "Memory"} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                      )}
+                    </div>
+                    <div className="px-4 py-4">
+                      <p className="text-[11px] font-extrabold uppercase tracking-[0.22em] text-on-surface-variant">{author?.full_name ?? "Student"}</p>
+                      <p className="mt-2 line-clamp-2 text-sm leading-6 text-on-surface">{memory.caption ?? "A new memory was just added to the class archive."}</p>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
         </div>
       </motion.section>
 
