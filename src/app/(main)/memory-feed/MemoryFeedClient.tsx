@@ -13,6 +13,133 @@ type Item = {
   profiles: Profile | null;
 };
 
+async function compressImageFile(input: File, opts?: { maxDim?: number; quality?: number }) {
+  const maxDim = opts?.maxDim ?? 1920;
+  const quality = opts?.quality ?? 0.82;
+
+  const bitmap = await createImageBitmap(input);
+  const scale = Math.min(1, maxDim / Math.max(bitmap.width, bitmap.height));
+  const targetW = Math.max(1, Math.round(bitmap.width * scale));
+  const targetH = Math.max(1, Math.round(bitmap.height * scale));
+
+  const canvas = document.createElement("canvas");
+  canvas.width = targetW;
+  canvas.height = targetH;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) throw new Error("Canvas not supported");
+  ctx.drawImage(bitmap, 0, 0, targetW, targetH);
+
+  const blob: Blob = await new Promise((resolve, reject) => {
+    canvas.toBlob(
+      (b) => {
+        if (!b) reject(new Error("Failed to compress image"));
+        else resolve(b);
+      },
+      "image/jpeg",
+      quality
+    );
+  });
+
+  const outName = input.name.replace(/\.[^.]+$/, "") + ".jpg";
+  return new File([blob], outName, { type: "image/jpeg" });
+}
+
+async function compressVideoFile(
+  input: File,
+  opts?: {
+    maxWidth?: number;
+    maxHeight?: number;
+    videoBitsPerSecond?: number;
+    mimeType?: string;
+  }
+) {
+  const maxWidth = opts?.maxWidth ?? 1280;
+  const maxHeight = opts?.maxHeight ?? 720;
+  const videoBitsPerSecond = opts?.videoBitsPerSecond ?? 1_500_000;
+
+  const requested = opts?.mimeType;
+  const mimeType =
+    (requested && MediaRecorder.isTypeSupported(requested) && requested) ||
+    (MediaRecorder.isTypeSupported("video/webm;codecs=vp9,opus") && "video/webm;codecs=vp9,opus") ||
+    (MediaRecorder.isTypeSupported("video/webm;codecs=vp8,opus") && "video/webm;codecs=vp8,opus") ||
+    (MediaRecorder.isTypeSupported("video/webm") && "video/webm") ||
+    "";
+
+  if (!mimeType) return input;
+
+  const url = URL.createObjectURL(input);
+  try {
+    const video = document.createElement("video");
+    video.src = url;
+    video.muted = true;
+    video.playsInline = true;
+    video.preload = "auto";
+
+    await new Promise<void>((resolve, reject) => {
+      const onLoaded = () => resolve();
+      const onErr = () => reject(new Error("Failed to load video"));
+      video.addEventListener("loadedmetadata", onLoaded, { once: true });
+      video.addEventListener("error", onErr, { once: true });
+    });
+
+    const srcW = video.videoWidth || 0;
+    const srcH = video.videoHeight || 0;
+    if (!srcW || !srcH) return input;
+
+    const scale = Math.min(1, maxWidth / srcW, maxHeight / srcH);
+    const outW = Math.max(2, Math.round(srcW * scale));
+    const outH = Math.max(2, Math.round(srcH * scale));
+
+    const canvas = document.createElement("canvas");
+    canvas.width = outW;
+    canvas.height = outH;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return input;
+
+    const stream = canvas.captureStream(30);
+    const recorder = new MediaRecorder(stream, {
+      mimeType,
+      videoBitsPerSecond,
+    });
+
+    const chunks: BlobPart[] = [];
+    recorder.ondataavailable = (e) => {
+      if (e.data && e.data.size > 0) chunks.push(e.data);
+    };
+
+    const done = new Promise<Blob>((resolve, reject) => {
+      recorder.onstop = () => resolve(new Blob(chunks, { type: mimeType }));
+      recorder.onerror = () => reject(new Error("Video compression failed"));
+    });
+
+    await video.play();
+    recorder.start(250);
+
+    const drawFrame = () => {
+      if (video.ended || video.paused) return;
+      ctx.drawImage(video, 0, 0, outW, outH);
+      requestAnimationFrame(drawFrame);
+    };
+    requestAnimationFrame(drawFrame);
+
+    await new Promise<void>((resolve) => {
+      video.addEventListener("ended", () => resolve(), { once: true });
+    });
+
+    recorder.stop();
+    const outBlob = await done;
+    if (!outBlob.size) return input;
+
+    const outName = input.name.replace(/\.[^.]+$/, "") + ".webm";
+    const out = new File([outBlob], outName, { type: outBlob.type || "video/webm" });
+    return out.size < input.size ? out : input;
+  } catch {
+    return input;
+  } finally {
+    URL.revokeObjectURL(url);
+  }
+}
+
 function timeAgo(d: string) {
   const diff = Date.now() - new Date(d).getTime();
   const m = Math.floor(diff / 60000);
@@ -303,6 +430,7 @@ export default function MemoryFeedClient({ items, uploadsEnabled, userId }: { it
   // Likes
   const [likeCounts, setLikeCounts] = useState<Record<string, number>>({});
   const [userLikes, setUserLikes] = useState<Set<string>>(new Set());
+  const userLikesRef = useRef<Set<string>>(new Set());
 
   // Comments
   const [comments, setComments] = useState<Record<string, Comment[]>>({});
@@ -352,16 +480,36 @@ export default function MemoryFeedClient({ items, uploadsEnabled, userId }: { it
     const channel = supabase
       .channel('memory-social-updates')
       .on('postgres_changes', { event: '*', schema: 'public', table: 'memory_likes' }, (payload) => {
-        // SKIP if it's our own action (already handled optimistically)
         const eventUserId = payload.eventType === 'DELETE' ? payload.old?.user_id : payload.new?.user_id;
-        if (eventUserId === userId) return;
 
         if (payload.eventType === 'INSERT') {
           const memoryId = payload.new.memory_id;
           setLikeCounts(prev => ({ ...prev, [memoryId]: (prev[memoryId] || 0) + 1 }));
+
+          if (eventUserId === userId) {
+            const alreadyLiked = userLikesRef.current.has(memoryId);
+            if (!alreadyLiked) {
+              setUserLikes(prev => {
+                const n = new Set(prev);
+                n.add(memoryId);
+                return n;
+              });
+            }
+          }
         } else if (payload.eventType === 'DELETE') {
           const memoryId = payload.old.memory_id;
           setLikeCounts(prev => ({ ...prev, [memoryId]: Math.max(0, (prev[memoryId] || 1) - 1) }));
+
+          if (eventUserId === userId) {
+            const alreadyUnliked = !userLikesRef.current.has(memoryId);
+            if (!alreadyUnliked) {
+              setUserLikes(prev => {
+                const n = new Set(prev);
+                n.delete(memoryId);
+                return n;
+              });
+            }
+          }
         }
       })
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'memory_comments' }, async (payload) => {
@@ -393,6 +541,10 @@ export default function MemoryFeedClient({ items, uploadsEnabled, userId }: { it
       supabase.removeChannel(channel);
     };
   }, [userId]);
+
+  useEffect(() => {
+    userLikesRef.current = userLikes;
+  }, [userLikes]);
 
   async function toggleLike(memoryId: string) {
     const supabase = createClient();
@@ -450,9 +602,26 @@ export default function MemoryFeedClient({ items, uploadsEnabled, userId }: { it
     if (!file) { setError("Please select a file"); return; }
     setLoading(true); setError("");
     const supabase = createClient();
-    const ext = file.name.split(".").pop();
+
+    let uploadFile = file;
+    try {
+      if (file.type.startsWith("image/")) {
+        uploadFile = await compressImageFile(file);
+      } else if (file.type.startsWith("video/")) {
+        uploadFile = await compressVideoFile(file);
+      }
+    } catch (err) {
+      console.error(err);
+      setError("Failed to compress media");
+      setLoading(false);
+      return;
+    }
+
+    const ext = uploadFile.name.split(".").pop();
     const path = `${userId}/${Date.now()}.${ext}`;
-    const { error: upErr } = await supabase.storage.from("memories-media").upload(path, file);
+    const { error: upErr } = await supabase.storage.from("memories-media").upload(path, uploadFile, {
+      contentType: uploadFile.type,
+    });
     if (upErr) { setError(upErr.message); setLoading(false); return; }
     const { data: urlData } = supabase.storage.from("memories-media").getPublicUrl(path);
     const mediaType = file.type.startsWith("video") ? "video" : "photo";
