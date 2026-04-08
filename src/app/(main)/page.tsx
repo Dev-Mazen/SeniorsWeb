@@ -1,5 +1,5 @@
 ﻿import { createClient } from "@/lib/supabase/server";
-import HomeClient from "./HomeClient";
+import HomeExperience from "@/components/home/HomeExperience";
 
 export default async function HomePage() {
   const supabase = await createClient();
@@ -7,5 +7,5 @@ export default async function HomePage() {
   const { data: { user } } = await supabase.auth.getUser();
   const { data: profile } = await supabase.from("profiles").select("full_name, role").eq("id", user!.id).single();
 
-  return <HomeClient settings={settings} profile={profile} />;
+  return <HomeExperience settings={settings} profile={profile} />;
 }

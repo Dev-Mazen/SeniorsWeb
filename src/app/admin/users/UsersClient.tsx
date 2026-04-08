@@ -19,6 +19,8 @@ export default function UsersClient({ users: initial }: { users: Profile[] }) {
   const [editData, setEditData] = useState<{ full_name: string; role: string }>({ full_name: "", role: "student" });
   const [loading, setLoading] = useState<string | null>(null);
   const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState<"all" | "active" | "inactive">("all");
+  const [actionNotice, setActionNotice] = useState("");
 
   // Add user modal
   const [showAdd, setShowAdd] = useState(false);
@@ -32,8 +34,11 @@ export default function UsersClient({ users: initial }: { users: Profile[] }) {
 
   const filtered = users.filter(
     (u) =>
-      (u.full_name ?? "").toLowerCase().includes(search.toLowerCase()) ||
-      (u.email ?? "").toLowerCase().includes(search.toLowerCase())
+      (
+        (u.full_name ?? "").toLowerCase().includes(search.toLowerCase()) ||
+        (u.email ?? "").toLowerCase().includes(search.toLowerCase())
+      ) &&
+      (statusFilter === "all" || (statusFilter === "active" ? u.is_active : !u.is_active))
   );
 
   function startEdit(user: Profile) {
@@ -51,6 +56,8 @@ export default function UsersClient({ users: initial }: { users: Profile[] }) {
     setUsers((prev) =>
       prev.map((u) => (u.id === id ? { ...u, full_name: editData.full_name, role: editData.role } : u))
     );
+    setActionNotice("User profile updated.");
+    setTimeout(() => setActionNotice(""), 2500);
     setEditingId(null);
     setLoading(null);
   }
@@ -63,6 +70,8 @@ export default function UsersClient({ users: initial }: { users: Profile[] }) {
       .update({ is_active: !user.is_active })
       .eq("id", user.id);
     setUsers((prev) => prev.map((u) => (u.id === user.id ? { ...u, is_active: !u.is_active } : u)));
+    setActionNotice(`User ${user.is_active ? "deactivated" : "activated"}.`);
+    setTimeout(() => setActionNotice(""), 2500);
     setLoading(null);
   }
 
@@ -72,6 +81,8 @@ export default function UsersClient({ users: initial }: { users: Profile[] }) {
     const supabase = createClient();
     await supabase.from("profiles").delete().eq("id", user.id);
     setUsers((prev) => prev.filter((u) => u.id !== user.id));
+    setActionNotice("User deleted.");
+    setTimeout(() => setActionNotice(""), 2500);
     setLoading(null);
   }
 
@@ -133,6 +144,18 @@ export default function UsersClient({ users: initial }: { users: Profile[] }) {
               onChange={(e) => setSearch(e.target.value)}
             />
           </div>
+          <div className="flex items-center rounded-full bg-surface-container-high p-1">
+            {(["all", "active", "inactive"] as const).map((f) => (
+              <button
+                key={f}
+                type="button"
+                onClick={() => setStatusFilter(f)}
+                className={`px-3 py-1.5 rounded-full text-xs font-bold capitalize transition-colors ${statusFilter === f ? "bg-primary text-white" : "text-on-surface-variant"}`}
+              >
+                {f}
+              </button>
+            ))}
+          </div>
           <button
             onClick={() => setShowAdd(true)}
             className="flex items-center gap-2 px-5 py-2.5 bg-primary text-white rounded-full font-bold text-sm hover:bg-primary/90 transition-all shadow-md"
@@ -142,6 +165,11 @@ export default function UsersClient({ users: initial }: { users: Profile[] }) {
           </button>
         </div>
       </header>
+      {actionNotice && (
+        <div className="mb-4 rounded-xl border border-green-200 bg-green-50 text-green-700 text-sm font-semibold px-4 py-3">
+          {actionNotice}
+        </div>
+      )}
 
       {/* Add User Modal */}
       {showAdd && (

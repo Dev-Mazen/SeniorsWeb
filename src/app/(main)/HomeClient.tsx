@@ -1,7 +1,8 @@
+/* eslint-disable */
 "use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { motion, type Variants } from "framer-motion";
+import { motion, type Variants, useScroll, useTransform } from "framer-motion";
 import type { PlatformSettings, Profile } from "@/types/database";
 
 function useCountdown(targetDate: string) {
@@ -27,6 +28,10 @@ function useCountdown(targetDate: string) {
 export default function HomeClient({ settings, profile }: { settings: PlatformSettings | null; profile: Pick<Profile,"full_name"|"role"> | null }) {
   const grad = settings?.graduation_date ?? "2026-05-24";
   const timer = useCountdown(grad);
+  const { scrollYProgress } = useScroll();
+  const heroImageY = useTransform(scrollYProgress, [0, 0.35], [0, 120]);
+  const heroContentY = useTransform(scrollYProgress, [0, 0.25], [0, -40]);
+  const heroContentOpacity = useTransform(scrollYProgress, [0, 0.22], [1, 0.5]);
 
   const staggerContainer: Variants = {
     hidden: { opacity: 0 },
@@ -50,13 +55,17 @@ export default function HomeClient({ settings, profile }: { settings: PlatformSe
             initial={{ scale: 1.1, opacity: 0 }}
             animate={{ scale: 1.05, opacity: 0.6 }}
             transition={{ duration: 2, ease: "easeOut" }}
+            style={{ y: heroImageY }}
             alt="Senior Year Hero" 
             className="w-full h-full object-cover" 
             src="/stitch-assets/home_img_0.jpg"
           />
         </div>
         <div className="absolute inset-0 hero-gradient"></div>
-        <div className="relative z-10 h-full flex flex-col items-center justify-center text-center px-4">
+        <motion.div
+          style={{ y: heroContentY, opacity: heroContentOpacity }}
+          className="relative z-10 h-full flex flex-col items-center justify-center text-center px-4"
+        >
           <motion.span initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="text-primary font-body tracking-[0.3em] uppercase text-sm mb-6 font-bold">
             The Final Chapter
           </motion.span>
@@ -71,11 +80,17 @@ export default function HomeClient({ settings, profile }: { settings: PlatformSe
               Start Curating
             </Link>
           </motion.div>
-        </div>
+        </motion.div>
       </section>
 
       {/* Countdown Section */}
-      <section className="py-24 px-8 bg-surface-container-low">
+      <motion.section
+        initial={{ opacity: 0, y: 28 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.2 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+        className="py-24 px-8 bg-surface-container-low"
+      >
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-12">
           <div className="max-w-md">
             <h2 className="text-4xl md:text-5xl font-black serif-heading text-on-surface leading-tight mb-4">The Final Countdown</h2>
@@ -95,10 +110,16 @@ export default function HomeClient({ settings, profile }: { settings: PlatformSe
             ))}
           </div>
         </div>
-      </section>
+      </motion.section>
 
       {/* Navigation Cards (Asymmetric Editorial Grid) */}
-      <section className="py-32 px-8 max-w-full overflow-hidden">
+      <motion.section
+        initial={{ opacity: 0, y: 28 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.15 }}
+        transition={{ duration: 0.7, ease: "easeOut" }}
+        className="py-32 px-8 max-w-full overflow-hidden"
+      >
         <motion.div variants={staggerContainer} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.1 }} className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-12 items-end">
           
           {/* Card 1: Directory */}
@@ -167,16 +188,22 @@ export default function HomeClient({ settings, profile }: { settings: PlatformSe
           </Link>
           
         </motion.div>
-      </section>
+      </motion.section>
 
       {/* Signature Editorial Quote */}
-      <section className="py-24 bg-surface flex flex-col items-center justify-center text-center px-8 border-y border-outline-variant/10">
+      <motion.section
+        initial={{ opacity: 0, y: 24 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.25 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+        className="py-24 bg-surface flex flex-col items-center justify-center text-center px-8 border-y border-outline-variant/10"
+      >
         <span className="material-symbols-outlined text-primary mb-8 text-5xl" style={{fontVariationSettings:"'FILL' 1"}}>format_quote</span>
         <blockquote className="text-3xl md:text-5xl font-black serif-heading text-on-surface max-w-4xl leading-tight mb-8">
             "Yesterday is but today's memory, and tomorrow is today's dream."
         </blockquote>
         <cite className="not-italic font-label tracking-widest text-sm uppercase text-primary font-bold">— Khalil Gibran</cite>
-      </section>
+      </motion.section>
 
       {/* Footer */}
       <footer className="bg-surface-container-highest py-20 px-8">

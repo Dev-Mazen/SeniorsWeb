@@ -19,7 +19,7 @@ export default async function MainLayout({ children }: { children: React.ReactNo
   return (
     <div className="min-h-screen bg-surface">
       <Navbar role={profile?.role} />
-      <main className="pt-16 pb-24 md:pb-0">{children}</main>
+      <main className="overflow-x-hidden pt-20 pb-28 md:pb-0">{children}</main>
       <MobileNav />
     </div>
   );

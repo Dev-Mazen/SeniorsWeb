@@ -12,6 +12,7 @@ type Item = {
   created_at: string;
   profiles: Profile | null;
 };
+type LiveNotice = { id: string; text: string };
 
 async function compressImageFile(input: File, opts?: { maxDim?: number; quality?: number }) {
   const maxDim = opts?.maxDim ?? 1920;
@@ -439,6 +440,7 @@ export default function MemoryFeedClient({ items, uploadsEnabled, userId }: { it
 
   // Share
   const [shareItem, setShareItem] = useState<Item | null>(null);
+  const [liveNotices, setLiveNotices] = useState<LiveNotice[]>([]);
 
   // Load likes & comments on mount
   useEffect(() => {
@@ -524,6 +526,10 @@ export default function MemoryFeedClient({ items, uploadsEnabled, userId }: { it
           .single();
         
         if (newComment) {
+          setLiveNotices((prev) => {
+            const next = [{ id: `${Date.now()}-${Math.random()}`, text: "New comment added on a memory." }, ...prev].slice(0, 3);
+            return next;
+          });
           setComments(prev => {
             const memoryId = newComment.memory_id;
             const existing = prev[memoryId] || [];
@@ -541,6 +547,14 @@ export default function MemoryFeedClient({ items, uploadsEnabled, userId }: { it
       supabase.removeChannel(channel);
     };
   }, [userId]);
+
+  useEffect(() => {
+    if (liveNotices.length === 0) return;
+    const t = setTimeout(() => {
+      setLiveNotices((prev) => prev.slice(0, -1));
+    }, 2800);
+    return () => clearTimeout(t);
+  }, [liveNotices]);
 
   useEffect(() => {
     userLikesRef.current = userLikes;
@@ -675,6 +689,16 @@ export default function MemoryFeedClient({ items, uploadsEnabled, userId }: { it
       )}
 
       <div className="max-w-7xl mx-auto px-6 pt-12 pb-32">
+        {liveNotices.length > 0 && (
+          <div className="fixed right-5 top-20 z-[120] space-y-2">
+            {liveNotices.map((notice) => (
+              <div key={notice.id} className="rounded-xl border border-primary/20 bg-surface-container-lowest px-4 py-3 text-sm font-semibold text-on-surface shadow-xl">
+                {notice.text}
+              </div>
+            ))}
+          </div>
+        )}
+
         {/* Header */}
         <header className="mb-10">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">

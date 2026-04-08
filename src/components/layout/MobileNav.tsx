@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -13,17 +13,18 @@ const tabs = [
 export default function MobileNav() {
   const pathname = usePathname();
   return (
-    <nav className="md:hidden fixed bottom-0 left-0 w-full z-[100] flex justify-around items-center px-4 py-3 border-t border-stone-200/10 bg-white/80 backdrop-blur-2xl shadow-[0_-8px_30px_rgb(0,0,0,0.04)] rounded-t-[2rem]">
+    <nav className="fixed bottom-3 left-1/2 z-[100] flex w-[calc(100%-1.5rem)] max-w-md -translate-x-1/2 items-center justify-around rounded-[2rem] border border-white/60 bg-white/80 px-3 py-2 shadow-[0_18px_40px_-20px_rgba(28,28,25,0.3)] backdrop-blur-2xl md:hidden">
       {tabs.map(({ href, icon, label }) => (
         <Link
           key={href}
           href={href}
-          className={`flex flex-col items-center justify-center px-3 py-1 rounded-full transition-all ${
-            pathname === href ? "bg-orange-100 text-primary" : "text-stone-400"
+          className={`relative flex min-w-[58px] flex-col items-center justify-center rounded-[1.25rem] px-3 py-2 transition-all ${
+            pathname === href ? "bg-stone-900 text-white shadow-lg shadow-stone-900/15" : "text-stone-500"
           }`}
         >
-          <span className="material-symbols-outlined text-xl">{icon}</span>
-          <span className="text-[9px] font-bold uppercase tracking-widest mt-1">{label}</span>
+          {pathname === href && <span className="absolute -top-1 h-1.5 w-1.5 rounded-full bg-primary" />}
+          <span className="material-symbols-outlined text-[22px]">{icon}</span>
+          <span className="mt-1 text-[9px] font-bold uppercase tracking-[0.18em]">{label}</span>
         </Link>
       ))}
     </nav>

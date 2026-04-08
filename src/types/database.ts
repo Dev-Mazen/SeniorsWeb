@@ -237,6 +237,29 @@ export type Database = {
           content?: string
         }
       }
+      memory_comments: {
+        Row: {
+          id: string
+          memory_id: string
+          user_id: string
+          content: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          memory_id: string
+          user_id: string
+          content: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          memory_id?: string
+          user_id?: string
+          content?: string
+          created_at?: string
+        }
+      }
       likes: {
         Row: {
           id: string
@@ -249,8 +272,28 @@ export type Database = {
           user_id: string
         }
         Update: Record<string, never>
+        }
       }
-    }
+      memory_likes: {
+        Row: {
+          id: string
+          memory_id: string
+          user_id: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          memory_id: string
+          user_id: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          memory_id?: string
+          user_id?: string
+          created_at?: string
+        }
+      }
     Views: Record<string, never>
     Functions: Record<string, never>
     Enums: Record<string, never>
@@ -270,3 +313,5 @@ export type TeacherMessage = Database["public"]["Tables"]["teacher_messages"]["R
 export type TimeCapsule = Database["public"]["Tables"]["time_capsules"]["Row"]
 export type Comment = Database["public"]["Tables"]["comments"]["Row"]
 export type Like = Database["public"]["Tables"]["likes"]["Row"]
+export type MemoryComment = Database["public"]["Tables"]["memory_comments"]["Row"]
+export type MemoryLike = Database["public"]["Tables"]["memory_likes"]["Row"]

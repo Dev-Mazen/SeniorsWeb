@@ -1,5 +1,5 @@
-﻿"use client";
-import { useState } from "react";
+"use client";
+import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 
 type Post = { id: string; content: string; media_url: string | null; created_at: string; profiles: { full_name: string | null; photo_url: string | null } | null };
@@ -43,10 +43,43 @@ const COLORS = [
 ];
 
 export default function WallClient({ posts, wallEnabled, userId }: { posts: Post[]; wallEnabled: boolean; userId: string }) {
+  const [livePosts, setLivePosts] = useState(posts);
   const [content, setContent] = useState("");
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
+  const [liveNotice, setLiveNotice] = useState<string | null>(null);
+
+  useEffect(() => {
+    const supabase = createClient();
+    const channel = supabase
+      .channel("wall-live")
+      .on("postgres_changes", { event: "INSERT", schema: "public", table: "wall_posts" }, async (payload) => {
+        const newPost = payload.new as { id?: string; status?: string; author_id?: string };
+        if (!newPost?.id || newPost.status !== "approved") return;
+
+        const { data: fullPost } = await supabase
+          .from("wall_posts")
+          .select("id, content, media_url, created_at, profiles:author_id(full_name, photo_url)")
+          .eq("id", newPost.id)
+          .single();
+
+        if (!fullPost) return;
+        setLivePosts((prev) => {
+          if (prev.some((p) => p.id === fullPost.id)) return prev;
+          return [fullPost as Post, ...prev];
+        });
+        if (newPost.author_id !== userId) {
+          setLiveNotice("A new wall memory was just posted.");
+          setTimeout(() => setLiveNotice(null), 3500);
+        }
+      })
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [userId]);
 
   async function handlePost(e: React.FormEvent) {
     e.preventDefault();
@@ -131,14 +164,20 @@ export default function WallClient({ posts, wallEnabled, userId }: { posts: Post
         )}
 
         {/* Posts grid */}
-        {posts.length === 0 ? (
+        {liveNotice && (
+          <div className="max-w-xl mx-auto mb-8 rounded-full bg-primary/10 border border-primary/20 px-4 py-2 text-sm text-primary font-semibold text-center">
+            {liveNotice}
+          </div>
+        )}
+
+        {livePosts.length === 0 ? (
           <div className="text-center py-20 relative z-10">
             <span className="material-symbols-outlined text-6xl text-outline/40">forum</span>
             <p className="text-on-surface-variant mt-4 font-medium">No posts yet. Be the first to leave your mark!</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-            {posts.map((post, idx) => {
+            {livePosts.map((post, idx) => {
               const styleIdx = idx % COLORS.length;
               const { bg, border, textIcon, textP, rotate } = COLORS[styleIdx];
               
