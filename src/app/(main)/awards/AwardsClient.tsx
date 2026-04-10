@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 
@@ -16,6 +16,7 @@ export default function AwardsClient({ questions, profiles, myVotes, votingEnabl
     return map;
   });
   const [saving, setSaving] = useState<string | null>(null);
+  const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [search, setSearch] = useState<Record<string, string>>({});
 
   async function castVote(questionId: string, nomineeId: string) {
@@ -29,6 +30,7 @@ export default function AwardsClient({ questions, profiles, myVotes, votingEnabl
     }
     setVotes(prev => ({ ...prev, [questionId]: nomineeId }));
     setSaving(null);
+    setOpenDropdown(null);
   }
 
   function filtered(qId: string) {
@@ -55,6 +57,7 @@ export default function AwardsClient({ questions, profiles, myVotes, votingEnabl
           const myVote = votes[q.id];
           const qResults = results?.[q.id] ?? [];
           const winner = awardsRevealed ? profiles.find(p => p.id === qResults[0]?.nominee_id) : null;
+          const votedProfile = profiles.find(p => p.id === myVote);
 
           return (
             <div key={q.id} className="bg-surface-container-lowest rounded-xl p-6 editorial-shadow border border-outline-variant/10">
@@ -74,26 +77,51 @@ export default function AwardsClient({ questions, profiles, myVotes, votingEnabl
                   </div>
                 </div>
               ) : votingEnabled ? (
-                <>
-                  <input
-                    className="w-full p-3 bg-surface-container-high rounded-xl border-none focus:ring-2 focus:ring-primary/20 text-sm mb-4"
-                    placeholder="Search classmates..."
-                    value={search[q.id] ?? ""}
-                    onChange={e => setSearch(prev => ({ ...prev, [q.id]: e.target.value }))}
-                  />
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 max-h-60 overflow-y-auto no-scrollbar">
-                    {filtered(q.id).map(p => (
-                      <button key={p.id} onClick={() => castVote(q.id, p.id)} disabled={saving === q.id || p.id === userId}
-                        className={`flex items-center gap-2 p-3 rounded-xl text-left transition-all text-sm font-medium ${myVote === p.id ? "bg-primary text-white" : "bg-surface-container-high hover:bg-surface-container text-on-surface"} disabled:opacity-40`}>
-                        <div className="w-8 h-8 rounded-full bg-surface-container-highest flex-shrink-0 flex items-center justify-center text-xs font-black">
-                          {(p.full_name ?? "?")[0]}
-                        </div>
-                        <span className="truncate">{p.full_name}</span>
-                        {myVote === p.id && <span className="material-symbols-outlined text-sm ml-auto">check</span>}
-                      </button>
-                    ))}
+                <div className="relative">
+                  <div 
+                    className={`flex justify-between items-center w-full p-4 rounded-xl cursor-pointer transition-colors border ${openDropdown === q.id ? 'bg-surface border-primary/30 ring-2 ring-primary/20' : 'bg-surface-container-high hover:bg-surface-container border-transparent'}`}
+                    onClick={() => setOpenDropdown(openDropdown === q.id ? null : q.id)}
+                  >
+                    <span className={`font-medium ${votedProfile ? 'text-on-surface' : 'text-on-surface-variant'}`}>
+                      {votedProfile ? votedProfile.full_name : "Select a classmate..."}
+                    </span>
+                    <span className="material-symbols-outlined text-outline">
+                      {openDropdown === q.id ? "expand_less" : "expand_more"}
+                    </span>
                   </div>
-                </>
+
+                  {openDropdown === q.id && (
+                    <div className="absolute top-16 left-0 w-full z-50 bg-surface-container-lowest border border-outline-variant/20 shadow-xl rounded-xl p-2 animate-in fade-in zoom-in-95 duration-200">
+                      <div className="relative mb-2">
+                        <span className="material-symbols-outlined absolute left-3 top-3 text-outline text-sm">search</span>
+                        <input
+                          autoFocus
+                          className="w-full pl-9 pr-3 py-2 bg-surface-container-high rounded-lg border-none focus:ring-1 focus:ring-primary/20 text-sm placeholder:text-outline/60 outline-none"
+                          placeholder="Search classmates..."
+                          value={search[q.id] ?? ""}
+                          onChange={e => setSearch(prev => ({ ...prev, [q.id]: e.target.value }))}
+                          onClick={e => e.stopPropagation()}
+                        />
+                      </div>
+                      <div className="max-h-52 overflow-y-auto no-scrollbar space-y-1 pr-1">
+                        {filtered(q.id).length === 0 ? (
+                          <div className="p-3 text-sm text-on-surface-variant text-center">No classmates found.</div>
+                        ) : (
+                          filtered(q.id).map(p => (
+                            <button key={p.id} onClick={(e) => { e.stopPropagation(); castVote(q.id, p.id); }} disabled={saving === q.id || p.id === userId}
+                              className={`w-full flex items-center gap-3 p-2.5 rounded-lg text-left transition-all text-sm font-medium ${myVote === p.id ? "bg-primary/10 text-primary" : "hover:bg-surface-container text-on-surface"} disabled:opacity-40`}>
+                              <div className="w-8 h-8 rounded-full bg-surface-container-highest flex-shrink-0 flex items-center justify-center text-xs font-black">
+                                {(p.full_name ?? "?")[0]}
+                              </div>
+                              <span className="truncate flex-1">{p.full_name}</span>
+                              {myVote === p.id && <span className="material-symbols-outlined text-[18px]">check</span>}
+                            </button>
+                          ))
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </div>
               ) : (
                 <p className="text-on-surface-variant text-sm italic">Voting closed.</p>
               )}

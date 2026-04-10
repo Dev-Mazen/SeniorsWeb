@@ -29,7 +29,7 @@ export default function SettingsClient({ settings: initial }: { settings: Platfo
   }
 
   const toggles: { key: keyof PlatformSettings; label: string; desc: string }[] = [
-    { key: "wall_posts_enabled", label: "The Wall Posts", desc: "Allow students to post on The Wall" },
+    { key: "wall_enabled", label: "The Wall Posts", desc: "Allow students to post on The Wall" },
     { key: "uploads_enabled", label: "Memory Uploads", desc: "Allow photo/video uploads to Memory Feed" },
     { key: "voting_enabled", label: "Awards Voting", desc: "Enable students to cast votes for awards" },
     { key: "awards_revealed", label: "Reveal Awards Results", desc: "Show voting winners publicly to all students" },

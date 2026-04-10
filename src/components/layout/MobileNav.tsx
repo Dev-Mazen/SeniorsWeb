@@ -4,16 +4,17 @@ import { usePathname } from "next/navigation";
 
 const tabs = [
   { href: "/", icon: "home", label: "Home" },
+  { href: "/directory", icon: "groups", label: "Directory" },
   { href: "/wall", icon: "dashboard_customize", label: "Wall" },
   { href: "/memory-feed", icon: "auto_awesome", label: "Memories" },
-  { href: "/directory", icon: "group", label: "Directory" },
-  { href: "/time-capsule", icon: "hourglass_top", label: "Capsule" },
+  { href: "/awards", icon: "emoji_events", label: "Awards" },
+  { href: "/hall-of-thanks", icon: "volunteer_activism", label: "Thanks" },
 ];
 
-export default function MobileNav() {
+export default function MobileNav({ photoUrl }: { photoUrl?: string | null }) {
   const pathname = usePathname();
   return (
-    <nav className="fixed bottom-3 left-1/2 z-[100] flex w-[calc(100%-1.5rem)] max-w-md -translate-x-1/2 items-center justify-around rounded-[2rem] border border-white/60 bg-white/80 px-3 py-2 shadow-[0_18px_40px_-20px_rgba(28,28,25,0.3)] backdrop-blur-2xl md:hidden">
+    <nav className="fixed bottom-3 left-1/2 z-[100] flex w-[calc(100%-1.5rem)] max-w-md -translate-x-1/2 items-center gap-1 rounded-[2rem] border border-white/60 bg-white/80 px-3 py-2 shadow-[0_18px_40px_-20px_rgba(28,28,25,0.3)] backdrop-blur-2xl md:hidden overflow-x-auto hide-scrollbar">
       {tabs.map(({ href, icon, label }) => (
         <Link
           key={href}

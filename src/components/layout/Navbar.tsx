@@ -5,28 +5,20 @@ import { createClient } from "@/lib/supabase/client";
 import { useEffect, useMemo, useState } from "react";
 
 const navLinks = [
-  { href: "/", label: "Home" },
   { href: "/directory", label: "Directory" },
   { href: "/wall", label: "The Wall" },
   { href: "/memory-feed", label: "Memory Feed" },
   { href: "/awards", label: "Awards" },
   { href: "/hall-of-thanks", label: "Hall of Thanks" },
-  { href: "/time-capsule", label: "Time Capsule" },
 ];
 
-export default function Navbar({ role }: { role?: string }) {
+export default function Navbar({ role, photoUrl }: { role?: string; photoUrl?: string | null }) {
   const pathname = usePathname();
   const router = useRouter();
   const [openPalette, setOpenPalette] = useState(false);
   const [query, setQuery] = useState("");
+  const [scrolled, setScrolled] = useState(false);
   const allLinks = useMemo(() => (role === "admin" ? [...navLinks, { href: "/admin", label: "Admin" }] : navLinks), [role]);
-
-  async function handleLogout() {
-    const supabase = createClient();
-    await supabase.auth.signOut();
-    router.push("/login");
-    router.refresh();
-  }
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -40,8 +32,17 @@ export default function Navbar({ role }: { role?: string }) {
       }
     };
 
+    const onScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
+
     window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
+    window.addEventListener("scroll", onScroll);
+    onScroll();
+    return () => {
+      window.removeEventListener("keydown", onKeyDown);
+      window.removeEventListener("scroll", onScroll);
+    };
   }, []);
 
   const paletteLinks = useMemo(() => {
@@ -51,8 +52,8 @@ export default function Navbar({ role }: { role?: string }) {
 
   return (
     <>
-      <header className="fixed top-0 z-50 w-full px-3 pt-3 md:px-6">
-        <div className="section-shell mx-auto flex max-w-7xl items-center justify-between rounded-[2rem] px-4 py-3 md:px-6">
+      <header className={`fixed top-0 z-50 w-full transition-all duration-500 ${scrolled ? "px-2 pt-2 md:px-4" : "px-3 pt-3 md:px-6"}`}>
+        <div className={`mx-auto flex max-w-7xl items-center justify-between transition-all duration-500 ease-out ${scrolled ? "section-shell rounded-[1.5rem] px-5 py-2 shadow-sm bg-surface/90 border-outline-variant/30 backdrop-blur-xl" : "section-shell rounded-[2rem] px-4 py-3 md:px-6 shadow-none border-transparent bg-white/40"}`}>
           <Link href="/" className="group flex items-center gap-3">
             <div className="orbital-ring flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-primary to-primary-container text-sm font-black text-white">
               26
@@ -93,13 +94,17 @@ export default function Navbar({ role }: { role?: string }) {
               <span>Quick nav</span>
               <span className="rounded-full bg-white px-2 py-0.5 text-[10px] font-bold text-on-surface">Ctrl K</span>
             </button>
-            <button
-              onClick={handleLogout}
-              className="pill-badge flex h-11 w-11 items-center justify-center rounded-full text-on-surface-variant transition-colors hover:text-on-surface"
-              title="Sign out"
+            <Link
+              href="/profile"
+              className="pill-badge flex h-11 w-11 items-center justify-center rounded-full overflow-hidden text-on-surface-variant transition-colors hover:text-on-surface p-0.5 border border-outline-variant/20 relative"
+              title="My Profile"
             >
-              <span className="material-symbols-outlined">logout</span>
-            </button>
+              {photoUrl ? (
+                <img src={photoUrl} alt="My Profile" className="w-full h-full rounded-full object-cover" />
+              ) : (
+                <span className="material-symbols-outlined absolute text-[22px]">person</span>
+              )}
+            </Link>
           </div>
         </div>
       </header>

@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, Manrope } from "next/font/google";
 import "./globals.css";
-import ScrollEnhancer from "@/components/layout/ScrollEnhancer";
 
 const headlineFont = Cormorant_Garamond({
   subsets: ["latin"],
@@ -30,7 +29,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body className="min-h-screen bg-background text-on-background">
-        <ScrollEnhancer />
         {children}
       </body>
     </html>

@@ -15,58 +15,65 @@ export type Database = {
           email: string | null
           full_name: string | null
           nickname: string | null
+          quote: string | null
+          fun_fact: string | null
           role: string
           is_active: boolean
           photo_url: string | null
-          bio: string | null
           created_at: string
+          updated_at: string
         }
         Insert: {
           id: string
           email?: string | null
           full_name?: string | null
           nickname?: string | null
+          quote?: string | null
+          fun_fact?: string | null
           role?: string
           is_active?: boolean
           photo_url?: string | null
-          bio?: string | null
           created_at?: string
+          updated_at?: string
         }
         Update: {
           id?: string
           email?: string | null
           full_name?: string | null
           nickname?: string | null
+          quote?: string | null
+          fun_fact?: string | null
           role?: string
           is_active?: boolean
           photo_url?: string | null
-          bio?: string | null
           created_at?: string
+          updated_at?: string
         }
       }
       platform_settings: {
         Row: {
-          id: string
-          wall_posts_enabled: boolean
+          id: number
+          wall_enabled: boolean
           uploads_enabled: boolean
           voting_enabled: boolean
           awards_revealed: boolean
           graduation_date: string
-          created_at: string
+          updated_at: string
         }
         Insert: {
-          wall_posts_enabled?: boolean
+          wall_enabled?: boolean
           uploads_enabled?: boolean
           voting_enabled?: boolean
           awards_revealed?: boolean
           graduation_date?: string
         }
         Update: {
-          wall_posts_enabled?: boolean
+          wall_enabled?: boolean
           uploads_enabled?: boolean
           voting_enabled?: boolean
           awards_revealed?: boolean
           graduation_date?: string
+          updated_at?: string
         }
       }
       wall_posts: {
@@ -74,16 +81,19 @@ export type Database = {
           id: string
           author_id: string
           content: string
+          media_url: string | null
           status: string
           created_at: string
         }
         Insert: {
           author_id: string
           content: string
+          media_url?: string | null
           status?: string
         }
         Update: {
           content?: string
+          media_url?: string | null
           status?: string
         }
       }
@@ -149,6 +159,7 @@ export type Database = {
           author_id: string
           subject_id: string
           content: string
+          is_private: boolean
           status: string
           created_at: string
         }
@@ -156,10 +167,12 @@ export type Database = {
           author_id: string
           subject_id: string
           content: string
+          is_private?: boolean
           status?: string
         }
         Update: {
           content?: string
+          is_private?: boolean
           status?: string
         }
       }
@@ -169,36 +182,45 @@ export type Database = {
           name: string
           subject: string | null
           photo_url: string | null
-          created_at: string
+          bio: string | null
+          display_order: number | null
+          created_at: string | null
         }
         Insert: {
           name: string
           subject?: string | null
           photo_url?: string | null
+          bio?: string | null
+          display_order?: number | null
         }
         Update: {
           name?: string
           subject?: string | null
           photo_url?: string | null
+          bio?: string | null
+          display_order?: number | null
         }
       }
       teacher_messages: {
         Row: {
           id: string
-          author_id: string
+          author_id: string | null
           teacher_id: string
           content: string
+          is_anonymous: boolean
           status: string
           created_at: string
         }
         Insert: {
-          author_id: string
+          author_id?: string | null
           teacher_id: string
           content: string
+          is_anonymous?: boolean
           status?: string
         }
         Update: {
           content?: string
+          is_anonymous?: boolean
           status?: string
         }
       }
@@ -207,17 +229,19 @@ export type Database = {
           id: string
           author_id: string
           content: string
-          open_date: string
+          is_private: boolean
           created_at: string
+          updated_at: string
         }
         Insert: {
           author_id: string
           content: string
-          open_date: string
+          is_private?: boolean
         }
         Update: {
           content?: string
-          open_date?: string
+          is_private?: boolean
+          updated_at?: string
         }
       }
       comments: {
@@ -273,7 +297,6 @@ export type Database = {
         }
         Update: Record<string, never>
         }
-      }
       memory_likes: {
         Row: {
           id: string
@@ -294,6 +317,7 @@ export type Database = {
           created_at?: string
         }
       }
+    }
     Views: Record<string, never>
     Functions: Record<string, never>
     Enums: Record<string, never>

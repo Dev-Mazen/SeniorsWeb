@@ -65,8 +65,8 @@ export default function HomeExperience({
   const statusCards = [
     {
       label: "Wall",
-      value: settings?.wall_posts_enabled ? "Live" : "Paused",
-      tone: settings?.wall_posts_enabled ? "text-primary" : "text-on-surface-variant",
+      value: settings?.wall_enabled ? "Live" : "Paused",
+      tone: settings?.wall_enabled ? "text-primary" : "text-on-surface-variant",
     },
     {
       label: "Uploads",
@@ -88,7 +88,7 @@ export default function HomeExperience({
       copy: "Search the graduating class, revisit familiar faces, and see where everyone's heading next.",
       image: "/stitch-assets/home_img_1.jpg",
       accent: "from-primary/90 via-primary/60 to-transparent",
-      size: "md:col-span-4 md:row-span-2",
+      size: "md:col-span-5 md:row-span-2",
     },
     {
       href: "/wall",
@@ -97,7 +97,7 @@ export default function HomeExperience({
       copy: "Leave messages, celebrate friendships, and watch the class heartbeat unfold in real time.",
       image: "/stitch-assets/home_img_2.jpg",
       accent: "from-secondary/90 via-secondary/50 to-transparent",
-      size: "md:col-span-5 md:row-span-3",
+      size: "md:col-span-4 md:row-span-3",
     },
     {
       href: "/memory-feed",
@@ -115,7 +115,7 @@ export default function HomeExperience({
       copy: "Send gratitude to teachers, mentors, and the people who shaped the year.",
       image: "/stitch-assets/home_img_3.jpg",
       accent: "from-stone-900/90 via-stone-700/55 to-transparent",
-      size: "md:col-span-3",
+      size: "md:col-span-5",
     },
     {
       href: "/time-capsule",
@@ -124,7 +124,7 @@ export default function HomeExperience({
       copy: "Write something today that a future version of you will open later.",
       image: "/stitch-assets/home_img_4.jpg",
       accent: "from-primary-container/95 via-primary/50 to-transparent",
-      size: "md:col-span-4",
+      size: "md:col-span-3",
     },
   ];
 
@@ -249,32 +249,53 @@ export default function HomeExperience({
         </div>
       </section>
 
+      {/* Infinite Scrolling Marquee */}
+      <div className="w-full relative bg-surface-container-lowest/50 py-5 overflow-hidden border-y border-outline-variant/10 -mt-6 mb-8 flex whitespace-nowrap z-20 transform -rotate-1 origin-left">
+        <motion.div 
+          animate={{ x: ["0%", "-50%"] }} 
+          transition={{ repeat: Infinity, ease: "linear", duration: 30 }} 
+          className="flex w-max items-center gap-12 font-black text-4xl uppercase tracking-[0.1em] text-on-surface/10 select-none pointer-events-none"
+        >
+          {Array.from({ length: 8 }).map((_, i) => (
+            <span key={i} className="flex flex-shrink-0 items-center gap-12">
+              <span className="italic">SENIORS 2026</span>
+              <span className="material-symbols-outlined text-primary/30 text-4xl" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+              <span className="italic">THE FINAL CHAPTER</span>
+              <span className="material-symbols-outlined text-tertiary/30 text-4xl" style={{ fontVariationSettings: "'FILL' 1" }}>local_fire_department</span>
+            </span>
+          ))}
+        </motion.div>
+      </div>
       <motion.section
-        initial={{ opacity: 0, y: 28 }}
+        initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, amount: 0.2 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
         className="px-4 py-8 md:px-8"
       >
-        <div className="section-shell mx-auto max-w-7xl rounded-[2rem] px-6 py-10 md:px-10 md:py-12">
+        <div className="section-shell mx-auto max-w-7xl rounded-[2.5rem] px-8 py-12 md:px-14 md:py-16 bg-surface-container-lowest/80 relative overflow-hidden">
+          {/* Decorative element for countdown */}
+          <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl -z-10" />
           <div className="flex flex-col gap-12 lg:flex-row lg:items-center lg:justify-between">
-            <div className="max-w-xl">
-              <p className="section-kicker mb-4">Countdown</p>
-              <h2 className="serif-heading text-4xl font-semibold leading-tight text-on-surface md:text-5xl">
-                Every memory gets sharper as the finish line gets closer.
+            <div className="max-w-xl relative p-4">
+              <span className="material-symbols-outlined absolute -top-4 -left-4 text-5xl text-primary/10">hourglass_top</span>
+              <p className="text-primary font-bold text-sm tracking-[0.2em] uppercase mb-4 pl-1">Countdown to Graduation</p>
+              <h2 className="serif-heading text-5xl font-black leading-[1.1] text-on-surface md:text-6xl text-balance">
+                Every memory matters as the finish line gets closer.
               </h2>
-              <p className="mt-4 max-w-lg text-base leading-7 text-on-surface-variant">
+              <p className="mt-6 max-w-lg text-lg leading-relaxed text-on-surface-variant">
                 Graduation is approaching fast. Use this space to write notes, collect photos, and leave behind something bigger
                 than a static yearbook page.
               </p>
             </div>
-            <div className="grid flex-1 grid-cols-2 gap-4 sm:grid-cols-4">
+            <div className="grid flex-1 grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
               {Object.entries(timer).map(([label, val]) => (
-                <div key={label} className="spotlight-card rounded-[1.75rem] border border-outline-variant/18 px-4 py-6 text-center">
-                  <p className="serif-heading text-4xl font-semibold text-on-surface md:text-5xl">
+                <div key={label} className="group relative bg-white rounded-[2rem] border border-outline-variant/30 p-6 sm:p-8 text-center editorial-shadow transition-transform hover:-translate-y-1">
+                  <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-surface-container-low to-transparent rounded-b-[2rem] -z-10" />
+                  <p className="font-sans text-5xl sm:text-6xl font-black tracking-tight text-on-surface group-hover:scale-105 transition-transform">
                     {String(val).padStart(label === "Days" && val > 99 ? 3 : 2, "0")}
                   </p>
-                  <p className="mt-3 text-[11px] font-extrabold uppercase tracking-[0.24em] text-on-surface-variant">{label}</p>
+                  <p className="mt-4 text-xs font-bold uppercase tracking-[0.25em] text-on-surface-variant group-hover:text-primary transition-colors">{label}</p>
                 </div>
               ))}
             </div>
@@ -311,17 +332,25 @@ export default function HomeExperience({
           >
             {destinationCards.map((card) => (
               <Link key={card.href} href={card.href} className={`group block ${card.size}`}>
-                <motion.div variants={fadeUp} className="interactive-card relative h-full min-h-[280px] overflow-hidden rounded-[2rem]">
-                  <img alt={card.title} className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" src={card.image} />
-                  <div className={`absolute inset-0 bg-gradient-to-t ${card.accent}`} />
-                  <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-stone-950/70" />
-                  <div className="absolute bottom-0 left-0 right-0 p-6 md:p-7">
-                    <p className="mb-3 text-[11px] font-extrabold uppercase tracking-[0.24em] text-white/70">{card.eyebrow}</p>
-                    <h3 className="serif-heading text-3xl font-semibold text-white">{card.title}</h3>
-                    <p className="mt-3 max-w-sm text-sm leading-6 text-white/75">{card.copy}</p>
-                    <div className="mt-5 flex items-center gap-2 text-sm font-bold uppercase tracking-[0.18em] text-white">
-                      <span>Open</span>
-                      <span className="material-symbols-outlined text-base">arrow_forward</span>
+                <motion.div variants={fadeUp} className="interactive-card relative h-full min-h-[320px] overflow-hidden rounded-[2.5rem] editorial-shadow">
+                  <img alt={card.title} className="absolute inset-0 h-full w-full object-cover transition-transform duration-1000 group-hover:scale-110" src={card.image} />
+                  <div className={`absolute inset-0 bg-gradient-to-t ${card.accent} mix-blend-multiply opacity-80`} />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
+                  
+                  {/* Hover reveal glow */}
+                  <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                  
+                  <div className="absolute bottom-0 left-0 right-0 p-8 md:p-10 transform transition-transform duration-500 group-hover:-translate-y-2">
+                    <div className="flex items-center gap-3 mb-4">
+                      <span className="w-8 h-[2px] bg-white/60"></span>
+                      <p className="text-[12px] font-extrabold uppercase tracking-[0.3em] text-white/90 drop-shadow-md pb-[2px]">{card.eyebrow}</p>
+                    </div>
+                    <h3 className="serif-heading text-4xl font-black text-white drop-shadow-lg leading-none">{card.title}</h3>
+                    <p className="mt-4 max-w-sm text-sm leading-relaxed text-white/80 drop-shadow opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100">{card.copy}</p>
+                    
+                    <div className="mt-6 flex items-center gap-2 text-[13px] font-black uppercase tracking-[0.2em] text-white group-hover:text-primary-fixed-dim transition-colors">
+                      <span>Explore</span>
+                      <span className="material-symbols-outlined text-lg group-hover:translate-x-1 transition-transform">arrow_forward</span>
                     </div>
                   </div>
                 </motion.div>
@@ -356,12 +385,12 @@ export default function HomeExperience({
           </div>
 
           <div className="section-shell rounded-[2rem] px-6 py-8 md:px-8">
-            <div className="mb-6 flex items-center justify-between">
-              <div>
+            <div className="mb-6 flex flex-wrap items-start sm:items-center justify-between gap-4">
+              <div className="flex-1 min-w-0">
                 <p className="section-kicker mb-3">Fresh moments</p>
-                <h2 className="serif-heading text-4xl font-semibold text-on-surface">What classmates posted recently</h2>
+                <h2 className="serif-heading text-3xl md:text-4xl font-semibold text-on-surface">What classmates posted recently</h2>
               </div>
-              <Link href="/memory-feed" className="rounded-full bg-stone-900 px-5 py-3 text-xs font-black uppercase tracking-[0.18em] text-white">
+              <Link href="/memory-feed" className="rounded-full bg-stone-900 px-5 py-3 text-xs font-black uppercase tracking-[0.18em] text-white whitespace-nowrap flex-shrink-0">
                 Open feed
               </Link>
             </div>
@@ -396,26 +425,50 @@ export default function HomeExperience({
         transition={{ duration: 0.6, ease: "easeOut" }}
         className="px-4 py-10 md:px-8 md:py-14"
       >
-        <div className="section-shell mx-auto flex max-w-7xl flex-col gap-8 rounded-[2rem] px-6 py-10 md:flex-row md:items-end md:justify-between md:px-10">
+        <div className="section-shell mx-auto flex max-w-7xl flex-col gap-8 rounded-[2rem] px-6 py-10 md:flex-row md:items-end md:justify-between md:px-10 relative overflow-hidden">
+          {/* Subtle glow */}
+          <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-full blur-3xl -z-10 translate-x-1/2 -translate-y-1/2" />
+          
           <div className="max-w-3xl">
             <span className="material-symbols-outlined mb-5 text-5xl text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>
               format_quote
             </span>
-            <blockquote className="serif-heading text-3xl font-semibold leading-tight text-on-surface md:text-5xl">
+            <blockquote className="serif-heading text-3xl font-semibold leading-tight text-on-surface md:text-5xl drop-shadow-sm">
               Yesterday is today&apos;s memory, and tomorrow is today&apos;s dream.
             </blockquote>
             <cite className="mt-5 block not-italic text-sm font-extrabold uppercase tracking-[0.24em] text-primary">
               Khalil Gibran
             </cite>
           </div>
-          <div className="max-w-sm rounded-[1.75rem] bg-stone-900 px-6 py-6 text-white">
-            <p className="text-xs font-extrabold uppercase tracking-[0.24em] text-white/55">Best next move</p>
-            <p className="mt-3 text-base leading-7 text-white/80">
+          <div className="max-w-sm rounded-[1.75rem] bg-stone-900 border border-outline-variant/10 px-6 py-6 text-white shadow-2xl relative overflow-hidden">
+            <div className="absolute -top-10 -right-10 w-32 h-32 bg-white/5 rounded-full blur-2xl" />
+            <p className="text-xs font-extrabold uppercase tracking-[0.24em] text-white/55 relative z-10">Best next move</p>
+            <p className="mt-3 text-base leading-7 text-white/80 relative z-10">
               Add one memory, send one thank-you, and leave one note on the wall today. Small entries compound into an unforgettable archive.
             </p>
           </div>
         </div>
       </motion.section>
+
+      {/* Opposing Infinite Scrolling Marquee */}
+      <div className="w-full relative bg-primary text-white py-4 overflow-hidden mt-6 mb-12 flex whitespace-nowrap z-20 transform rotate-1 origin-right shadow-lg">
+        <motion.div 
+          animate={{ x: ["-50%", "0%"] }} 
+          transition={{ repeat: Infinity, ease: "linear", duration: 35 }} 
+          className="flex w-max items-center gap-12 font-black text-2xl uppercase tracking-[0.2em] opacity-90 select-none pointer-events-none"
+        >
+          {Array.from({ length: 12 }).map((_, i) => (
+            <span key={i} className="flex flex-shrink-0 items-center gap-12">
+              <span>UNFORGETTABLE</span>
+              <span className="w-2 h-2 rounded-full bg-white"></span>
+              <span>FOREVER</span>
+              <span className="w-2 h-2 rounded-full bg-white"></span>
+              <span>MOMENTS</span>
+              <span className="w-2 h-2 rounded-full bg-white"></span>
+            </span>
+          ))}
+        </motion.div>
+      </div>
 
       <footer className="px-4 pb-24 pt-6 md:px-8 md:pb-12">
         <div className="mx-auto flex max-w-7xl flex-col gap-6 rounded-[2rem] border border-outline-variant/15 bg-surface-container-low px-6 py-8 md:flex-row md:items-center md:justify-between md:px-8">

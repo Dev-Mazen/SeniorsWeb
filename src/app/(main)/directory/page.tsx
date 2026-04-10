@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
 import Link from "next/link";
@@ -77,7 +77,7 @@ export default function DirectoryPage() {
         .order("full_name");
       if (profs) setProfiles(profs);
 
-      // Public approved senior memories only
+      // Public approved senior memories only (not private)
       const { data: pubMems } = await supabase
         .from("senior_memories")
         .select(`
@@ -86,6 +86,7 @@ export default function DirectoryPage() {
           subject:subject_id(full_name, photo_url)
         `)
         .eq("status", "approved")
+        .eq("is_private", false)
         .order("created_at", { ascending: false })
         .limit(50);
       if (pubMems) setPublicSeniorMems(pubMems as any);
@@ -108,9 +109,16 @@ export default function DirectoryPage() {
     load();
   }, []);
 
+  const [studentPage, setStudentPage] = useState(1);
+  const STUDENTS_PER_PAGE = 12;
+
+  // Reset page when search changes
   const filteredProfiles = profiles.filter(p =>
     !searchQuery || p.full_name?.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  // Reset to page 1 when search changes
+  useEffect(() => { setStudentPage(1); }, [searchQuery]);
 
   const filteredPublicMems = publicSeniorMems.filter(m =>
     !searchQuery ||
@@ -118,6 +126,9 @@ export default function DirectoryPage() {
     (Array.isArray(m.profiles) ? (m.profiles as any)[0] : m.profiles)?.full_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
     (Array.isArray(m.subject) ? (m.subject as any)[0] : m.subject)?.full_name?.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  const totalStudentPages = Math.ceil(filteredProfiles.length / STUDENTS_PER_PAGE);
+  const paginatedProfiles = filteredProfiles.slice((studentPage - 1) * STUDENTS_PER_PAGE, studentPage * STUDENTS_PER_PAGE);
 
   return (
     <div className="pt-8 pb-32 px-6 max-w-7xl mx-auto">
@@ -211,58 +222,100 @@ export default function DirectoryPage() {
                   </p>
                 </div>
               ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                  {filteredProfiles.map((p) => (
-                    <div
-                      key={p.id}
-                      className="group bg-surface-container-lowest rounded-xl p-8 transition-all duration-500 hover:-translate-y-2 editorial-shadow flex flex-col border border-transparent hover:border-primary/10"
-                    >
-                      <div className="flex items-start justify-between mb-8">
-                        <div className="relative">
-                          {p.photo_url ? (
-                            <img
-                              src={p.photo_url}
-                              alt={p.full_name ?? ""}
-                              className="w-24 h-24 rounded-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
-                            />
-                          ) : (
-                            <div className="w-24 h-24 rounded-full bg-surface-container-high flex items-center justify-center text-2xl font-black text-primary">
-                              {(p.full_name ?? "?")[0]}
-                            </div>
+                <>
+                  {/* Page info */}
+                  <div className="flex items-center justify-between mb-6">
+                    <p className="text-sm text-on-surface-variant font-medium">
+                      Showing {(studentPage - 1) * STUDENTS_PER_PAGE + 1}–{Math.min(studentPage * STUDENTS_PER_PAGE, filteredProfiles.length)} of {filteredProfiles.length} students
+                    </p>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    {paginatedProfiles.map((p) => (
+                      <div
+                        key={p.id}
+                        className="group bg-surface-container-lowest rounded-xl p-8 transition-all duration-500 hover:-translate-y-2 editorial-shadow flex flex-col border border-transparent hover:border-primary/10"
+                      >
+                        <div className="flex items-start justify-between mb-8">
+                          <div className="relative">
+                            {p.photo_url ? (
+                              <img
+                                src={p.photo_url}
+                                alt={p.full_name ?? ""}
+                                className="w-24 h-24 rounded-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
+                              />
+                            ) : (
+                              <div className="w-24 h-24 rounded-full bg-surface-container-high flex items-center justify-center text-2xl font-black text-primary">
+                                {(p.full_name ?? "?")[0]}
+                              </div>
+                            )}
+                          </div>
+                          {p.nickname && (
+                            <span className="px-4 py-1.5 bg-secondary/10 text-secondary rounded-full text-xs font-bold tracking-widest uppercase">
+                              {p.nickname}
+                            </span>
                           )}
                         </div>
-                        {p.nickname && (
-                          <span className="px-4 py-1.5 bg-secondary/10 text-secondary rounded-full text-xs font-bold tracking-widest uppercase">
-                            {p.nickname}
-                          </span>
-                        )}
+                        <div className="mb-6">
+                          <h3 className="text-2xl font-bold mb-1 group-hover:text-primary transition-colors">
+                            {p.full_name ?? "Unknown"}
+                          </h3>
+                          {p.quote && (
+                            <p className="text-on-surface-variant text-sm italic font-medium">&ldquo;{p.quote}&rdquo;</p>
+                          )}
+                        </div>
+                        <div className="mt-auto flex flex-col gap-4">
+                          {p.fun_fact && (
+                            <div className="flex items-center gap-2 text-primary">
+                              <span className="material-symbols-outlined text-sm">auto_awesome</span>
+                              <span className="text-xs font-bold uppercase tracking-wider">{p.fun_fact}</span>
+                            </div>
+                          )}
+                          <Link
+                            href={`/directory/${p.id}/memory`}
+                            className="w-full py-4 bg-surface-container-high text-on-surface font-bold rounded-full hover:bg-primary hover:text-on-primary transition-all flex items-center justify-center gap-2 text-sm"
+                          >
+                            <span className="material-symbols-outlined text-xl">favorite</span>
+                            Submit a Memory
+                          </Link>
+                        </div>
                       </div>
-                      <div className="mb-6">
-                        <h3 className="text-2xl font-bold mb-1 group-hover:text-primary transition-colors">
-                          {p.full_name ?? "Unknown"}
-                        </h3>
-                        {p.quote && (
-                          <p className="text-on-surface-variant text-sm italic font-medium">&ldquo;{p.quote}&rdquo;</p>
-                        )}
+                    ))}
+                  </div>
+
+                  {/* Pagination Controls */}
+                  {totalStudentPages > 1 && (
+                    <div className="flex items-center justify-center gap-3 mt-12">
+                      <button
+                        onClick={() => { setStudentPage(p => Math.max(1, p - 1)); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                        disabled={studentPage === 1}
+                        className="px-5 py-2.5 rounded-full text-sm font-bold bg-surface-container-high text-on-surface hover:bg-surface-container-highest disabled:opacity-30 disabled:cursor-not-allowed transition-all flex items-center gap-1"
+                      >
+                        <span className="material-symbols-outlined text-sm">chevron_left</span>
+                        Previous
+                      </button>
+                      <div className="flex items-center gap-1">
+                        {Array.from({ length: totalStudentPages }, (_, i) => i + 1).map(page => (
+                          <button
+                            key={page}
+                            onClick={() => { setStudentPage(page); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                            className={`w-10 h-10 rounded-full text-sm font-bold transition-all ${page === studentPage ? 'bg-primary text-white shadow-md' : 'text-on-surface-variant hover:bg-surface-container-high'}`}
+                          >
+                            {page}
+                          </button>
+                        ))}
                       </div>
-                      <div className="mt-auto flex flex-col gap-4">
-                        {p.fun_fact && (
-                          <div className="flex items-center gap-2 text-primary">
-                            <span className="material-symbols-outlined text-sm">auto_awesome</span>
-                            <span className="text-xs font-bold uppercase tracking-wider">{p.fun_fact}</span>
-                          </div>
-                        )}
-                        <Link
-                          href={`/directory/${p.id}/memory`}
-                          className="w-full py-4 bg-surface-container-high text-on-surface font-bold rounded-full hover:bg-primary hover:text-on-primary transition-all flex items-center justify-center gap-2 text-sm"
-                        >
-                          <span className="material-symbols-outlined text-xl">favorite</span>
-                          Submit a Memory
-                        </Link>
-                      </div>
+                      <button
+                        onClick={() => { setStudentPage(p => Math.min(totalStudentPages, p + 1)); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                        disabled={studentPage === totalStudentPages}
+                        className="px-5 py-2.5 rounded-full text-sm font-bold bg-surface-container-high text-on-surface hover:bg-surface-container-highest disabled:opacity-30 disabled:cursor-not-allowed transition-all flex items-center gap-1"
+                      >
+                        Next
+                        <span className="material-symbols-outlined text-sm">chevron_right</span>
+                      </button>
                     </div>
-                  ))}
-                </div>
+                  )}
+                </>
               )}
             </>
           )}
