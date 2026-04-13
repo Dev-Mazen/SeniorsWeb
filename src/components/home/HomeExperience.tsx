@@ -115,7 +115,7 @@ export default function HomeExperience({
       copy: "Send gratitude to teachers, mentors, and the people who shaped the year.",
       image: "/stitch-assets/home_img_3.jpg",
       accent: "from-stone-900/90 via-stone-700/55 to-transparent",
-      size: "md:col-span-5",
+      size: "md:col-span-5 md:row-span-2",
     },
     {
       href: "/time-capsule",
@@ -124,7 +124,7 @@ export default function HomeExperience({
       copy: "Write something today that a future version of you will open later.",
       image: "/stitch-assets/home_img_4.jpg",
       accent: "from-primary-container/95 via-primary/50 to-transparent",
-      size: "md:col-span-3",
+      size: "md:col-span-3 md:row-span-2",
     },
   ];
 
@@ -160,14 +160,14 @@ export default function HomeExperience({
           <div className="soft-grid absolute inset-0 opacity-40" />
           <motion.img
             initial={{ scale: 1.1, opacity: 0 }}
-            animate={{ scale: 1.04, opacity: 0.32 }}
+            animate={{ scale: 1.04, opacity: 0.6 }}
             transition={{ duration: 2, ease: "easeOut" }}
             style={{ y: heroImageY }}
             alt="Senior Year Hero"
-            className="absolute inset-y-0 right-0 h-full w-full object-cover object-center md:w-[62%]"
+            className="absolute inset-0 h-full w-full object-cover object-center"
             src="/stitch-assets/home_img_0.jpg"
           />
-          <div className="hero-gradient absolute inset-0" />
+          <div className="hero-gradient absolute inset-0 opacity-40 pointer-events-none" />
           <div className="relative z-10 grid min-h-[760px] grid-cols-1 gap-8 px-6 py-10 md:min-h-[840px] md:grid-cols-[1.2fr_0.8fr] md:px-10 md:py-12 lg:px-14">
             <motion.div style={{ y: heroContentY, opacity: heroContentOpacity }} className="flex flex-col justify-between">
               <div className="max-w-3xl pt-12 md:pt-20">
@@ -191,7 +191,7 @@ export default function HomeExperience({
                   initial={{ opacity: 0, y: 24 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.45 }}
-                  className="text-balance serif-heading max-w-4xl text-5xl font-semibold leading-[0.9] text-white md:text-7xl lg:text-[6.5rem]"
+                  className="text-balance serif-heading max-w-4xl text-5xl font-semibold leading-[0.9] text-primary md:text-7xl lg:text-[6.5rem]"
                 >
                   Build a yearbook that feels alive.
                 </motion.h1>
@@ -199,16 +199,16 @@ export default function HomeExperience({
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.7 }}
-                  className="mt-6 max-w-2xl text-balance text-base leading-7 text-white/78 md:text-lg"
+                  className="mt-6 max-w-2xl text-balance text-base leading-7 text-on-surface/80 md:text-lg"
                 >
                   Preserve the loud moments, the quiet ones, and the in-between stories. This space is your class archive,
                   social wall, and time capsule in one polished experience.
                 </motion.p>
                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.9 }} className="mt-10 flex flex-wrap gap-4">
-                  <Link href="/directory" className="pressable rounded-full bg-white px-7 py-4 text-sm font-extrabold uppercase tracking-[0.18em] text-stone-900 transition-transform hover:scale-[1.02]">
+                  <Link href="/directory" className="pressable rounded-full bg-stone-900 px-7 py-4 text-sm font-extrabold uppercase tracking-[0.18em] text-white transition-transform hover:scale-[1.02]">
                     Start exploring
                   </Link>
-                  <Link href="/wall" className="pressable rounded-full border border-white/25 bg-white/10 px-7 py-4 text-sm font-extrabold uppercase tracking-[0.18em] text-white backdrop-blur-md transition-transform hover:scale-[1.02]">
+                  <Link href="/wall" className="pressable rounded-full border border-outline-variant/40 bg-surface-container/50 px-7 py-4 text-sm font-extrabold uppercase tracking-[0.18em] text-on-surface backdrop-blur-md transition-transform hover:scale-[1.02]">
                     Visit the wall
                   </Link>
                 </motion.div>

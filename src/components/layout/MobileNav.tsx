@@ -11,7 +11,7 @@ const tabs = [
   { href: "/hall-of-thanks", icon: "volunteer_activism", label: "Thanks" },
 ];
 
-export default function MobileNav({ photoUrl }: { photoUrl?: string | null }) {
+export default function MobileNav() {
   const pathname = usePathname();
   return (
     <nav className="fixed bottom-3 left-1/2 z-[100] flex w-[calc(100%-1.5rem)] max-w-md -translate-x-1/2 items-center gap-1 rounded-[2rem] border border-white/60 bg-white/80 px-3 py-2 shadow-[0_18px_40px_-20px_rgba(28,28,25,0.3)] backdrop-blur-2xl md:hidden overflow-x-auto hide-scrollbar">

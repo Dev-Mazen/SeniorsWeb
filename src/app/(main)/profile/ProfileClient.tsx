@@ -8,6 +8,8 @@ export default function ProfileClient({ profile, userId }: { profile: any; userI
   const [nickname, setNickname] = useState(profile?.nickname || "");
   const [quote, setQuote] = useState(profile?.quote || "");
   const [funFact, setFunFact] = useState(profile?.fun_fact || "");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState("");
@@ -41,6 +43,20 @@ export default function ProfileClient({ profile, userId }: { profile: any; userI
     setLoading(true); setError(""); setSaved(false);
     const supabase = createClient();
     
+    if (newPassword) {
+      if (newPassword !== confirmPassword) {
+        setError("New passwords do not match.");
+        setLoading(false);
+        return;
+      }
+      const { error: pwdErr } = await supabase.auth.updateUser({ password: newPassword });
+      if (pwdErr) {
+        setError(pwdErr.message);
+        setLoading(false);
+        return;
+      }
+    }
+
     const { error: err } = await supabase
       .from("profiles")
       .update({
@@ -54,6 +70,8 @@ export default function ProfileClient({ profile, userId }: { profile: any; userI
       
     if (err) { setError(err.message); setLoading(false); return; }
     
+    setNewPassword("");
+    setConfirmPassword("");
     setSaved(true);
     setLoading(false);
     setTimeout(() => { setSaved(false); router.refresh(); }, 2000);
@@ -138,12 +156,49 @@ export default function ProfileClient({ profile, userId }: { profile: any; userI
             </div>
           </div>
 
+          {/* Password Change Section */}
+          <div className="pt-8 border-t border-outline-variant/10">
+            <h3 className="text-lg font-bold text-on-surface mb-6">Change Password</h3>
+            <div className="space-y-6">
+              <div>
+                <label className="block text-xs font-black uppercase tracking-widest text-on-surface-variant mb-2">New Password &nbsp;<span className="normal-case opacity-50">(Leave blank to keep current)</span></label>
+                <div className="relative">
+                  <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline/50 select-none text-sm">lock</span>
+                  <input 
+                    type="password"
+                    className="w-full pl-12 pr-4 py-4 bg-surface-container-high rounded-xl border-none focus:ring-2 focus:ring-primary/30 text-on-surface placeholder:text-outline/50 transition-all shadow-inner"
+                    placeholder="Enter new password..."
+                    value={newPassword}
+                    onChange={e => setNewPassword(e.target.value)}
+                  />
+                </div>
+              </div>
+              
+              {newPassword && (
+                <div className="animate-in fade-in slide-in-from-top-2 duration-300">
+                  <label className="block text-xs font-black uppercase tracking-widest text-on-surface-variant mb-2">Confirm New Password</label>
+                  <div className="relative">
+                    <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline/50 select-none text-sm">lock_reset</span>
+                    <input 
+                      type="password"
+                      className="w-full pl-12 pr-4 py-4 bg-surface-container-high rounded-xl border-none focus:ring-2 focus:ring-primary/30 text-on-surface placeholder:text-outline/50 transition-all shadow-inner"
+                      placeholder="Confirm new password..."
+                      value={confirmPassword}
+                      onChange={e => setConfirmPassword(e.target.value)}
+                      required={!!newPassword}
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+
           {/* Status Messages */}
           {error && <div className="bg-red-500/10 text-red-500 p-4 rounded-xl text-sm flex items-center gap-2"><span className="material-symbols-outlined text-sm">error</span> {error}</div>}
           {saved && <div className="bg-green-500/10 text-green-600 p-4 rounded-xl text-sm flex items-center gap-2 font-medium"><span className="material-symbols-outlined text-sm">check_circle</span> Profile gracefully updated!</div>}
 
           {/* Submit */}
-          <div className="pt-4 border-t border-outline-variant/10 flex justify-between items-center sm:flex-row flex-col gap-4">
+          <div className="pt-8 border-t border-outline-variant/10 flex justify-between items-center sm:flex-row flex-col gap-4">
             <button type="button" onClick={async () => {
               const supabase = createClient();
               await supabase.auth.signOut();
@@ -162,3 +217,4 @@ export default function ProfileClient({ profile, userId }: { profile: any; userI
     </div>
   );
 }
+
