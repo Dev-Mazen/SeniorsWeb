@@ -5,6 +5,7 @@ export default async function MemoryFeedPage() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   const { data: settings } = await supabase.from("platform_settings").select("uploads_enabled").single();
+  const { data: profile } = await supabase.from("profiles").select("role").eq("id", user!.id).single();
   const { data: items } = await supabase
     .from("memories")
     .select("*, profiles(full_name, photo_url)")
@@ -21,6 +22,7 @@ export default async function MemoryFeedPage() {
       items={items ?? []}
       uploadsEnabled={settings?.uploads_enabled ?? true}
       userId={user!.id}
+      userRole={profile?.role ?? "member"}
       initialLikes={likes ?? []}
       initialComments={comments ?? []}
     />

@@ -2,12 +2,17 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 const links = [
   { href: "/admin", icon: "dashboard", label: "Overview" },
-  { href: "/admin/users", icon: "group", label: "Users" },
-  { href: "/admin/moderation", icon: "verified_user", label: "Moderation" },
-  { href: "/admin/questions", icon: "emoji_events", label: "Questions" },
+  { href: "/admin/users", icon: "group", label: "Students Management" },
+  { href: "/admin/moderation/memories", icon: "photo_library", label: "Memories Moderation" },
+  { href: "/admin/moderation/wall", icon: "sticky_note_2", label: "Chaos Board Moderation" },
+  { href: "/admin/moderation/teachers", icon: "school", label: "Teacher Messages" },
+  { href: "/admin/voting", icon: "how_to_vote", label: "Voting Control" },
+  { href: "/admin/time-capsule", icon: "hourglass_bottom", label: "Time Capsule Settings" },
+  { href: "/admin/content-release", icon: "dynamic_feed", label: "Content Release Config" },
   { href: "/admin/settings", icon: "tune", label: "Settings" },
 ];
 
@@ -38,9 +43,12 @@ export default function AdminSidebar({ adminName }: { adminName: string }) {
         })}
       </nav>
       <div className="px-4 mt-auto">
-        <div className="bg-surface-container-low p-4 rounded-xl mb-4">
-          <p className="text-xs opacity-60 mb-1">Signed in as</p>
-          <p className="font-bold text-sm">{adminName}</p>
+        <div className="bg-surface-container-low p-4 rounded-xl mb-4 flex justify-between items-center">
+          <div>
+            <p className="text-xs opacity-60 mb-1">Signed in as</p>
+            <p className="font-bold text-sm">{adminName}</p>
+          </div>
+          <ThemeToggle />
         </div>
         <button onClick={logout} className="w-full py-3 px-6 flex items-center gap-3 rounded-full hover:bg-surface-container-low text-on-surface/70 transition-all">
           <span className="material-symbols-outlined">logout</span>

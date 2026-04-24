@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
@@ -16,7 +16,7 @@ export default function SubmitMemoryPage() {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
-  const [sendToAll, setSendToAll] = useState(false);
+  const [isPrivate, setIsPrivate] = useState(false);
   
   const [memories, setMemories] = useState<Memory[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -59,20 +59,15 @@ export default function SubmitMemoryPage() {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) { setError("Not logged in"); setLoading(false); return; }
     
-    if (sendToAll) {
-      const { error: err } = await supabase.from("wall_posts").insert({
-        author_id: user.id,
-        content,
-      });
-      if (err) { setError(err.message); setLoading(false); return; }
-    } else {
-      const { error: err } = await supabase.from("senior_memories").insert({
-        subject_id: subjectId,
-        author_id: user.id,
-        content,
-      });
-      if (err) { setError(err.message); setLoading(false); return; }
-    }
+    // Always insert to senior_memories. is_private decides if it shows in global feed
+    const { error: err } = await supabase.from("senior_memories").insert({
+      subject_id: subjectId,
+      author_id: user.id,
+      content,
+      is_private: isPrivate,
+    });
+    
+    if (err) { setError(err.message); setLoading(false); return; }
     
     setSuccess(true);
     setLoading(false);
@@ -130,22 +125,26 @@ export default function SubmitMemoryPage() {
               required
             />
             
-            <label className="flex items-start gap-3 p-3 mt-4 rounded-lg hover:bg-surface-container-high transition-colors cursor-pointer mb-2 border border-outline-variant/20 bg-surface">
+            <label className="flex items-start gap-3 p-4 mt-6 rounded-xl hover:bg-surface-container-high transition-colors cursor-pointer border border-outline-variant/20 bg-surface">
               <input 
                 type="checkbox" 
-                checked={sendToAll} 
-                onChange={(e) => setSendToAll(e.target.checked)} 
+                checked={isPrivate} 
+                onChange={(e) => setIsPrivate(e.target.checked)} 
                 className="w-5 h-5 text-primary border-outline-variant rounded focus:ring-primary/30 mt-0.5"
               />
               <div>
-                <p className="font-bold text-sm text-on-surface">Post to the Global Wall instead</p>
-                <p className="text-xs text-on-surface-variant">Check this box to share to all students on the Global Wall. If unchecked, this memory is privately sent to the student for their personal page.</p>
+                <p className="font-bold text-sm text-on-surface flex items-center gap-1">
+                  <span className="material-symbols-outlined text-[16px]">lock</span>
+                  Make this memory private
+                </p>
+                <p className="text-xs text-on-surface-variant mt-1">If checked, this memory will only be visible to you and {subjectProfile?.full_name?.split(" ")[0] || "them"}. It will not appear in the global directory messages tab.</p>
               </div>
             </label>
 
-            {error && <p className="text-red-600 text-sm mt-2">{error}</p>}
-            <button type="submit" disabled={loading || !content.trim()} className="mt-6 w-full sunset-gradient py-4 rounded-full text-white font-bold disabled:opacity-50 hover:scale-[1.02] transition-transform shadow-md">
-              {loading ? "Submitting..." : (sendToAll ? "Post to Global Wall" : "Submit Memory")}
+            {error && <p className="text-red-600 text-sm mt-3">{error}</p>}
+            <button type="submit" disabled={loading || !content.trim()} className="mt-8 w-full sunset-gradient py-4 rounded-full text-white font-bold disabled:opacity-50 hover:scale-[1.02] transition-transform shadow-md flex items-center justify-center gap-2">
+              <span className="material-symbols-outlined text-sm">send</span>
+              {loading ? "Submitting..." : "Submit Memory"}
             </button>
           </form>
         </div>

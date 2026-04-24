@@ -67,7 +67,7 @@ export default function WallClient({ posts, wallEnabled, userId }: { posts: Post
         if (!fullPost) return;
         setLivePosts((prev) => {
           if (prev.some((p) => p.id === fullPost.id)) return prev;
-          return [fullPost as Post, ...prev];
+          return [fullPost as unknown as Post, ...prev];
         });
         if (newPost.author_id !== userId) {
           setLiveNotice("A new wall memory was just posted.");

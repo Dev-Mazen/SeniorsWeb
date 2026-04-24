@@ -729,46 +729,59 @@ export default function MemoryFeedClient({ items, uploadsEnabled, userId }: { it
 
         {/* Upload */}
         {uploadsEnabled ? (
-          <form onSubmit={handleUpload} className="bg-surface-container-lowest rounded-2xl p-8 editorial-shadow mb-12 border border-outline-variant/20">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-primary-container flex items-center justify-center">
-                <span className="material-symbols-outlined text-white text-lg">add_a_photo</span>
+          <form onSubmit={handleUpload} className="bg-surface-container-lowest rounded-[2rem] p-8 md:p-10 editorial-shadow mb-16 border border-outline-variant/20 relative overflow-hidden">
+            {/* Decorative BG element */}
+            <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl -z-10" />
+
+            <div className="flex items-center gap-4 mb-8">
+              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-primary-container flex items-center justify-center shadow-sm">
+                <span className="material-symbols-outlined text-white">add_a_photo</span>
               </div>
               <div>
-                <p className="font-bold text-on-surface text-sm">Share a Memory</p>
-                <p className="text-xs text-on-surface-variant">Upload a photo or video from our year</p>
+                <h2 className="serif text-2xl font-black text-on-surface">Share a Memory</h2>
+                <p className="text-sm font-medium text-on-surface-variant">Upload a photo or video from our year</p>
               </div>
             </div>
-            <div onClick={() => fileRef.current?.click()} className="border-2 border-dashed border-outline-variant/50 rounded-2xl p-10 text-center cursor-pointer hover:border-primary/50 hover:bg-surface-container-low/50 transition-all mb-5 group">
+            
+            <div onClick={() => fileRef.current?.click()} className="border-2 border-dashed border-outline-variant/60 rounded-[1.5rem] p-10 md:p-12 text-center cursor-pointer hover:border-primary/50 hover:bg-surface-container-low/50 transition-all mb-6 group relative overflow-hidden bg-white/50">
               {preview ? (
-                <div className="relative">
+                <div className="relative inline-block">
                   {file?.type.startsWith("video") ? (
-                    <video src={preview} className="max-h-52 mx-auto rounded-xl" controls />
+                    <video src={preview} className="max-h-64 mx-auto rounded-xl shadow-lg ring-1 ring-outline-variant/20" controls />
                   ) : (
-                    <img src={preview} alt="preview" className="max-h-52 mx-auto rounded-xl object-cover shadow-lg" />
+                    <img src={preview} alt="preview" className="max-h-64 mx-auto rounded-xl object-cover shadow-lg ring-1 ring-outline-variant/20" />
                   )}
-                  <button type="button" onClick={(e) => { e.stopPropagation(); setFile(null); setPreview(null); }} className="absolute top-2 right-2 w-8 h-8 rounded-full bg-black/50 flex items-center justify-center text-white backdrop-blur-sm hover:bg-black/70">
+                  <button type="button" onClick={(e) => { e.stopPropagation(); setFile(null); setPreview(null); }} className="absolute -top-3 -right-3 w-8 h-8 rounded-full bg-surface-container-highest border border-outline-variant/30 flex items-center justify-center text-on-surface hover:bg-white hover:text-red-500 shadow-sm transition-all z-10">
                     <span className="material-symbols-outlined text-sm">close</span>
                   </button>
                 </div>
               ) : (
-                <>
-                  <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-surface-container-high flex items-center justify-center group-hover:bg-primary/10 transition-colors">
-                    <span className="material-symbols-outlined text-3xl text-outline group-hover:text-primary transition-colors">cloud_upload</span>
+                <div className="flex flex-col items-center justify-center">
+                  <div className="w-20 h-20 mb-5 rounded-[1.5rem] bg-surface-container flex items-center justify-center group-hover:bg-primary/10 transition-colors shadow-sm">
+                    <span className="material-symbols-outlined text-4xl text-outline group-hover:text-primary transition-colors">cloud_upload</span>
                   </div>
-                  <p className="text-on-surface-variant font-semibold mb-1">Drop your file here or click to browse</p>
-                  <p className="text-outline text-xs">PNG, JPG, GIF, MP4 — Max 50MB</p>
-                </>
+                  <p className="text-on-surface font-semibold text-lg mb-2">Drag and drop or click to browse</p>
+                  <p className="text-on-surface-variant text-sm font-medium">JPEG, PNG, GIF, MP4 — Max 50MB</p>
+                </div>
               )}
             </div>
             <input ref={fileRef} type="file" accept="image/*,video/*" className="hidden" onChange={handleFile} />
-            <input className="w-full p-4 bg-surface-container-high rounded-xl border-none focus:ring-2 focus:ring-primary/20 text-on-surface placeholder:text-outline/60 mb-5 focus:outline-none" placeholder="Add a caption..." value={caption} onChange={e => setCaption(e.target.value)} />
-            {error && <p className="text-red-500 text-sm mb-3 flex items-center gap-1"><span className="material-symbols-outlined text-sm">error</span> {error}</p>}
-            {success && <p className="text-green-600 text-sm mb-3 flex items-center gap-1"><span className="material-symbols-outlined text-sm">check_circle</span> Submitted for review!</p>}
-            <div className="flex justify-between items-center">
-              <p className="text-on-surface-variant text-xs font-medium">Requires admin approval.</p>
-              <button type="submit" disabled={loading || !file} className="sunset-gradient px-8 py-3 rounded-full text-white font-bold disabled:opacity-50 hover:scale-[1.03] transition-transform shadow-md flex items-center gap-2">
-                <span className="material-symbols-outlined text-sm">upload</span>
+            
+            <div className="mt-6 mb-6 relative">
+              <span className="material-symbols-outlined absolute left-5 top-5 text-outline">description</span>
+              <input className="w-full pl-14 pr-6 py-5 bg-surface-container-high rounded-2xl border-none focus:ring-2 focus:ring-primary/30 text-on-surface placeholder:text-outline/70 focus:outline-none font-medium" placeholder="Add a caption..." value={caption} onChange={e => setCaption(e.target.value)} />
+            </div>
+
+            {error && <div className="bg-red-50 text-red-600 p-4 rounded-xl text-sm mb-6 flex items-center gap-2"><span className="material-symbols-outlined">error</span> {error}</div>}
+            {success && <div className="bg-green-50 text-green-700 p-4 rounded-xl text-sm mb-6 flex items-center gap-2 font-medium"><span className="material-symbols-outlined">check_circle</span> Upload successful! Awaiting admin approval.</div>}
+            
+            <div className="flex flex-col sm:flex-row justify-between items-center bg-surface-container-low p-4 rounded-[1.5rem]">
+              <p className="text-on-surface-variant text-sm font-medium flex items-center gap-2 mb-4 sm:mb-0">
+                <span className="material-symbols-outlined text-sm">security</span>
+                Requires admin approval
+              </p>
+              <button type="submit" disabled={loading || !file} className="w-full sm:w-auto sunset-gradient px-8 py-3.5 rounded-full text-white font-bold disabled:opacity-50 hover:scale-[1.03] transition-transform shadow-lg flex items-center justify-center gap-2 group">
+                <span className="material-symbols-outlined text-sm group-hover:-translate-y-1 transition-transform">upload</span>
                 {loading ? "Uploading..." : "Share Memory"}
               </button>
             </div>
@@ -808,145 +821,168 @@ export default function MemoryFeedClient({ items, uploadsEnabled, userId }: { it
 
         {/* Items */}
         {filteredItems.length === 0 ? (
-          <div className="text-center py-20">
-            <span className="material-symbols-outlined text-6xl text-outline/40">photo_library</span>
-            <p className="text-on-surface-variant mt-4 font-medium">{searchQuery || filterType !== "all" ? "No memories match your filter." : "No memories yet. Be the first to share!"}</p>
+          <div className="text-center py-20 bg-surface-container-lowest rounded-[2rem] border border-outline-variant/10">
+            <span className="material-symbols-outlined text-6xl text-outline/30 mb-4 block">photo_library</span>
+            <p className="text-on-surface-variant font-medium text-lg">{searchQuery || filterType !== "all" ? "No memories match your filter." : "No memories yet. Be the first to share!"}</p>
           </div>
         ) : viewMode === "list" ? (
           /* ── LIST VIEW ── */
-          <div className="max-w-3xl mx-auto space-y-8">
+          <div className="max-w-3xl mx-auto space-y-12">
             {filteredItems.map((item, idx) => {
               const memComments = comments[item.id] || [];
               const isExpanded = expandedComments.has(item.id);
               return (
-                <article key={item.id} className="bg-surface-container-lowest rounded-2xl overflow-hidden editorial-shadow border border-outline-variant/10 group">
-                  {/* Author */}
-                  <div className="p-5 flex items-center gap-3">
+                <article key={item.id} className="bg-surface-container-lowest rounded-[2rem] overflow-hidden editorial-shadow border border-outline-variant/15 hover:border-primary/20 transition-colors duration-300">
+                  {/* Author Header */}
+                  <div className="p-6 flex items-center gap-4 border-b border-outline-variant/5">
                     {item.profiles?.photo_url ? (
-                      <img src={item.profiles.photo_url} alt="" className="w-11 h-11 rounded-full object-cover ring-2 ring-surface-container" />
+                      <img src={item.profiles.photo_url} alt="" className="w-12 h-12 rounded-full object-cover ring-2 ring-surface" />
                     ) : (
-                      <div className="w-11 h-11 rounded-full bg-surface-container-high flex items-center justify-center font-bold text-primary text-lg">{(item.profiles?.full_name ?? "?")[0]}</div>
+                      <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center font-black text-primary text-xl ring-2 ring-surface">{(item.profiles?.full_name ?? "?")[0]}</div>
                     )}
                     <div className="flex-grow">
-                      <p className="font-bold text-sm text-on-surface">{item.profiles?.full_name ?? "Student"}</p>
-                      <p className="text-xs text-on-surface-variant flex items-center gap-1">
-                        <span className="material-symbols-outlined text-xs">{item.media_type === "video" ? "videocam" : "image"}</span>
+                      <p className="font-bold text-base text-on-surface hover:text-primary transition-colors cursor-pointer">{item.profiles?.full_name ?? "Student"}</p>
+                      <p className="text-xs font-semibold text-on-surface-variant flex items-center gap-1.5 uppercase tracking-wider mt-1">
+                        <span className="material-symbols-outlined text-[14px]">{item.media_type === "video" ? "videocam" : "image"}</span>
                         {formatDate(item.created_at)} · {timeAgo(item.created_at)}
                       </p>
                     </div>
                   </div>
-                  {/* Media — click opens lightbox */}
-                  <div className="relative bg-black/5 cursor-pointer" onClick={() => setLightboxIndex(idx)}>
+                  {/* Media */}
+                  <div className="relative bg-surface-container-low cursor-pointer group" onClick={() => setLightboxIndex(idx)}>
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors z-10" />
                     {item.media_type === "video" ? (
-                      <video src={item.media_url} className="w-full max-h-[550px] object-contain bg-black" preload="metadata" />
+                      <video src={item.media_url} className="w-full max-h-[600px] object-contain bg-black" preload="metadata" />
                     ) : (
-                      <img src={item.media_url} alt={item.caption ?? ""} className="w-full max-h-[550px] object-cover" loading="lazy" />
+                      <img src={item.media_url} alt={item.caption ?? ""} className="w-full max-h-[600px] object-contain" loading="lazy" />
                     )}
                     {item.media_type === "video" && (
-                      <div className="absolute inset-0 flex items-center justify-center bg-black/20">
-                        <div className="w-16 h-16 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
-                          <span className="material-symbols-outlined text-4xl text-white">play_arrow</span>
+                      <div className="absolute inset-0 flex items-center justify-center bg-black/10 group-hover:bg-black/30 transition-colors z-20">
+                        <div className="w-20 h-20 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center shadow-2xl group-hover:scale-110 transition-transform">
+                          <span className="material-symbols-outlined text-5xl text-white ml-2">play_arrow</span>
                         </div>
                       </div>
                     )}
                   </div>
-                  {/* Actions */}
-                  <div className="px-5 pt-4 flex items-center gap-5">
-                    <button onClick={() => toggleLike(item.id)} className="flex items-center gap-1.5 group/like">
-                      <span className={`material-symbols-outlined text-xl transition-all ${userLikes.has(item.id) ? "text-red-500 scale-110" : "text-on-surface-variant group-hover/like:text-red-400"}`} style={userLikes.has(item.id) ? { fontVariationSettings: "'FILL' 1" } : {}}>favorite</span>
-                      <span className="text-sm font-bold text-on-surface-variant">{likeCounts[item.id] || 0}</span>
-                    </button>
-                    <button onClick={() => setExpandedComments(prev => { const n = new Set(prev); isExpanded ? n.delete(item.id) : n.add(item.id); return n; })} className="flex items-center gap-1.5 text-on-surface-variant hover:text-primary transition-colors">
-                      <span className="material-symbols-outlined text-xl">chat_bubble_outline</span>
-                      <span className="text-sm font-bold">{memComments.length}</span>
-                    </button>
-                    <button onClick={() => setShareItem(item)} className="flex items-center gap-1.5 text-on-surface-variant hover:text-primary transition-colors">
-                      <span className="material-symbols-outlined text-xl">share</span>
-                    </button>
-                    <button 
-                      onClick={() => {
-                        const a = document.createElement('a');
-                        a.href = item.media_url;
-                        a.download = `memory-${item.id}.${item.media_type === 'video' ? 'mp4' : 'jpg'}`;
-                        a.target = "_blank";
-                        document.body.appendChild(a);
-                        a.click();
-                        document.body.removeChild(a);
-                      }} 
-                      className="flex items-center gap-1.5 text-on-surface-variant hover:text-primary transition-colors"
-                      title="Download"
-                    >
-                      <span className="material-symbols-outlined text-xl">download</span>
-                    </button>
-                  </div>
-                  {/* Caption */}
-                  {item.caption && (
-                    <div className="px-5 pt-2 pb-1">
-                      <p className="text-on-surface text-sm"><span className="font-bold mr-1.5">{item.profiles?.full_name}</span>{item.caption}</p>
-                    </div>
-                  )}
-                  {/* Comments Section */}
-                  {isExpanded && (
-                    <div className="px-5 pb-4 pt-2">
-                      <div className="space-y-3 max-h-60 overflow-y-auto mb-3">
-                        {memComments.length === 0 ? (
-                          <p className="text-on-surface-variant text-xs py-2">No comments yet. Be the first!</p>
-                        ) : memComments.map(c => {
-                          const cp = Array.isArray(c.profiles) ? (c.profiles as any)[0] : c.profiles;
-                          return (
-                            <div key={c.id} className="flex items-start gap-2.5">
-                              {cp?.photo_url ? (
-                                <img src={cp.photo_url} alt="" className="w-7 h-7 rounded-full object-cover flex-shrink-0" />
-                              ) : (
-                                <div className="w-7 h-7 rounded-full bg-surface-container-high flex items-center justify-center text-primary font-bold text-[10px] flex-shrink-0">{(cp?.full_name ?? "?")[0]}</div>
-                              )}
-                              <div>
-                                <p className="text-sm text-on-surface"><span className="font-bold mr-1">{cp?.full_name ?? "Anonymous"}</span>{c.content}</p>
-                                <p className="text-[10px] text-on-surface-variant mt-0.5">{timeAgo(c.created_at)}</p>
-                              </div>
-                            </div>
-                          );
-                        })}
+                  
+                  {/* Content & Actions */}
+                  <div className="p-6">
+                    {/* Caption */}
+                    {item.caption && (
+                      <div className="mb-6">
+                        <p className="text-on-surface text-base leading-relaxed break-words font-medium">
+                          <span className="font-bold mr-2 text-primary">{item.profiles?.full_name}</span>
+                          {item.caption}
+                        </p>
                       </div>
-                      <form onSubmit={e => { e.preventDefault(); const t = commentInputs[item.id]?.trim(); if (!t) return; addComment(item.id, t); setCommentInputs(prev => ({ ...prev, [item.id]: "" })); }} className="flex items-center gap-2">
-                        <input className="flex-1 bg-surface-container-high rounded-full px-4 py-2.5 text-sm text-on-surface placeholder:text-outline/60 outline-none focus:ring-1 focus:ring-primary/30" placeholder="Add a comment..." value={commentInputs[item.id] || ""} onChange={e => setCommentInputs(prev => ({ ...prev, [item.id]: e.target.value }))} />
-                        <button type="submit" disabled={!commentInputs[item.id]?.trim()} className="text-primary font-bold text-sm disabled:opacity-30">Post</button>
-                      </form>
+                    )}
+                    
+                    {/* Action Bar */}
+                    <div className="flex items-center gap-6 py-4 border-t border-b border-outline-variant/10">
+                      <button onClick={() => toggleLike(item.id)} className="flex items-center gap-2 group/like py-1">
+                        <span className={`material-symbols-outlined text-2xl transition-all duration-300 ${userLikes.has(item.id) ? "text-red-500 scale-110" : "text-on-surface-variant group-hover/like:text-red-400 group-hover/like:scale-110"}`} style={userLikes.has(item.id) ? { fontVariationSettings: "'FILL' 1" } : {}}>favorite</span>
+                        <span className="text-sm font-bold text-on-surface-variant">{likeCounts[item.id] || 0}</span>
+                      </button>
+                      <button onClick={() => setExpandedComments(prev => { const n = new Set(prev); isExpanded ? n.delete(item.id) : n.add(item.id); return n; })} className="flex items-center gap-2 text-on-surface-variant hover:text-primary transition-colors py-1">
+                        <span className="material-symbols-outlined text-2xl">chat_bubble_outline</span>
+                        <span className="text-sm font-bold">{memComments.length}</span>
+                      </button>
+                      <button onClick={() => setShareItem(item)} className="flex items-center gap-2 text-on-surface-variant hover:text-primary transition-colors py-1 ml-auto">
+                        <span className="material-symbols-outlined text-2xl">share</span>
+                      </button>
+                      <button 
+                        onClick={() => {
+                          const a = document.createElement('a');
+                          a.href = item.media_url;
+                          a.download = `memory-${item.id}.${item.media_type === 'video' ? 'mp4' : 'jpg'}`;
+                          a.target = "_blank";
+                          document.body.appendChild(a);
+                          a.click();
+                          document.body.removeChild(a);
+                        }} 
+                        className="flex items-center gap-2 text-on-surface-variant hover:text-primary transition-colors py-1"
+                        title="Download"
+                      >
+                        <span className="material-symbols-outlined text-2xl">download</span>
+                      </button>
                     </div>
-                  )}
-                  {!isExpanded && memComments.length > 0 && (
-                    <button onClick={() => setExpandedComments(prev => new Set(prev).add(item.id))} className="px-5 pb-4 pt-1 text-on-surface-variant text-xs hover:text-primary transition-colors">
-                      View all {memComments.length} comment{memComments.length !== 1 ? "s" : ""}
-                    </button>
-                  )}
+
+                    {/* Comments Section */}
+                    {isExpanded && (
+                      <div className="pt-6 animate-in fade-in duration-300">
+                        <div className="space-y-4 max-h-72 overflow-y-auto mb-5 pr-2 custom-scrollbar">
+                          {memComments.length === 0 ? (
+                            <p className="text-on-surface-variant text-sm py-4 text-center bg-surface-container-low rounded-xl">No comments yet. Be the first to reply!</p>
+                          ) : memComments.map(c => {
+                            const cp = Array.isArray(c.profiles) ? (c.profiles as any)[0] : c.profiles;
+                            return (
+                              <div key={c.id} className="flex items-start gap-3 group/comment hover:bg-surface-container-lowest p-2 -mx-2 rounded-xl transition-colors">
+                                {cp?.photo_url ? (
+                                  <img src={cp.photo_url} alt="" className="w-8 h-8 rounded-full object-cover flex-shrink-0 mt-1" />
+                                ) : (
+                                  <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-xs flex-shrink-0 mt-1">{(cp?.full_name ?? "?")[0]}</div>
+                                )}
+                                <div className="flex-1 bg-surface-container-low px-4 py-3 rounded-[1.25rem] rounded-tl-sm">
+                                  <p className="text-sm text-on-surface leading-relaxed"><span className="font-bold mr-2 text-primary">{cp?.full_name ?? "Anonymous"}</span>{c.content}</p>
+                                </div>
+                                <p className="text-[10px] uppercase tracking-wider font-bold text-on-surface-variant/50 pt-3 group-hover/comment:text-on-surface-variant/80 transition-colors w-16 text-right flex-shrink-0">{timeAgo(c.created_at)}</p>
+                              </div>
+                            );
+                          })}
+                        </div>
+                        <form onSubmit={e => { e.preventDefault(); const t = commentInputs[item.id]?.trim(); if (!t) return; addComment(item.id, t); setCommentInputs(prev => ({ ...prev, [item.id]: "" })); }} className="flex items-center gap-3 relative">
+                          <input className="flex-1 bg-surface-container-high rounded-full pl-5 pr-14 py-4 text-sm text-on-surface placeholder:text-outline/70 outline-none focus:ring-2 focus:ring-primary/20 transition-all font-medium" placeholder="Add a comment..." value={commentInputs[item.id] || ""} onChange={e => setCommentInputs(prev => ({ ...prev, [item.id]: e.target.value }))} />
+                          <button type="submit" disabled={!commentInputs[item.id]?.trim()} className="absolute right-2 top-1.5 w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white disabled:opacity-0 disabled:scale-75 transition-all duration-300">
+                            <span className="material-symbols-outlined text-sm ml-0.5">send</span>
+                          </button>
+                        </form>
+                      </div>
+                    )}
+                    {!isExpanded && memComments.length > 0 && (
+                      <button onClick={() => setExpandedComments(prev => new Set(prev).add(item.id))} className="mt-4 text-on-surface-variant font-bold text-sm hover:text-primary transition-colors flex items-center gap-1.5 px-2 py-1 rounded-md hover:bg-surface-container-low">
+                        View all {memComments.length} comment{memComments.length !== 1 ? "s" : ""}
+                      </button>
+                    )}
+                  </div>
                 </article>
               );
             })}
           </div>
         ) : (
           /* ── GRID VIEW ── */
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+          <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
             {filteredItems.map((item, idx) => {
               const memComments = comments[item.id] || [];
               return (
-                <div key={item.id} className="group relative rounded-xl overflow-hidden aspect-square bg-surface-container-high cursor-pointer" onClick={() => setLightboxIndex(idx)}>
+                <div key={item.id} className="group relative rounded-[2rem] overflow-hidden aspect-square bg-surface-container editorial-shadow cursor-pointer border border-outline-variant/10" onClick={() => setLightboxIndex(idx)}>
                   {item.media_type === "video" ? (
-                    <>
-                      <video src={item.media_url} className="w-full h-full object-cover" muted preload="metadata" />
-                      <div className="absolute top-3 right-3 w-8 h-8 rounded-full bg-black/50 backdrop-blur-sm flex items-center justify-center">
-                        <span className="material-symbols-outlined text-white text-sm">play_arrow</span>
+                     <div className="w-full h-full relative">
+                      <video src={item.media_url} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" muted preload="metadata" />
+                      <div className="absolute top-4 right-4 w-10 h-10 rounded-full bg-black/40 backdrop-blur-md flex items-center justify-center z-10">
+                        <span className="material-symbols-outlined text-white">play_arrow</span>
                       </div>
-                    </>
+                    </div>
                   ) : (
-                    <img src={item.media_url} alt={item.caption ?? ""} className="w-full h-full object-cover" loading="lazy" />
+                    <img src={item.media_url} alt={item.caption ?? ""} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy" />
                   )}
                   {/* Hover Overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-black/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-5 md:p-6 z-20">
+                    
+                    {/* User info on hover */}
+                    <div className="absolute top-5 left-5 right-5 flex items-center gap-3 transform -translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 delay-100">
+                       {item.profiles?.photo_url ? (
+                        <img src={item.profiles.photo_url} alt="" className="w-8 h-8 rounded-full border border-white/50" />
+                      ) : (
+                        <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center text-white text-xs font-bold border border-white/50">{(item.profiles?.full_name ?? "?")[0]}</div>
+                      )}
+                      <span className="text-white font-bold text-sm drop-shadow-md truncate">{item.profiles?.full_name ?? "Student"}</span>
+                    </div>
+
                     {/* Action buttons on hover */}
-                    <div className="flex items-center gap-4 mb-3">
-                      <button onClick={(e) => { e.stopPropagation(); toggleLike(item.id); }} className="flex items-center gap-1 group/btn">
-                        <span className={`material-symbols-outlined text-base ${userLikes.has(item.id) ? "text-red-500" : "text-white"}`} style={userLikes.has(item.id) ? { fontVariationSettings: "'FILL' 1" } : {}}>favorite</span>
-                        <span className="text-white text-xs font-bold">{likeCounts[item.id] || 0}</span>
+                    <div className="flex items-center gap-5 mb-4 transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 delay-150">
+                      <button onClick={(e) => { e.stopPropagation(); toggleLike(item.id); }} className="flex items-center gap-1.5 group/btn">
+                        <span className={`material-symbols-outlined text-[22px] group-hover/btn:scale-110 transition-transform ${userLikes.has(item.id) ? "text-red-500" : "text-white"}`} style={userLikes.has(item.id) ? { fontVariationSettings: "'FILL' 1" } : {}}>favorite</span>
+                        <span className="text-white text-sm font-bold shadow-black drop-shadow-lg">{likeCounts[item.id] || 0}</span>
                       </button>
                       <span className="flex items-center gap-1">
                         <span className="material-symbols-outlined text-white text-base">chat_bubble_outline</span>

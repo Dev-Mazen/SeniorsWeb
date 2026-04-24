@@ -1,32 +1,27 @@
 "use client";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
-import { createClient } from "@/lib/supabase/client";
-import { useEffect, useMemo, useState } from "react";
+import { usePathname } from "next/navigation";
+import { useDeferredValue, useEffect, useMemo, useState } from "react";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 const navLinks = [
-  { href: "/", label: "Home" },
-  { href: "/directory", label: "Directory" },
-  { href: "/wall", label: "The Wall" },
-  { href: "/memory-feed", label: "Memory Feed" },
-  { href: "/awards", label: "Awards" },
-  { href: "/hall-of-thanks", label: "Hall of Thanks" },
-  { href: "/time-capsule", label: "Time Capsule" },
+  { href: "/directory", label: "Directory", hint: "Classmates, profiles, and shared memories" },
+  { href: "/wall", label: "The Wall", hint: "Live notes, messages, and shout-outs" },
+  { href: "/memory-feed", label: "Memory Feed", hint: "Photos, videos, and recent archive posts" },
+  { href: "/awards", label: "Awards", hint: "Voting, results, and class superlatives" },
+  { href: "/hall-of-thanks", label: "Hall of Thanks", hint: "Teacher gratitude and appreciation" },
 ];
 
-export default function Navbar({ role }: { role?: string }) {
+export default function Navbar({ role, photoUrl }: { role?: string; photoUrl?: string | null }) {
   const pathname = usePathname();
-  const router = useRouter();
   const [openPalette, setOpenPalette] = useState(false);
   const [query, setQuery] = useState("");
-  const allLinks = useMemo(() => (role === "admin" ? [...navLinks, { href: "/admin", label: "Admin" }] : navLinks), [role]);
-
-  async function handleLogout() {
-    const supabase = createClient();
-    await supabase.auth.signOut();
-    router.push("/login");
-    router.refresh();
-  }
+  const [scrolled, setScrolled] = useState(false);
+  const deferredQuery = useDeferredValue(query);
+  const allLinks = useMemo(
+    () => (role === "admin" ? [...navLinks, { href: "/admin", label: "Admin", hint: "Moderation, settings, and platform controls" }] : navLinks),
+    [role],
+  );
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -40,21 +35,31 @@ export default function Navbar({ role }: { role?: string }) {
       }
     };
 
+    const onScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
+
     window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
+    window.addEventListener("scroll", onScroll);
+    onScroll();
+    return () => {
+      window.removeEventListener("keydown", onKeyDown);
+      window.removeEventListener("scroll", onScroll);
+    };
   }, []);
 
   const paletteLinks = useMemo(() => {
-    if (!query.trim()) return allLinks;
-    return allLinks.filter((link) => link.label.toLowerCase().includes(query.toLowerCase()));
-  }, [allLinks, query]);
+    if (!deferredQuery.trim()) return allLinks;
+    const normalized = deferredQuery.toLowerCase();
+    return allLinks.filter((link) => `${link.label} ${link.hint} ${link.href}`.toLowerCase().includes(normalized));
+  }, [allLinks, deferredQuery]);
 
   return (
     <>
-      <header className="fixed top-0 z-50 w-full px-3 pt-3 md:px-6">
-        <div className="section-shell mx-auto flex max-w-7xl items-center justify-between rounded-[2rem] px-4 py-3 md:px-6">
+      <header className={`fixed top-0 z-50 w-full transition-all duration-500 ${scrolled ? "px-2 pt-2 md:px-4" : "px-3 pt-3 md:px-6"}`}>
+        <div className={`mx-auto flex max-w-7xl items-center justify-between transition-all duration-500 ease-out ${scrolled ? "section-shell rounded-[1.5rem] px-5 py-2 shadow-sm bg-surface/90 border-outline-variant/30 backdrop-blur-xl" : "section-shell rounded-[2rem] px-4 py-3 md:px-6 shadow-none border-transparent bg-white/40"}`}>
           <Link href="/" className="group flex items-center gap-3">
-            <div className="orbital-ring flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-primary to-primary-container text-sm font-black text-white">
+            <div className="orbital-ring flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-primary to-primary-container text-sm font-black text-white px-2">
               26
             </div>
             <div className="leading-none">
@@ -72,8 +77,8 @@ export default function Navbar({ role }: { role?: string }) {
                   href={href}
                   className={`rounded-full px-4 py-2 text-sm font-semibold transition-all duration-200 ${
                     active
-                      ? "bg-on-surface text-white shadow-lg shadow-stone-900/10"
-                      : "text-on-surface-variant hover:bg-white/80 hover:text-on-surface"
+                      ? "bg-on-surface text-inverse-on-surface shadow-lg shadow-stone-900/10"
+                      : "text-on-surface-variant hover:bg-surface-container hover:text-on-surface"
                   }`}
                 >
                   {label}
@@ -85,21 +90,29 @@ export default function Navbar({ role }: { role?: string }) {
           <div className="flex items-center gap-2">
             <button
               type="button"
-              onClick={() => setOpenPalette(true)}
+              onClick={() => {
+                setOpenPalette(true);
+                setQuery("");
+              }}
               className="pill-badge hidden items-center gap-2 rounded-full px-3 py-2 text-xs font-semibold text-on-surface-variant transition-colors hover:text-on-surface md:flex"
               title="Open command palette"
             >
               <span className="material-symbols-outlined text-sm">search</span>
               <span>Quick nav</span>
-              <span className="rounded-full bg-white px-2 py-0.5 text-[10px] font-bold text-on-surface">Ctrl K</span>
+              <span className="rounded-full bg-surface-container px-2 py-0.5 text-[10px] font-bold text-on-surface">Ctrl K</span>
             </button>
-            <button
-              onClick={handleLogout}
-              className="pill-badge flex h-11 w-11 items-center justify-center rounded-full text-on-surface-variant transition-colors hover:text-on-surface"
-              title="Sign out"
+            <ThemeToggle />
+            <Link
+              href="/profile"
+              className="pill-badge flex h-11 w-11 items-center justify-center rounded-full overflow-hidden text-on-surface-variant transition-colors hover:text-on-surface p-0.5 border border-outline-variant/20 relative"
+              title="My Profile"
             >
-              <span className="material-symbols-outlined">logout</span>
-            </button>
+              {photoUrl ? (
+                <img src={photoUrl} alt="My Profile" className="w-full h-full rounded-full object-cover" />
+              ) : (
+                <span className="material-symbols-outlined absolute text-[22px]">person</span>
+              )}
+            </Link>
           </div>
         </div>
       </header>
@@ -114,7 +127,7 @@ export default function Navbar({ role }: { role?: string }) {
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
                 placeholder="Search pages..."
-                className="w-full bg-transparent outline-none text-sm"
+                className="w-full bg-transparent outline-none text-sm text-on-surface"
               />
             </div>
             <div className="max-h-80 overflow-y-auto">
@@ -126,10 +139,13 @@ export default function Navbar({ role }: { role?: string }) {
                     setOpenPalette(false);
                     setQuery("");
                   }}
-                  className="flex items-center justify-between px-4 py-3 text-sm transition-colors hover:bg-surface-container-low"
+                  className="flex items-center justify-between gap-4 px-4 py-3 text-sm transition-colors hover:bg-surface-container-low"
                 >
-                  <span>{link.label}</span>
-                  <span className="text-on-surface-variant">{link.href}</span>
+                  <div className="min-w-0">
+                    <p className="font-semibold text-on-surface">{link.label}</p>
+                    <p className="truncate text-xs text-on-surface-variant">{link.hint}</p>
+                  </div>
+                  <span className="shrink-0 text-on-surface-variant">{pathname === link.href ? "Current" : link.href}</span>
                 </Link>
               ))}
               {paletteLinks.length === 0 && (
