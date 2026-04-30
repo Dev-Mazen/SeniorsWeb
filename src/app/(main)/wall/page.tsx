@@ -7,9 +7,15 @@ export default async function WallPage() {
   const { data: settings } = await supabase.from("platform_settings").select("wall_enabled").single();
   const { data: posts } = await supabase
     .from("wall_posts")
-    .select("*, profiles(full_name, photo_url)")
+    .select("*, profiles(full_name, nickname, photo_url)")
     .eq("status", "approved")
     .order("created_at", { ascending: false });
 
-  return <WallClient posts={posts ?? []} wallEnabled={settings?.wall_enabled ?? true} userId={user!.id} />;
+  return (
+    <div className="mx-auto max-w-7xl px-4 pb-32 pt-8 md:px-8">
+      <section className="section-shell rounded-[2rem] p-3 md:p-4">
+        <WallClient posts={posts ?? []} wallEnabled={settings?.wall_enabled ?? true} userId={user!.id} />
+      </section>
+    </div>
+  );
 }

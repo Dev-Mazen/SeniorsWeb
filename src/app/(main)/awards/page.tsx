@@ -6,7 +6,7 @@ export default async function AwardsPage() {
   const { data: { user } } = await supabase.auth.getUser();
   const { data: settings } = await supabase.from("platform_settings").select("voting_enabled, awards_revealed").single();
   const { data: questions } = await supabase.from("awards_questions").select("*").eq("is_active", true).order("display_order");
-  const { data: profiles } = await supabase.from("profiles").select("id, full_name, photo_url").eq("is_active", true).eq("role", "student");
+  const { data: profiles } = await supabase.from("profiles").select("id, full_name, nickname, photo_url").eq("is_active", true).eq("role", "student");
   const { data: myVotes } = await supabase.from("awards_votes").select("question_id, nominee_id").eq("voter_id", user!.id);
   
   let results: Record<string, { nominee_id: string; count: number }[]> | null = null;
@@ -23,5 +23,19 @@ export default async function AwardsPage() {
       Object.keys(results).forEach(qid => results![qid].sort((a, b) => b.count - a.count));
     }
   }
-  return <AwardsClient questions={questions ?? []} profiles={profiles ?? []} myVotes={myVotes ?? []} votingEnabled={settings?.voting_enabled ?? false} awardsRevealed={settings?.awards_revealed ?? false} results={results} userId={user!.id} />;
+  return (
+    <div className="mx-auto max-w-7xl px-4 pb-32 pt-8 md:px-8">
+      <section className="section-shell rounded-[2rem] p-3 md:p-4">
+        <AwardsClient
+          questions={questions ?? []}
+          profiles={profiles ?? []}
+          myVotes={myVotes ?? []}
+          votingEnabled={settings?.voting_enabled ?? false}
+          awardsRevealed={settings?.awards_revealed ?? false}
+          results={results}
+          userId={user!.id}
+        />
+      </section>
+    </div>
+  );
 }

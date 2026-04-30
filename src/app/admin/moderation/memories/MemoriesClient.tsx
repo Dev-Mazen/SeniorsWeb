@@ -10,8 +10,15 @@ type Memory = {
   media_type: string;
   status: string;
   created_at: string;
-  profiles: { full_name: string | null, email: string | null };
+  profiles: { full_name: string | null, nickname?: string | null, email: string | null };
 };
+
+function shortDisplayName(name: string | null | undefined) {
+  const parts = (name ?? "").split(" ").filter(Boolean);
+  if (parts.length >= 2) return parts[1];
+  if (parts.length === 1) return parts[0];
+  return "Student";
+}
 
 export default function MemoriesClient({ initialMemories }: { initialMemories: Memory[] }) {
   const [memories, setMemories] = useState(initialMemories);
@@ -160,7 +167,12 @@ export default function MemoriesClient({ initialMemories }: { initialMemories: M
                <div className="flex justify-between items-start">
                   <div>
                     <h4 className="font-bold text-lg text-on-surface flex items-center gap-2">
-                       {memory.profiles?.full_name ?? "Unknown Senior"}
+                       {shortDisplayName(memory.profiles?.full_name)}
+                       {memory.profiles?.nickname && (
+                        <span className="ml-2 text-xs font-bold uppercase tracking-[0.15em] text-primary/70">
+                          @{memory.profiles.nickname}
+                        </span>
+                       )}
                     </h4>
                     <p className="text-xs font-semibold text-on-surface-variant mt-1 tracking-widest uppercase">
                        {new Date(memory.created_at).toLocaleString()}
@@ -205,3 +217,4 @@ export default function MemoriesClient({ initialMemories }: { initialMemories: M
     </div>
   );
 }
+

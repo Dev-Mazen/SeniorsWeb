@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { motion, type Variants, useScroll, useTransform } from "framer-motion";
+import { motion, type Variants, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import type { PlatformSettings, Profile } from "@/types/database";
 
 function useCountdown(targetDate: string) {
@@ -57,300 +57,356 @@ export default function HomeExperience({
   const grad = settings?.graduation_date ?? "2026-05-24";
   const timer = useCountdown(grad);
   const { scrollYProgress } = useScroll();
-  const heroImageY = useTransform(scrollYProgress, [0, 0.35], [0, 140]);
-  const heroContentY = useTransform(scrollYProgress, [0, 0.25], [0, -40]);
-  const heroContentOpacity = useTransform(scrollYProgress, [0, 0.22], [1, 0.5]);
+  const heroImageY = useTransform(scrollYProgress, [0, 0.4], [0, 200]);
+  const heroContentY = useTransform(scrollYProgress, [0, 0.3], [0, -60]);
+  const heroContentOpacity = useTransform(scrollYProgress, [0, 0.25], [1, 0]);
   const firstName = profile?.full_name?.split(" ")[0] ?? "Senior";
 
   const statusCards = [
     {
-      label: "Wall",
-      value: settings?.wall_enabled ? "Live" : "Paused",
-      tone: settings?.wall_enabled ? "text-primary" : "text-on-surface-variant",
+      label: "Archive Wall",
+      value: settings?.wall_enabled ? "Active" : "Locked",
+      tone: settings?.wall_enabled ? "text-primary" : "text-on-surface-variant/40",
+      icon: "dashboard_customize"
     },
     {
-      label: "Uploads",
-      value: settings?.uploads_enabled ? "Open" : "Locked",
-      tone: settings?.uploads_enabled ? "text-secondary" : "text-on-surface-variant",
+      label: "Intel Flow",
+      value: settings?.uploads_enabled ? "Synced" : "Paused",
+      tone: settings?.uploads_enabled ? "text-secondary" : "text-on-surface-variant/40",
+      icon: "sync_alt"
     },
     {
-      label: "Awards",
-      value: settings?.awards_revealed ? "Revealed" : "Building",
-      tone: settings?.awards_revealed ? "text-tertiary" : "text-on-surface-variant",
+      label: "Recognition",
+      value: settings?.awards_revealed ? "Live" : "Pending",
+      tone: settings?.awards_revealed ? "text-tertiary" : "text-on-surface-variant/40",
+      icon: "workspace_premium"
     },
   ];
 
   const destinationCards = [
     {
       href: "/directory",
-      title: "Directory Atlas",
-      eyebrow: "Connect",
+      title: "Class Atlas",
+      eyebrow: "Registry",
       copy: "Search the graduating class, revisit familiar faces, and see where everyone's heading next.",
       image: "/stitch-assets/home_img_1.jpg",
-      accent: "from-primary/90 via-primary/60 to-transparent",
+      accent: "from-primary/80 via-primary/40 to-transparent",
       size: "md:col-span-5 md:row-span-2",
     },
     {
       href: "/wall",
-      title: "The Wall",
-      eyebrow: "Collaborate",
+      title: "The Living Wall",
+      eyebrow: "Fragments",
       copy: "Leave messages, celebrate friendships, and watch the class heartbeat unfold in real time.",
       image: "/stitch-assets/home_img_2.jpg",
-      accent: "from-secondary/90 via-secondary/50 to-transparent",
+      accent: "from-secondary/80 via-secondary/40 to-transparent",
       size: "md:col-span-4 md:row-span-3",
     },
     {
       href: "/memory-feed",
-      title: "Memory Feed",
+      title: "Chronicle",
       eyebrow: "Archive",
       copy: "A living gallery of photos, clips, and moments that deserve a second look.",
       image: "/stitch-assets/home_img_5.jpg",
-      accent: "from-tertiary/90 via-tertiary/50 to-transparent",
+      accent: "from-tertiary/80 via-tertiary/40 to-transparent",
       size: "md:col-span-3 md:row-span-2",
     },
     {
       href: "/hall-of-thanks",
-      title: "Hall of Thanks",
+      title: "Sanctuary of Gratitude",
       eyebrow: "Honor",
       copy: "Send gratitude to teachers, mentors, and the people who shaped the year.",
       image: "/stitch-assets/home_img_3.jpg",
-      accent: "from-stone-900/90 via-stone-700/55 to-transparent",
+      accent: "from-on-surface/80 via-on-surface/40 to-transparent",
       size: "md:col-span-5 md:row-span-2",
     },
     {
       href: "/time-capsule",
-      title: "Time Capsule",
-      eyebrow: "Future",
+      title: "Temporal Vault",
+      eyebrow: "Legacy",
       copy: "Write something today that a future version of you will open later.",
       image: "/stitch-assets/home_img_4.jpg",
-      accent: "from-primary-container/95 via-primary/50 to-transparent",
+      accent: "from-primary-container/80 via-primary-container/40 to-transparent",
       size: "md:col-span-3 md:row-span-2",
     },
   ];
 
   const quickActions = [
-    { href: "/directory", label: "Explore directory", icon: "travel_explore" },
-    { href: "/wall", label: "Post on the wall", icon: "edit_square" },
-    { href: "/memory-feed", label: "Open memories", icon: "photo_library" },
-    { href: "/time-capsule", label: "Write to future me", icon: "hourglass_top" },
-  ];
-  const socialStats = [
-    { label: "Classmates", value: stats.classmates, tone: "text-primary" },
-    { label: "Memories", value: stats.memories, tone: "text-secondary" },
-    { label: "Wall Posts", value: stats.wallPosts, tone: "text-tertiary" },
+    { href: "/directory", label: "Registry Access", icon: "travel_explore" },
+    { href: "/wall", label: "Pin Fragment", icon: "edit_square" },
+    { href: "/memory-feed", label: "View Archive", icon: "photo_library" },
+    { href: "/time-capsule", label: "Temporal Lock", icon: "hourglass_top" },
   ];
 
   const staggerContainer: Variants = {
     hidden: { opacity: 0 },
     show: {
       opacity: 1,
-      transition: { staggerChildren: 0.15 },
+      transition: { staggerChildren: 0.1 },
     },
   };
 
   const fadeUp: Variants = {
-    hidden: { opacity: 0, y: 30 },
-    show: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" as const } },
+    hidden: { opacity: 0, y: 30, scale: 0.95 },
+    show: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } },
   };
 
   return (
-    <>
-      <section className="relative overflow-hidden px-4 pb-12 pt-8 md:px-8 md:pb-20">
-        <div className="hero-mesh section-shell soft-noise relative mx-auto min-h-[760px] max-w-7xl overflow-hidden rounded-[2rem] md:min-h-[840px]">
-          <div className="soft-grid absolute inset-0 opacity-40" />
-          <motion.img
-            initial={{ scale: 1.1, opacity: 0 }}
-            animate={{ scale: 1.04, opacity: 0.6 }}
-            transition={{ duration: 2, ease: "easeOut" }}
+    <div className="space-y-24">
+      {/* Hero Section */}
+      <section className="relative px-4 pt-4 md:px-8 scroll-fade ambient-anim">
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.98 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="section-shell relative mx-auto min-h-[85vh] max-w-[1600px] overflow-hidden rounded-[3.5rem] shadow-2xl"
+        >
+          {/* Parallax Background */}
+          <motion.div 
             style={{ y: heroImageY }}
-            alt="Senior Year Hero"
-            className="absolute inset-0 h-full w-full object-cover object-center"
-            src="/stitch-assets/home_img_0.jpg"
-          />
-          <div className="hero-gradient absolute inset-0 opacity-40 pointer-events-none" />
-          <div className="relative z-10 grid min-h-[760px] grid-cols-1 gap-8 px-6 py-10 md:min-h-[840px] md:grid-cols-[1.2fr_0.8fr] md:px-10 md:py-12 lg:px-14">
-            <motion.div style={{ y: heroContentY, opacity: heroContentOpacity }} className="flex flex-col justify-between">
-              <div className="max-w-3xl pt-12 md:pt-20">
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.2 }}
-                  className="pill-badge mb-8 inline-flex rounded-full px-4 py-2 text-xs font-extrabold uppercase tracking-[0.26em] text-on-surface-variant"
-                >
-                  The final chapter is being written now
-                </motion.div>
-                <motion.p
-                  initial={{ opacity: 0, y: 24 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.35 }}
-                  className="section-kicker mb-5"
-                >
-                  Welcome back, {firstName}
-                </motion.p>
-                <motion.h1
-                  initial={{ opacity: 0, y: 24 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.45 }}
-                  className="text-balance serif-heading max-w-4xl text-5xl font-semibold leading-[0.9] text-primary md:text-7xl lg:text-[6.5rem]"
-                >
-                  Build a yearbook that feels alive.
-                </motion.h1>
-                <motion.p
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.7 }}
-                  className="mt-6 max-w-2xl text-balance text-base leading-7 text-on-surface/80 md:text-lg"
-                >
-                  Preserve the loud moments, the quiet ones, and the in-between stories. This space is your class archive,
-                  social wall, and time capsule in one polished experience.
-                </motion.p>
-                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.9 }} className="mt-10 flex flex-wrap gap-4">
-                  <Link href="/directory" className="pressable rounded-full bg-stone-900 px-7 py-4 text-sm font-extrabold uppercase tracking-[0.18em] text-white transition-transform hover:scale-[1.02]">
-                    Start exploring
-                  </Link>
-                  <Link href="/wall" className="pressable rounded-full border border-outline-variant/40 bg-surface-container/50 px-7 py-4 text-sm font-extrabold uppercase tracking-[0.18em] text-on-surface backdrop-blur-md transition-transform hover:scale-[1.02]">
-                    Visit the wall
-                  </Link>
-                </motion.div>
-              </div>
+            className="absolute inset-0 z-0"
+          >
+            <img
+              alt="Archive Hero"
+              className="h-full w-full object-cover grayscale-[0.2] brightness-[0.7]"
+              src="/stitch-assets/home_img_0.jpg"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent" />
+          </motion.div>
 
-              <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.05 }} className="mt-12 grid gap-4 md:max-w-2xl md:grid-cols-3">
-                {statusCards.map((item) => (
-                  <div key={item.label} className="pill-badge rounded-[1.5rem] px-5 py-5">
-                    <p className="text-xs font-extrabold uppercase tracking-[0.24em] text-on-surface-variant">{item.label}</p>
-                    <p className={`mt-3 text-2xl font-black ${item.tone}`}>{item.value}</p>
+          {/* Grid Overlay */}
+          <div className="absolute inset-0 z-[1] bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay pointer-events-none" />
+          
+          {/* Content */}
+          <div className="relative z-10 grid h-full min-h-[85vh] grid-cols-1 md:grid-cols-[1.4fr_0.6fr] gap-12 p-8 md:p-20">
+            <motion.div 
+              style={{ y: heroContentY, opacity: heroContentOpacity }}
+              className="flex flex-col justify-center"
+            >
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.2 }}
+                className="inline-flex items-center gap-3 px-6 py-2 rounded-full bg-primary/10 text-primary border border-primary/20 mb-8 w-fit"
+              >
+                <span className="material-symbols-outlined text-sm">auto_awesome</span>
+                <span className="text-[10px] font-black uppercase tracking-[0.4em]">The Living Archive v20.26</span>
+              </motion.div>
+
+              <motion.h1
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3, duration: 1 }}
+                className="serif text-7xl md:text-[9.5rem] font-black text-on-surface leading-[0.8] tracking-tighter mb-10"
+              >
+                Legacy <br />
+                <span className="text-transparent bg-clip-text bg-gradient-to-br from-primary to-secondary italic">Redefined.</span>
+              </motion.h1>
+
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.6 }}
+                className="max-w-xl text-xl md:text-2xl font-medium text-on-surface-variant leading-relaxed mb-12"
+              >
+                Class of 2026. This isn't just a website. It's a digital nerve center for every memory, every shout-out, and every dream.
+              </motion.p>
+
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.8 }}
+                className="flex flex-wrap gap-6"
+              >
+                <Link href="/directory" className="group relative px-12 py-6 rounded-full bg-on-surface text-background font-black text-xs uppercase tracking-[0.3em] overflow-hidden transition-all hover:shadow-2xl hover:shadow-primary/20 active:scale-95">
+                  <span className="relative z-10">Initialize Scan</span>
+                  <div className="absolute inset-0 bg-gradient-to-r from-primary to-secondary opacity-0 group-hover:opacity-100 transition-opacity" />
+                </Link>
+                <Link href="/wall" className="px-12 py-6 rounded-full border border-outline-variant/20 bg-surface-container-low/40 backdrop-blur-xl text-on-surface font-black text-xs uppercase tracking-[0.3em] hover:bg-surface-container-low transition-all active:scale-95">
+                  Access Wall
+                </Link>
+              </motion.div>
+
+              {/* Stats Bar */}
+              <motion.div 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 1 }}
+                className="mt-20 flex flex-wrap gap-12"
+              >
+                {statusCards.map((card) => (
+                  <div key={card.label} className="group cursor-default">
+                    <div className="flex items-center gap-3 mb-2">
+                      <span className={`material-symbols-outlined text-sm ${card.tone}`}>{card.icon}</span>
+                      <p className="text-[10px] font-black uppercase tracking-[0.3em] text-on-surface-variant/40 group-hover:text-on-surface-variant transition-colors">{card.label}</p>
+                    </div>
+                    <p className={`text-2xl font-black ${card.tone}`}>{card.value}</p>
                   </div>
                 ))}
               </motion.div>
             </motion.div>
 
-            <motion.div initial={{ opacity: 0, x: 18 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.6, duration: 0.8 }} className="flex items-end justify-end">
-              <div className="section-shell ml-auto w-full max-w-md rounded-[2rem] p-6 text-left md:mb-8">
-                <p className="section-kicker mb-5">Launch panel</p>
-                <div className="space-y-3">
-                  {quickActions.map((action) => (
-                    <Link key={action.href} href={action.href} className="interactive-card flex items-center justify-between rounded-[1.5rem] border border-outline-variant/20 bg-white/70 px-4 py-4">
-                      <div className="flex items-center gap-3">
-                        <span className="material-symbols-outlined rounded-full bg-surface-container px-3 py-3 text-on-surface">{action.icon}</span>
-                        <span className="font-semibold text-on-surface">{action.label}</span>
+            {/* Launch Panel Sidebar */}
+            <motion.div 
+              initial={{ opacity: 0, x: 40 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.8 }}
+              className="hidden md:flex flex-col justify-center items-end"
+            >
+              <div className="section-shell w-full max-w-sm rounded-[3rem] p-1 shadow-2xl">
+                <div className="bg-surface-container-lowest/40 backdrop-blur-3xl rounded-[2.8rem] p-10">
+                  <div className="mb-10">
+                    <p className="text-[10px] font-black uppercase tracking-[0.4em] text-primary mb-2">Terminal Access</p>
+                    <h2 className="serif text-4xl font-black text-on-surface leading-none">Command Center</h2>
+                  </div>
+
+                  <div className="space-y-4">
+                    {quickActions.map((action) => (
+                      <Link key={action.href} href={action.href} className="group flex items-center justify-between p-6 rounded-[1.8rem] bg-surface-container-high/40 hover:bg-primary/10 border border-outline-variant/10 transition-all hover:border-primary/20">
+                        <div className="flex items-center gap-4">
+                          <div className="w-12 h-12 rounded-2xl bg-surface-container-high flex items-center justify-center text-on-surface-variant group-hover:text-primary transition-colors">
+                            <span className="material-symbols-outlined">{action.icon}</span>
+                          </div>
+                          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-on-surface-variant group-hover:text-on-surface transition-colors">{action.label}</span>
+                        </div>
+                        <span className="material-symbols-outlined text-outline/30 group-hover:text-primary group-hover:translate-x-1 transition-all">chevron_right</span>
+                      </Link>
+                    ))}
+                  </div>
+
+                  <div className="mt-10 pt-8 border-t border-outline-variant/10">
+                    <div className="flex items-center gap-4 p-5 rounded-[2rem] bg-primary/5 border border-primary/10">
+                      <div className="w-12 h-12 rounded-2xl bg-primary/20 flex items-center justify-center text-primary font-black">
+                        {firstName[0]}
                       </div>
-                      <span className="material-symbols-outlined text-on-surface-variant">arrow_forward</span>
-                    </Link>
-                  ))}
-                </div>
-                <div className="mt-5 rounded-[1.5rem] bg-stone-900 px-5 py-5 text-white">
-                  <p className="text-xs font-extrabold uppercase tracking-[0.24em] text-white/55">Profile</p>
-                  <p className="mt-2 serif-heading text-3xl font-semibold">{profile?.full_name ?? "Class Member"}</p>
-                  <p className="mt-2 text-sm uppercase tracking-[0.2em] text-white/65">{profile?.role ?? "member"}</p>
+                      <div>
+                        <p className="text-[9px] font-black uppercase tracking-widest text-primary/60">Operator</p>
+                        <p className="text-xs font-black text-on-surface">{profile?.full_name}</p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </motion.div>
           </div>
-        </div>
+        </motion.div>
       </section>
 
-      {/* Infinite Scrolling Marquee */}
-      <div className="w-full relative bg-surface-container-lowest/50 py-5 overflow-hidden border-y border-outline-variant/10 -mt-6 mb-8 flex whitespace-nowrap z-20 transform -rotate-1 origin-left">
+      {/* Marquee Section */}
+      <div className="relative overflow-hidden py-10 bg-on-surface/5 -skew-y-2 border-y border-outline-variant/10 scroll-fade">
         <motion.div 
-          animate={{ x: ["0%", "-50%"] }} 
-          transition={{ repeat: Infinity, ease: "linear", duration: 30 }} 
-          className="flex w-max items-center gap-12 font-black text-4xl uppercase tracking-[0.1em] text-on-surface/10 select-none pointer-events-none"
+          animate={{ x: ["0%", "-50%"] }}
+          transition={{ repeat: Infinity, duration: 40, ease: "linear" }}
+          className="flex gap-20 whitespace-nowrap"
         >
-          {Array.from({ length: 8 }).map((_, i) => (
-            <span key={i} className="flex flex-shrink-0 items-center gap-12">
-              <span className="italic">SENIORS 2026</span>
-              <span className="material-symbols-outlined text-primary/30 text-4xl" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
-              <span className="italic">THE FINAL CHAPTER</span>
-              <span className="material-symbols-outlined text-tertiary/30 text-4xl" style={{ fontVariationSettings: "'FILL' 1" }}>local_fire_department</span>
-            </span>
+          {Array.from({ length: 10 }).map((_, i) => (
+            <div key={i} className="flex items-center gap-20">
+              <span className="serif text-5xl font-black text-on-surface/10 uppercase tracking-tighter">Class of 2026</span>
+              <span className="w-4 h-4 rounded-full bg-primary/20" />
+              <span className="serif text-5xl font-black text-on-surface/10 uppercase tracking-tighter italic">Unforgettable</span>
+              <span className="w-4 h-4 rounded-full bg-secondary/20" />
+            </div>
           ))}
         </motion.div>
       </div>
-      <motion.section
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.2 }}
-        transition={{ duration: 0.6, ease: "easeOut" }}
-        className="px-4 py-8 md:px-8"
-      >
-        <div className="section-shell mx-auto max-w-7xl rounded-[2.5rem] px-8 py-12 md:px-14 md:py-16 bg-surface-container-lowest/80 relative overflow-hidden">
-          {/* Decorative element for countdown */}
-          <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl -z-10" />
-          <div className="flex flex-col gap-12 lg:flex-row lg:items-center lg:justify-between">
-            <div className="max-w-xl relative p-4">
-              <span className="material-symbols-outlined absolute -top-4 -left-4 text-5xl text-primary/10">hourglass_top</span>
-              <p className="text-primary font-bold text-sm tracking-[0.2em] uppercase mb-4 pl-1">Countdown to Graduation</p>
-              <h2 className="serif-heading text-5xl font-black leading-[1.1] text-on-surface md:text-6xl text-balance">
-                Every memory matters as the finish line gets closer.
+
+      {/* Countdown Section */}
+      <section className="px-4 md:px-8 scroll-scale">
+        <div className="section-shell mx-auto max-w-7xl rounded-[3.5rem] bg-surface-container-lowest/50 backdrop-blur-3xl p-8 md:p-20 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-96 h-96 bg-primary/5 rounded-full blur-[100px] -z-10" />
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.2fr] gap-20 items-center">
+            <div>
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                className="inline-flex items-center gap-3 px-5 py-2 rounded-full bg-secondary/10 text-secondary border border-secondary/20 mb-8"
+              >
+                <span className="material-symbols-outlined text-sm">schedule</span>
+                <span className="text-[10px] font-black uppercase tracking-[0.4em]">Temporal Sync</span>
+              </motion.div>
+              <h2 className="serif text-5xl md:text-7xl font-black text-on-surface leading-none tracking-tighter mb-8">
+                The Clock is <br />
+                <span className="text-secondary italic">Accelerating.</span>
               </h2>
-              <p className="mt-6 max-w-lg text-lg leading-relaxed text-on-surface-variant">
-                Graduation is approaching fast. Use this space to write notes, collect photos, and leave behind something bigger
-                than a static yearbook page.
+              <p className="text-xl font-medium text-on-surface-variant leading-relaxed max-w-md">
+                 Graduation isn't just a date; it's the convergence of every story we've built together. Make every second count.
               </p>
             </div>
-            <div className="grid flex-1 grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-              {Object.entries(timer).map(([label, val]) => (
-                <div key={label} className="group relative bg-white rounded-[2rem] border border-outline-variant/30 p-6 sm:p-8 text-center editorial-shadow transition-transform hover:-translate-y-1">
-                  <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-surface-container-low to-transparent rounded-b-[2rem] -z-10" />
-                  <p className="font-sans text-5xl sm:text-6xl font-black tracking-tight text-on-surface group-hover:scale-105 transition-transform">
-                    {String(val).padStart(label === "Days" && val > 99 ? 3 : 2, "0")}
+            
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+              {Object.entries(timer).map(([label, val], idx) => (
+                <motion.div 
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ delay: idx * 0.1 }}
+                  key={label} 
+                  className="group relative bg-surface-container-high/40 p-8 rounded-[2.5rem] border border-outline-variant/10 text-center hover:bg-surface-container-high transition-all hover:shadow-xl hover:-translate-y-2"
+                >
+                  <p className="text-5xl md:text-6xl font-black text-on-surface tracking-tighter mb-4 transition-transform group-hover:scale-110">
+                    {String(val).padStart(2, "0")}
                   </p>
-                  <p className="mt-4 text-xs font-bold uppercase tracking-[0.25em] text-on-surface-variant group-hover:text-primary transition-colors">{label}</p>
-                </div>
+                  <p className="text-[10px] font-black uppercase tracking-[0.4em] text-on-surface-variant/40 group-hover:text-secondary transition-colors">{label}</p>
+                </motion.div>
               ))}
             </div>
           </div>
         </div>
-      </motion.section>
+      </section>
 
-      <motion.section
-        initial={{ opacity: 0, y: 28 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.15 }}
-        transition={{ duration: 0.7, ease: "easeOut" }}
-        className="px-4 py-12 md:px-8 md:py-16"
-      >
+      {/* Navigation Matrix */}
+      <section className="px-4 md:px-8 scroll-reveal">
         <div className="mx-auto max-w-7xl">
-          <div className="mb-10 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+          <header className="mb-16 flex flex-col md:flex-row md:items-end justify-between gap-10">
             <div className="max-w-2xl">
-              <p className="section-kicker mb-4">Destinations</p>
-              <h2 className="serif-heading text-4xl font-semibold text-on-surface md:text-5xl">
-                The app now feels like a campus map instead of a list of links.
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                className="inline-flex items-center gap-3 px-5 py-2 rounded-full bg-primary/10 text-primary border border-primary/20 mb-8"
+              >
+                <span className="material-symbols-outlined text-sm">explore</span>
+                <span className="text-[10px] font-black uppercase tracking-[0.4em]">Sub-Module Matrix</span>
+              </motion.div>
+              <h2 className="serif text-5xl md:text-7xl font-black text-on-surface leading-none tracking-tighter">
+                Explore the <br />
+                <span className="text-primary italic">Ecosystem.</span>
               </h2>
             </div>
-            <p className="max-w-md text-base leading-7 text-on-surface-variant">
-              Jump between stories, shout-outs, archives, and future letters with a homepage designed to surface mood, not just menus.
+            <p className="max-w-md text-lg font-medium text-on-surface-variant leading-relaxed">
+              Navigate between the living fragments of our history. Each portal leads to a unique dimension of our collective year.
             </p>
-          </div>
+          </header>
 
-          <motion.div
+          <motion.div 
             variants={staggerContainer}
             initial="hidden"
             whileInView="show"
             viewport={{ once: true, amount: 0.1 }}
-            className="grid grid-cols-1 gap-5 md:grid-cols-12 md:auto-rows-[150px]"
+            className="grid grid-cols-1 md:grid-cols-12 md:auto-rows-[160px] gap-6"
           >
             {destinationCards.map((card) => (
               <Link key={card.href} href={card.href} className={`group block ${card.size}`}>
-                <motion.div variants={fadeUp} className="interactive-card relative h-full min-h-[320px] overflow-hidden rounded-[2.5rem] editorial-shadow">
-                  <img alt={card.title} className="absolute inset-0 h-full w-full object-cover transition-transform duration-1000 group-hover:scale-110" src={card.image} />
-                  <div className={`absolute inset-0 bg-gradient-to-t ${card.accent} mix-blend-multiply opacity-80`} />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
+                <motion.div 
+                  variants={fadeUp}
+                  className="relative h-full min-h-[360px] overflow-hidden rounded-[3rem] shadow-2xl group-hover:shadow-primary/10 transition-all duration-700"
+                >
+                  <img 
+                    alt={card.title} 
+                    className="absolute inset-0 h-full w-full object-cover transition-transform duration-1000 group-hover:scale-110 brightness-[0.6]" 
+                    src={card.image} 
+                  />
+                  <div className={`absolute inset-0 bg-gradient-to-t ${card.accent} opacity-60 mix-blend-multiply`} />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
                   
-                  {/* Hover reveal glow */}
-                  <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-                  
-                  <div className="absolute bottom-0 left-0 right-0 p-8 md:p-10 transform transition-transform duration-500 group-hover:-translate-y-2">
+                  <div className="absolute inset-0 p-10 flex flex-col justify-end">
                     <div className="flex items-center gap-3 mb-4">
-                      <span className="w-8 h-[2px] bg-white/60"></span>
-                      <p className="text-[12px] font-extrabold uppercase tracking-[0.3em] text-white/90 drop-shadow-md pb-[2px]">{card.eyebrow}</p>
+                      <span className="w-10 h-[1px] bg-white/40" />
+                      <p className="text-[10px] font-black uppercase tracking-[0.4em] text-white/70">{card.eyebrow}</p>
                     </div>
-                    <h3 className="serif-heading text-4xl font-black text-white drop-shadow-lg leading-none">{card.title}</h3>
-                    <p className="mt-4 max-w-sm text-sm leading-relaxed text-white/80 drop-shadow opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100">{card.copy}</p>
+                    <h3 className="serif text-4xl md:text-5xl font-black text-white leading-none mb-6 group-hover:translate-x-2 transition-transform">{card.title}</h3>
+                    <p className="text-sm font-medium text-white/60 max-w-xs opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-500">{card.copy}</p>
                     
-                    <div className="mt-6 flex items-center gap-2 text-[13px] font-black uppercase tracking-[0.2em] text-white group-hover:text-primary-fixed-dim transition-colors">
-                      <span>Explore</span>
-                      <span className="material-symbols-outlined text-lg group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                    <div className="mt-8 flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.4em] text-white group-hover:text-primary transition-colors">
+                      <span>Enter Module</span>
+                      <span className="material-symbols-outlined text-lg group-hover:translate-x-2 transition-transform">arrow_forward</span>
                     </div>
                   </div>
                 </motion.div>
@@ -358,139 +414,99 @@ export default function HomeExperience({
             ))}
           </motion.div>
         </div>
-      </motion.section>
+      </section>
 
-      <motion.section
-        initial={{ opacity: 0, y: 24 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.2 }}
-        transition={{ duration: 0.6, ease: "easeOut" }}
-        className="px-4 py-8 md:px-8"
-      >
-        <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
-          <div className="section-shell rounded-[2rem] px-6 py-8 md:px-8">
-            <p className="section-kicker mb-4">Live pulse</p>
-            <h2 className="serif-heading text-4xl font-semibold text-on-surface">The app should feel active the second it opens.</h2>
-            <p className="mt-4 text-base leading-7 text-on-surface-variant">
-              These numbers now come from the actual platform so the homepage reads like a living space, not a static poster.
-            </p>
-            <div className="mt-6 grid gap-4 sm:grid-cols-3 lg:grid-cols-1">
-              {socialStats.map((stat) => (
-                <div key={stat.label} className="spotlight-card rounded-[1.5rem] border border-outline-variant/15 px-5 py-5">
-                  <p className="text-[11px] font-extrabold uppercase tracking-[0.24em] text-on-surface-variant">{stat.label}</p>
-                  <p className={`mt-3 text-4xl font-black ${stat.tone}`}>{stat.value}</p>
+      {/* Social Live Pulse */}
+      <section className="px-4 md:px-8">
+        <div className="mx-auto max-w-7xl grid grid-cols-1 lg:grid-cols-[0.8fr_1.2fr] gap-8">
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            className="section-shell rounded-[3rem] p-10 md:p-14 bg-surface-container-lowest/50 backdrop-blur-3xl flex flex-col justify-center"
+          >
+            <p className="text-[10px] font-black uppercase tracking-[0.4em] text-primary mb-6">Archive Density</p>
+            <h2 className="serif text-5xl font-black text-on-surface leading-none mb-10">Real-time Metrics.</h2>
+            <div className="space-y-6">
+              {[
+                { label: "Class Registry", val: stats.classmates, tone: "text-primary", icon: "groups" },
+                { label: "Archived Fragments", val: stats.memories, tone: "text-secondary", icon: "auto_awesome" },
+                { label: "Wall Scrawls", val: stats.wallPosts, tone: "text-tertiary", icon: "history_edu" }
+              ].map((s) => (
+                <div key={s.label} className="p-6 rounded-[2rem] bg-surface-container-high/40 border border-outline-variant/10 flex items-center justify-between group hover:border-primary/20 transition-all">
+                  <div className="flex items-center gap-4">
+                    <span className={`material-symbols-outlined text-2xl ${s.tone}`}>{s.icon}</span>
+                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-on-surface-variant">{s.label}</p>
+                  </div>
+                  <p className={`text-3xl font-black ${s.tone}`}>{s.val}</p>
                 </div>
               ))}
             </div>
-          </div>
+          </motion.div>
 
-          <div className="section-shell rounded-[2rem] px-6 py-8 md:px-8">
-            <div className="mb-6 flex flex-wrap items-start sm:items-center justify-between gap-4">
-              <div className="flex-1 min-w-0">
-                <p className="section-kicker mb-3">Fresh moments</p>
-                <h2 className="serif-heading text-3xl md:text-4xl font-semibold text-on-surface">What classmates posted recently</h2>
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            className="section-shell rounded-[3rem] p-10 md:p-14 bg-surface-container-lowest/50 backdrop-blur-3xl"
+          >
+            <div className="flex items-center justify-between mb-12">
+              <div>
+                <p className="text-[10px] font-black uppercase tracking-[0.4em] text-secondary mb-3">Live Feed</p>
+                <h2 className="serif text-4xl font-black text-on-surface leading-none">Recent Syncs</h2>
               </div>
-              <Link href="/memory-feed" className="rounded-full bg-stone-900 px-5 py-3 text-xs font-black uppercase tracking-[0.18em] text-white whitespace-nowrap flex-shrink-0">
-                Open feed
+              <Link href="/memory-feed" className="px-8 py-4 rounded-full bg-secondary text-background font-black text-[10px] uppercase tracking-[0.3em] hover:shadow-xl hover:shadow-secondary/20 transition-all active:scale-95">
+                Full Stream
               </Link>
             </div>
-            <div className="grid gap-4 md:grid-cols-3">
-              {recentMemories.map((memory) => {
-                const author = Array.isArray(memory.profiles) ? memory.profiles[0] : memory.profiles;
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {recentMemories.map((m) => {
+                const author = Array.isArray(m.profiles) ? m.profiles[0] : m.profiles;
                 return (
-                  <Link key={memory.id} href="/memory-feed" className="group overflow-hidden rounded-[1.5rem] bg-white">
-                    <div className="relative h-56 overflow-hidden">
-                      {memory.media_type === "video" ? (
-                        <video src={memory.media_url} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" muted autoPlay loop playsInline />
-                      ) : (
-                        <img src={memory.media_url} alt={memory.caption ?? author?.full_name ?? "Memory"} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
-                      )}
-                    </div>
-                    <div className="px-4 py-4">
-                      <p className="text-[11px] font-extrabold uppercase tracking-[0.22em] text-on-surface-variant">{author?.full_name ?? "Student"}</p>
-                      <p className="mt-2 line-clamp-2 text-sm leading-6 text-on-surface">{memory.caption ?? "A new memory was just added to the class archive."}</p>
+                  <Link key={m.id} href="/memory-feed" className="group relative aspect-[4/3] rounded-[2.5rem] overflow-hidden shadow-xl">
+                    <img 
+                      src={m.media_url} 
+                      className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
+                      alt="" 
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+                    <div className="absolute bottom-6 left-6 right-6">
+                      <p className="text-[9px] font-black uppercase tracking-[0.2em] text-secondary mb-2">{author?.full_name}</p>
+                      <p className="text-xs font-medium text-white line-clamp-1">{m.caption || "Archived fragment"}</p>
                     </div>
                   </Link>
                 );
               })}
             </div>
-          </div>
+          </motion.div>
         </div>
-      </motion.section>
+      </section>
 
-      <motion.section
-        initial={{ opacity: 0, y: 24 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.25 }}
-        transition={{ duration: 0.6, ease: "easeOut" }}
-        className="px-4 py-10 md:px-8 md:py-14"
-      >
-        <div className="section-shell mx-auto flex max-w-7xl flex-col gap-8 rounded-[2rem] px-6 py-10 md:flex-row md:items-end md:justify-between md:px-10 relative overflow-hidden">
-          {/* Subtle glow */}
-          <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-full blur-3xl -z-10 translate-x-1/2 -translate-y-1/2" />
-          
-          <div className="max-w-3xl">
-            <span className="material-symbols-outlined mb-5 text-5xl text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>
-              format_quote
-            </span>
-            <blockquote className="serif-heading text-3xl font-semibold leading-tight text-on-surface md:text-5xl drop-shadow-sm">
-              Yesterday is today&apos;s memory, and tomorrow is today&apos;s dream.
-            </blockquote>
-            <cite className="mt-5 block not-italic text-sm font-extrabold uppercase tracking-[0.24em] text-primary">
-              Khalil Gibran
-            </cite>
-          </div>
-          <div className="max-w-sm rounded-[1.75rem] bg-stone-900 border border-outline-variant/10 px-6 py-6 text-white shadow-2xl relative overflow-hidden">
-            <div className="absolute -top-10 -right-10 w-32 h-32 bg-white/5 rounded-full blur-2xl" />
-            <p className="text-xs font-extrabold uppercase tracking-[0.24em] text-white/55 relative z-10">Best next move</p>
-            <p className="mt-3 text-base leading-7 text-white/80 relative z-10">
-              Add one memory, send one thank-you, and leave one note on the wall today. Small entries compound into an unforgettable archive.
+      {/* Footer */}
+      <footer className="px-4 pb-20 md:px-8 md:pb-12 scroll-fade">
+        <div className="mx-auto max-w-[1600px] rounded-[3.5rem] bg-surface-container-low/30 backdrop-blur-3xl border border-outline-variant/10 p-12 md:p-20 text-center interactive-card">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            className="max-w-3xl mx-auto"
+          >
+            <h2 className="serif text-6xl md:text-8xl font-black text-on-surface leading-none mb-8">Seniors 2026.</h2>
+            <p className="text-xl font-medium text-on-surface-variant leading-relaxed mb-12">
+              Designed as a digital sanctuary for the dreamers, achievers, and legends in the making. Your story is eternal.
             </p>
-          </div>
-        </div>
-      </motion.section>
-
-      {/* Opposing Infinite Scrolling Marquee */}
-      <div className="w-full relative bg-primary text-white py-4 overflow-hidden mt-6 mb-12 flex whitespace-nowrap z-20 transform rotate-1 origin-right shadow-lg">
-        <motion.div 
-          animate={{ x: ["-50%", "0%"] }} 
-          transition={{ repeat: Infinity, ease: "linear", duration: 35 }} 
-          className="flex w-max items-center gap-12 font-black text-2xl uppercase tracking-[0.2em] opacity-90 select-none pointer-events-none"
-        >
-          {Array.from({ length: 12 }).map((_, i) => (
-            <span key={i} className="flex flex-shrink-0 items-center gap-12">
-              <span>UNFORGETTABLE</span>
-              <span className="w-2 h-2 rounded-full bg-white"></span>
-              <span>FOREVER</span>
-              <span className="w-2 h-2 rounded-full bg-white"></span>
-              <span>MOMENTS</span>
-              <span className="w-2 h-2 rounded-full bg-white"></span>
-            </span>
-          ))}
-        </motion.div>
-      </div>
-
-      <footer className="px-4 pb-24 pt-6 md:px-8 md:pb-12">
-        <div className="mx-auto flex max-w-7xl flex-col gap-6 rounded-[2rem] border border-outline-variant/15 bg-surface-container-low px-6 py-8 md:flex-row md:items-center md:justify-between md:px-8">
-          <div className="max-w-lg">
-            <p className="serif-heading text-3xl font-semibold text-on-surface">Seniors 2026</p>
-            <p className="mt-3 text-sm leading-6 text-on-surface-variant">
-              Designed as a digital keepsake for the dreamers, achievers, and legends in the making.
-            </p>
-          </div>
-          <div className="flex flex-wrap gap-3">
-            <Link href="/awards" className="rounded-full bg-white px-5 py-3 text-sm font-semibold text-on-surface">
-              Awards
-            </Link>
-            <Link href="/hall-of-thanks" className="rounded-full bg-white px-5 py-3 text-sm font-semibold text-on-surface">
-              Hall of Thanks
-            </Link>
-            <Link href="/time-capsule" className="rounded-full bg-white px-5 py-3 text-sm font-semibold text-on-surface">
-              Time Capsule
-            </Link>
-          </div>
+            <div className="flex flex-wrap justify-center gap-6">
+              {["directory", "wall", "memory-feed", "awards", "hall-of-thanks"].map((link) => (
+                <Link 
+                  key={link} 
+                  href={`/${link}`} 
+                  className="px-8 py-4 rounded-full bg-surface-container-high/40 hover:bg-primary/10 hover:text-primary transition-all text-[10px] font-black uppercase tracking-[0.4em] border border-outline-variant/10"
+                >
+                  {link.replace("-", " ")}
+                </Link>
+              ))}
+            </div>
+          </motion.div>
         </div>
       </footer>
-    </>
+    </div>
   );
 }

@@ -15,5 +15,11 @@ export default async function ProfilePage() {
     .eq("id", user.id)
     .single();
 
-  return <ProfileClient profile={profile} userId={user.id} />;
+  return (
+    <div className="mx-auto max-w-7xl px-4 pb-32 pt-8 md:px-8">
+      <section className="section-shell rounded-[2rem] p-4 md:p-6">
+        <ProfileClient profile={profile} userId={user.id} />
+      </section>
+    </div>
+  );
 }

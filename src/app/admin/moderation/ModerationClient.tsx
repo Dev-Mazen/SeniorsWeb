@@ -35,81 +35,85 @@ function Section({
   table: string;
   onAction: (table: string, id: string, status: string) => void;
 }) {
-  if (items.length === 0)
-    return (
-      <div className="bg-surface-container-lowest rounded-xl p-6 mb-6">
-        <h3 className="font-bold text-lg mb-2">{title}</h3>
-        <p className="text-on-surface-variant text-sm">No pending items.</p>
-      </div>
-    );
+  if (items.length === 0) return null;
 
   return (
-    <div className="bg-surface-container-lowest rounded-xl p-6 mb-6">
-      <h3 className="font-bold text-lg mb-4">
-        {title}{" "}
-        <span className="bg-primary/10 text-primary text-xs font-black px-2 py-0.5 rounded-full ml-2">
-          {items.length}
+    <div className="bg-white/60 dark:bg-neutral-950/40 backdrop-blur-3xl rounded-[3.5rem] p-10 border border-white dark:border-white/5 shadow-2xl shadow-black/[0.02]">
+      <h3 className="serif text-3xl font-black mb-8 flex items-center gap-4 text-on-surface">
+        {title}
+        <span className="bg-primary/10 text-primary text-[10px] font-black px-4 py-1.5 rounded-full uppercase tracking-widest border border-primary/5 shadow-inner">
+          {items.length} Pending
         </span>
       </h3>
-      <div className="space-y-4">
+      <div className="grid grid-cols-1 gap-6">
         {items.map((item) => (
           <div
             key={item.id}
-            className="flex items-start gap-4 p-4 bg-surface-container-low rounded-xl group hover:bg-surface-container transition-colors"
+            className="flex flex-col md:flex-row items-center gap-8 p-8 bg-surface-container-low/40 dark:bg-white/5 rounded-[2.5rem] border border-outline-variant/10 group hover:border-primary/20 hover:bg-white dark:hover:bg-neutral-900 transition-all duration-500 shadow-sm"
           >
-            {item.media_url &&
-              (item.media_type === "video" ? (
-                <video
-                  src={item.media_url}
-                  className="w-20 h-20 rounded-lg object-cover flex-shrink-0"
-                />
-              ) : (
-                <img
-                  src={item.media_url}
-                  alt=""
-                  className="w-20 h-20 rounded-lg object-cover flex-shrink-0"
-                />
-              ))}
+            {item.media_url && (
+              <div className="relative flex-shrink-0 group/media">
+                {item.media_type === "video" ? (
+                  <video
+                    src={item.media_url}
+                    className="w-32 h-32 rounded-[2rem] object-cover shadow-2xl group-hover/media:scale-110 transition-transform duration-700"
+                  />
+                ) : (
+                  <img
+                    src={item.media_url}
+                    alt=""
+                    className="w-32 h-32 rounded-[2rem] object-cover shadow-2xl group-hover/media:scale-110 transition-transform duration-700"
+                  />
+                )}
+                <div className="absolute inset-0 bg-black/20 rounded-[2rem] opacity-0 group-hover/media:opacity-100 transition-opacity flex items-center justify-center">
+                   <span className="material-symbols-outlined text-white text-3xl">zoom_in</span>
+                </div>
+              </div>
+            )}
             {!item.media_url && (
-              <div className="w-10 h-10 rounded-lg bg-surface-container-highest flex-shrink-0 flex items-center justify-center">
-                <span className="material-symbols-outlined text-on-surface-variant text-sm">
-                  description
-                </span>
+              <div className="w-20 h-20 rounded-3xl bg-on-surface/5 dark:bg-white/5 flex-shrink-0 flex items-center justify-center text-on-surface-variant group-hover:bg-primary/10 group-hover:text-primary transition-colors duration-500 shadow-inner">
+                <span className="material-symbols-outlined text-3xl">description</span>
               </div>
             )}
             <div className="flex-grow min-w-0">
-              <p className="text-sm font-bold text-on-surface truncate">
-                {item.content ?? item.caption ?? "(media only)"}
+              <p className="serif text-2xl font-black text-on-surface tracking-tighter mb-2 group-hover:text-primary transition-colors duration-500 truncate">
+                {item.content ?? item.caption ?? "(Visual Payload Only)"}
               </p>
-              <p className="text-xs text-on-surface-variant mt-1">
-                {item.profiles?.full_name ?? "Anonymous"}
-                {item.teachers ? ` → ${item.teachers.name}` : ""}
-                {item.subject ? ` about ${item.subject.full_name}` : ""}
-                {" · "}
-                {timeAgo(item.created_at)}
-              </p>
+              <div className="flex items-center flex-wrap gap-x-4 gap-y-2">
+                 <div className="flex items-center gap-2">
+                    <div className="w-6 h-6 rounded-full bg-on-surface/5 dark:bg-white/10 flex items-center justify-center">
+                       <span className="material-symbols-outlined text-[10px]">person</span>
+                    </div>
+                    <span className="text-[10px] font-black uppercase tracking-widest text-on-surface-variant/60">{item.profiles?.full_name ?? "Anonymous"}</span>
+                 </div>
+                 {item.teachers && (
+                   <div className="flex items-center gap-2">
+                      <span className="material-symbols-outlined text-xs text-primary/40">arrow_forward</span>
+                      <span className="text-[10px] font-black uppercase tracking-widest text-primary">{item.teachers.name}</span>
+                   </div>
+                 )}
+                 <span className="w-1.5 h-1.5 rounded-full bg-outline-variant/30" />
+                 <span className="text-[10px] font-black uppercase tracking-widest text-on-surface-variant/40">{timeAgo(item.created_at)}</span>
+              </div>
             </div>
-            <div className="flex gap-2 flex-shrink-0">
+            <div className="flex gap-4 flex-shrink-0">
               <button
                 onClick={() => onAction(table, item.id, "rejected")}
-                title="Reject"
-                className="w-9 h-9 rounded-full bg-error-container text-on-error-container flex items-center justify-center hover:bg-red-200 transition-all"
+                className="w-16 h-16 rounded-2xl bg-surface-container-highest dark:bg-red-500/10 text-on-surface-variant dark:text-red-400 flex items-center justify-center hover:bg-red-600 hover:text-white transition-all duration-500 shadow-lg group/reject"
               >
-                <span className="material-symbols-outlined text-sm">close</span>
+                <span className="material-symbols-outlined text-2xl font-black group-hover/reject:rotate-12">close</span>
               </button>
               <button
                 onClick={() => onAction(table, item.id, "approved")}
-                title="Approve"
-                className="w-9 h-9 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center hover:bg-primary hover:text-white transition-all"
+                className="w-16 h-16 rounded-2xl bg-on-surface dark:bg-green-600 text-surface dark:text-white flex items-center justify-center hover:scale-110 active:scale-95 transition-all duration-500 shadow-2xl group/approve"
               >
-                <span className="material-symbols-outlined text-sm">check</span>
+                <span className="material-symbols-outlined text-2xl font-black group-hover/approve:rotate-12">check</span>
               </button>
               <button
                 onClick={() => onAction(table, item.id, "delete")}
-                title="Delete permanently"
-                className="w-9 h-9 rounded-full bg-surface-container-high text-on-surface-variant flex items-center justify-center hover:bg-red-100 hover:text-red-600 transition-all"
+                className="w-12 h-12 rounded-xl bg-on-surface/5 dark:bg-white/5 text-on-surface-variant/40 flex items-center justify-center hover:bg-red-600 hover:text-white transition-all duration-500"
               >
-                <span className="material-symbols-outlined text-sm">delete</span>
+                <span className="material-symbols-outlined text-xl">delete</span>
               </button>
             </div>
           </div>
@@ -133,41 +137,48 @@ function ApprovedSection({
 }) {
   if (items.length === 0) return null;
   return (
-    <div className="bg-surface-container-lowest rounded-xl p-6 mb-6">
-      <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
-        <span className="material-symbols-outlined text-green-600 text-base">verified</span>
-        {title} — Published
-        <span className="bg-green-100 text-green-700 text-xs font-black px-2 py-0.5 rounded-full ml-1">
-          {items.length}
+    <div className="bg-white/60 dark:bg-neutral-950/40 backdrop-blur-3xl rounded-[3.5rem] p-10 border border-white dark:border-white/5 shadow-2xl shadow-black/[0.02]">
+      <h3 className="serif text-3xl font-black mb-8 flex items-center gap-4 text-on-surface">
+        <div className="w-10 h-10 rounded-2xl bg-green-500/10 flex items-center justify-center text-green-600">
+           <span className="material-symbols-outlined text-2xl font-black">verified</span>
+        </div>
+        {title} — Authenticated
+        <span className="bg-green-500 text-white text-[10px] font-black px-4 py-1.5 rounded-full uppercase tracking-widest shadow-lg shadow-green-500/20">
+          {items.length} Published
         </span>
       </h3>
-      <div className="space-y-3">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {items.map((item) => (
           <div
             key={item.id}
-            className="flex items-center gap-4 p-3 bg-green-50/50 rounded-xl"
+            className="flex items-center gap-6 p-6 bg-green-50/20 dark:bg-green-500/5 rounded-3xl border border-green-200/30 dark:border-green-500/10 group hover:scale-[1.02] transition-all duration-500"
           >
-            {item.media_url && (
+            {item.media_url ? (
               <img
                 src={item.media_url}
                 alt=""
-                className="w-12 h-12 rounded-lg object-cover flex-shrink-0"
+                className="w-20 h-20 rounded-2xl object-cover shadow-xl grayscale-[0.5] group-hover:grayscale-0 transition-all duration-500"
               />
+            ) : (
+              <div className="w-16 h-16 rounded-2xl bg-green-500/10 flex items-center justify-center text-green-600/40">
+                 <span className="material-symbols-outlined text-2xl">description</span>
+              </div>
             )}
             <div className="flex-grow min-w-0">
-              <p className="text-sm font-medium text-on-surface truncate">
-                {item.content ?? item.caption ?? "(media)"}
+              <p className="text-lg font-black text-on-surface tracking-tight truncate mb-1">
+                {item.content ?? item.caption ?? "(Published Media)"}
               </p>
-              <p className="text-xs text-on-surface-variant">
-                {item.profiles?.full_name ?? "Anonymous"} · {timeAgo(item.created_at)}
-              </p>
+              <div className="flex items-center gap-3">
+                 <span className="text-[9px] font-black uppercase tracking-widest text-on-surface-variant/60">{item.profiles?.full_name ?? "Anonymous"}</span>
+                 <span className="w-1 h-1 rounded-full bg-outline-variant/30" />
+                 <span className="text-[9px] font-black uppercase tracking-widest text-on-surface-variant/40">{timeAgo(item.created_at)}</span>
+              </div>
             </div>
             <button
               onClick={() => onDelete(table, item.id)}
-              title="Delete"
-              className="w-8 h-8 rounded-full flex items-center justify-center text-red-400 hover:bg-red-100 hover:text-red-600 transition-all flex-shrink-0"
+              className="w-12 h-12 rounded-2xl flex items-center justify-center text-on-surface-variant/30 hover:bg-red-600 hover:text-white transition-all duration-500 flex-shrink-0"
             >
-              <span className="material-symbols-outlined text-sm">delete</span>
+              <span className="material-symbols-outlined text-xl">delete</span>
             </button>
           </div>
         ))}
@@ -189,49 +200,55 @@ function RejectedSection({
 }) {
   if (items.length === 0) return null;
   return (
-    <div className="bg-surface-container-lowest rounded-xl p-6 mb-6">
-      <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
-        <span className="material-symbols-outlined text-red-600 text-base">block</span>
-        {title} — Rejected
-        <span className="bg-red-100 text-red-700 text-xs font-black px-2 py-0.5 rounded-full ml-1">
-          {items.length}
+    <div className="bg-white/60 dark:bg-neutral-950/40 backdrop-blur-3xl rounded-[3.5rem] p-10 border border-white dark:border-white/5 shadow-2xl shadow-black/[0.02]">
+      <h3 className="serif text-3xl font-black mb-8 flex items-center gap-4 text-on-surface">
+        <div className="w-10 h-10 rounded-2xl bg-red-500/10 flex items-center justify-center text-red-600">
+           <span className="material-symbols-outlined text-2xl font-black">block</span>
+        </div>
+        {title} — Neutralized
+        <span className="bg-red-500 text-white text-[10px] font-black px-4 py-1.5 rounded-full uppercase tracking-widest shadow-lg shadow-red-500/20">
+          {items.length} Rejected
         </span>
       </h3>
-      <div className="space-y-3">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {items.map((item) => (
           <div
             key={item.id}
-            className="flex items-center gap-4 p-3 bg-red-50/50 rounded-xl"
+            className="flex items-center gap-6 p-6 bg-red-50/20 dark:bg-red-500/5 rounded-3xl border border-red-200/30 dark:border-red-500/10 group opacity-70 hover:opacity-100 transition-all duration-500"
           >
-            {item.media_url && (
+            {item.media_url ? (
               <img
                 src={item.media_url}
                 alt=""
-                className="w-12 h-12 rounded-lg object-cover flex-shrink-0 opacity-70"
+                className="w-20 h-20 rounded-2xl object-cover shadow-xl grayscale blur-[2px] group-hover:blur-0 transition-all duration-500"
               />
+            ) : (
+              <div className="w-16 h-16 rounded-2xl bg-red-500/10 flex items-center justify-center text-red-600/40">
+                 <span className="material-symbols-outlined text-2xl">description</span>
+              </div>
             )}
             <div className="flex-grow min-w-0">
-              <p className="text-sm font-medium text-on-surface truncate strike-through opacity-80">
-                {item.content ?? item.caption ?? "(media)"}
+              <p className="text-lg font-black text-on-surface tracking-tight truncate mb-1 line-through opacity-60">
+                {item.content ?? item.caption ?? "(Rejected Media)"}
               </p>
-              <p className="text-xs text-on-surface-variant">
-                {item.profiles?.full_name ?? "Anonymous"} · {timeAgo(item.created_at)}
-              </p>
+              <div className="flex items-center gap-3">
+                 <span className="text-[9px] font-black uppercase tracking-widest text-on-surface-variant/60">{item.profiles?.full_name ?? "Anonymous"}</span>
+                 <span className="w-1 h-1 rounded-full bg-outline-variant/30" />
+                 <span className="text-[9px] font-black uppercase tracking-widest text-on-surface-variant/40">{timeAgo(item.created_at)}</span>
+              </div>
             </div>
             <div className="flex gap-2 flex-shrink-0">
               <button
                 onClick={() => onAction(table, item.id, "approved")}
-                title="Approve instead"
-                className="w-8 h-8 rounded-full flex items-center justify-center text-green-600 hover:bg-green-100 transition-all flex-shrink-0"
+                className="w-10 h-10 rounded-xl flex items-center justify-center text-green-600 hover:bg-green-600 hover:text-white transition-all duration-500"
               >
-                <span className="material-symbols-outlined text-sm">check</span>
+                <span className="material-symbols-outlined text-lg">check</span>
               </button>
               <button
                 onClick={() => onAction(table, item.id, "delete")}
-                title="Delete permanently"
-                className="w-8 h-8 rounded-full flex items-center justify-center text-red-400 hover:bg-red-100 hover:text-red-700 transition-all flex-shrink-0"
+                className="w-10 h-10 rounded-xl flex items-center justify-center text-red-600/40 hover:bg-red-600 hover:text-white transition-all duration-500"
               >
-                <span className="material-symbols-outlined text-sm">delete</span>
+                <span className="material-symbols-outlined text-lg">delete</span>
               </button>
             </div>
           </div>
@@ -327,106 +344,118 @@ export default function ModerationClient({
   const totalRejected = rw.length + rm.length + rt.length + rs.length;
 
   return (
-    <div>
-      <header className="mb-8">
-        <h2 className="text-3xl font-bold text-on-surface" style={{fontFamily:"'Noto Serif', serif"}}>Moderation Queue</h2>
-        <p className="text-on-surface-variant text-sm mt-1">
-          {totalPending} pending · {totalPublished} published · {totalRejected} rejected
-        </p>
+    <div className="animate-in fade-in slide-in-from-bottom-12 duration-1000 max-w-7xl mx-auto px-6">
+      <header className="flex flex-col xl:flex-row justify-between items-start xl:items-end gap-10 mb-20 relative">
+        <div className="relative z-10">
+          <div className="flex items-center gap-4 mb-4">
+            <div className="w-12 h-1 bg-primary rounded-full shadow-[0_0_15px_rgba(var(--color-primary-rgb),0.3)]" />
+            <p className="text-on-surface-variant/60 font-black uppercase tracking-[0.5em] text-[10px]">Command Deck</p>
+          </div>
+          <h2 className="serif text-7xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-br from-on-surface via-primary to-primary-container dark:from-white dark:to-primary-fixed pb-2">Central <span className="italic">Moderation</span></h2>
+          <p className="text-sm font-medium text-on-surface-variant/60 mt-4 max-w-lg leading-relaxed">
+            Universal authority console for overseeing {totalPending + totalPublished + totalRejected} interactions across the platform.
+          </p>
+        </div>
+        
+        <div className="flex bg-white/40 dark:bg-black/40 backdrop-blur-3xl rounded-[2.5rem] p-2 border border-white dark:border-white/5 shadow-2xl shadow-black/[0.02] relative z-10">
+          <button
+            onClick={() => setActiveTab("pending")}
+            className={`px-8 py-3.5 rounded-[2rem] text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-500 flex items-center gap-3 ${activeTab === "pending" ? "bg-primary dark:bg-primary-fixed text-white dark:text-primary-fixed-dim shadow-2xl shadow-primary/30 scale-105" : "text-on-surface-variant/60 hover:text-on-surface hover:bg-on-surface/5"}`}
+          >
+            Pending <span className="opacity-40 font-bold">({totalPending})</span>
+          </button>
+          <button
+            onClick={() => setActiveTab("published")}
+            className={`px-8 py-3.5 rounded-[2rem] text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-500 flex items-center gap-3 ${activeTab === "published" ? "bg-green-600 text-white shadow-2xl shadow-green-500/30 scale-105" : "text-on-surface-variant/60 hover:text-on-surface hover:bg-on-surface/5"}`}
+          >
+            Published <span className="opacity-40 font-bold">({totalPublished})</span>
+          </button>
+          <button
+            onClick={() => setActiveTab("rejected")}
+            className={`px-8 py-3.5 rounded-[2rem] text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-500 flex items-center gap-3 ${activeTab === "rejected" ? "bg-red-600 text-white shadow-2xl shadow-red-500/30 scale-105" : "text-on-surface-variant/60 hover:text-on-surface hover:bg-on-surface/5"}`}
+          >
+            Rejected <span className="opacity-40 font-bold">({totalRejected})</span>
+          </button>
+        </div>
       </header>
 
-      {/* Tabs */}
-      <div className="flex flex-wrap gap-2 mb-8 items-center">
-        <button
-          onClick={() => setActiveTab("pending")}
-          className={`px-5 py-2.5 rounded-full text-sm font-bold transition-all ${
-            activeTab === "pending"
-              ? "bg-primary text-white shadow-md"
-              : "bg-surface-container-high text-on-surface-variant hover:bg-surface-container"
-          }`}
-        >
-          Pending ({totalPending})
-        </button>
-        <button
-          onClick={() => setActiveTab("published")}
-          className={`px-5 py-2.5 rounded-full text-sm font-bold transition-all ${
-            activeTab === "published"
-              ? "bg-green-600 text-white shadow-md"
-              : "bg-surface-container-high text-on-surface-variant hover:bg-surface-container"
-          }`}
-        >
-          Published ({totalPublished})
-        </button>
-        <button
-          onClick={() => setActiveTab("rejected")}
-          className={`px-5 py-2.5 rounded-full text-sm font-bold transition-all ${
-            activeTab === "rejected"
-              ? "bg-red-600 text-white shadow-md"
-              : "bg-surface-container-high text-on-surface-variant hover:bg-surface-container"
-          }`}
-        >
-          Rejected ({totalRejected})
-        </button>
-
-        {/* Bulk Actions */}
-        {activeTab === "pending" && totalPending > 0 && (
-          <div className="flex gap-2 ml-auto">
+      {/* Bulk Operations HUD */}
+      {activeTab === "pending" && totalPending > 0 && (
+        <div className="flex items-center justify-between bg-white/60 dark:bg-primary-fixed/5 backdrop-blur-2xl border border-white dark:border-primary-fixed/10 p-8 rounded-[3rem] mb-16 shadow-2xl shadow-black/[0.02] animate-in slide-in-from-top-12">
+          <div className="flex items-center gap-6">
+             <div className="w-16 h-16 rounded-[2rem] bg-primary/10 flex items-center justify-center text-primary shadow-inner">
+                <span className="material-symbols-outlined text-3xl">offline_bolt</span>
+             </div>
+             <div>
+                <h3 className="serif text-2xl font-black text-on-surface tracking-tight">Bulk Authority</h3>
+                <p className="text-[10px] font-black uppercase tracking-[0.3em] text-on-surface-variant/40 mt-1">Execute system-wide protocols</p>
+             </div>
+          </div>
+          <div className="flex gap-4">
             <button
               onClick={() => handleBulkAction("approved")}
               disabled={bulkLoading}
-              className="px-4 py-2 rounded-full text-xs font-bold bg-green-600 text-white hover:bg-green-700 transition-all flex items-center gap-1.5 disabled:opacity-50 shadow-sm"
+              className="px-10 py-5 bg-on-surface dark:bg-green-600 text-surface dark:text-white rounded-[2rem] text-[11px] font-black uppercase tracking-[0.25em] transition-all duration-500 hover:scale-105 active:scale-95 shadow-2xl shadow-black/10 flex items-center gap-4 group/btn"
             >
-              <span className="material-symbols-outlined text-sm">done_all</span>
-              Accept All ({totalPending})
+              <span className="material-symbols-outlined text-xl group-hover/btn:rotate-12 transition-transform">done_all</span>
+              Authorize All
             </button>
             <button
               onClick={() => handleBulkAction("rejected")}
               disabled={bulkLoading}
-              className="px-4 py-2 rounded-full text-xs font-bold bg-red-600 text-white hover:bg-red-700 transition-all flex items-center gap-1.5 disabled:opacity-50 shadow-sm"
+              className="px-10 py-5 bg-surface-container-highest dark:bg-red-600 text-on-surface dark:text-white rounded-[2rem] text-[11px] font-black uppercase tracking-[0.25em] transition-all duration-500 hover:bg-red-500 hover:text-white hover:scale-105 active:scale-95 shadow-xl flex items-center gap-4 group/btn"
             >
-              <span className="material-symbols-outlined text-sm">block</span>
-              Reject All ({totalPending})
+              <span className="material-symbols-outlined text-xl group-hover/btn:rotate-12 transition-transform">block</span>
+              Purge Queue
             </button>
+          </div>
+        </div>
+      )}
+
+      <div className="space-y-16 pb-64">
+        {activeTab === "pending" && (
+          <div className="grid grid-cols-1 gap-12">
+            <Section title="Global Wall Submissions" items={wp} table="wall_posts" onAction={handleAction} />
+            <Section title="Temporal Memory Payloads" items={mem} table="memories" onAction={handleAction} />
+            <Section title="Faculty Tribute Messages" items={tm} table="teacher_messages" onAction={handleAction} />
+            <Section title="Senior Heritage Feed" items={sm} table="senior_memories" onAction={handleAction} />
+          </div>
+        )}
+
+        {activeTab === "published" && (
+          <div className="grid grid-cols-1 gap-12">
+            <ApprovedSection title="Wall Records" items={aw} table="wall_posts" onDelete={handleDelete} />
+            <ApprovedSection title="Memory Vaults" items={am} table="memories" onDelete={handleDelete} />
+            {totalPublished === 0 && (
+              <div className="text-center py-48 bg-white/20 dark:bg-neutral-950/20 rounded-[5rem] border-2 border-outline-variant/10 border-dashed backdrop-blur-3xl">
+                <div className="w-32 h-32 bg-on-surface/5 rounded-full flex items-center justify-center mx-auto mb-10">
+                  <span className="material-symbols-outlined text-7xl text-on-surface-variant/20">inventory_2</span>
+                </div>
+                <h4 className="serif text-4xl font-black text-on-surface tracking-tight mb-4 capitalize">Vault Empty</h4>
+                <p className="text-[10px] font-black uppercase tracking-[0.4em] text-on-surface-variant/40">No authenticated records have been published.</p>
+              </div>
+            )}
+          </div>
+        )}
+
+        {activeTab === "rejected" && (
+          <div className="grid grid-cols-1 gap-12">
+            <RejectedSection title="Purged Wall Posts" items={rw} table="wall_posts" onAction={handleAction} />
+            <RejectedSection title="Neutralized Memories" items={rm} table="memories" onAction={handleAction} />
+            <RejectedSection title="Deauthorized Tributes" items={rt} table="teacher_messages" onAction={handleAction} />
+            <RejectedSection title="Expunged Senior Feed" items={rs} table="senior_memories" onAction={handleAction} />
+            {totalRejected === 0 && (
+              <div className="text-center py-48 bg-white/20 dark:bg-neutral-950/20 rounded-[5rem] border-2 border-outline-variant/10 border-dashed backdrop-blur-3xl">
+                <div className="w-32 h-32 bg-on-surface/5 rounded-full flex items-center justify-center mx-auto mb-10">
+                  <span className="material-symbols-outlined text-7xl text-on-surface-variant/20">gpp_good</span>
+                </div>
+                <h4 className="serif text-4xl font-black text-on-surface tracking-tight mb-4 capitalize">Integrity Maintained</h4>
+                <p className="text-[10px] font-black uppercase tracking-[0.4em] text-on-surface-variant/40">No records have been flagged or purged.</p>
+              </div>
+            )}
           </div>
         )}
       </div>
-
-      {activeTab === "pending" && (
-        <>
-          <Section title="Wall Posts" items={wp} table="wall_posts" onAction={handleAction} />
-          <Section title="Memory Feed" items={mem} table="memories" onAction={handleAction} />
-          <Section title="Teacher Messages" items={tm} table="teacher_messages" onAction={handleAction} />
-          <Section title="Senior Memories" items={sm} table="senior_memories" onAction={handleAction} />
-        </>
-      )}
-
-      {activeTab === "published" && (
-        <>
-          <ApprovedSection title="Wall Posts" items={aw} table="wall_posts" onDelete={handleDelete} />
-          <ApprovedSection title="Memory Feed" items={am} table="memories" onDelete={handleDelete} />
-          {totalPublished === 0 && (
-            <div className="text-center py-16 text-on-surface-variant">
-              <span className="material-symbols-outlined text-5xl opacity-30 block mb-4">inventory_2</span>
-              No published items yet.
-            </div>
-          )}
-        </>
-      )}
-
-      {activeTab === "rejected" && (
-        <>
-          <RejectedSection title="Wall Posts" items={rw} table="wall_posts" onAction={handleAction} />
-          <RejectedSection title="Memory Feed" items={rm} table="memories" onAction={handleAction} />
-          <RejectedSection title="Teacher Messages" items={rt} table="teacher_messages" onAction={handleAction} />
-          <RejectedSection title="Senior Memories" items={rs} table="senior_memories" onAction={handleAction} />
-          {totalRejected === 0 && (
-            <div className="text-center py-16 text-on-surface-variant">
-              <span className="material-symbols-outlined text-5xl opacity-30 block mb-4">gpp_good</span>
-              No rejected items yet.
-            </div>
-          )}
-        </>
-      )}
     </div>
   );
 }

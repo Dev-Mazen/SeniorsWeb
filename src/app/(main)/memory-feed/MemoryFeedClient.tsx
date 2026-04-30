@@ -300,7 +300,7 @@ function Lightbox({
 
           {/* Side Panel (comments) */}
           {showComments && (
-            <div className="w-[340px] flex-shrink-0 bg-stone-900 rounded-r-xl h-[85vh] flex flex-col overflow-hidden ml-0">
+            <div className="w-[340px] flex-shrink-0 bg-surface-container-lowest/95 dark:bg-black/90 backdrop-blur-2xl rounded-r-xl h-[85vh] flex flex-col overflow-hidden ml-0 border-l border-white/5 dark:border-white/10">
               {/* Author */}
               <div className="p-4 border-b border-white/10 flex items-center gap-3">
                 {item.profiles?.photo_url ? (
@@ -703,8 +703,8 @@ export default function MemoryFeedClient({ items, uploadsEnabled, userId }: { it
         <header className="mb-10">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
             <div>
-              <h1 className="serif text-6xl md:text-7xl font-black text-on-surface mb-3 leading-none">
-                Memory <span className="text-primary italic">Feed</span>
+              <h1 className="serif text-6xl md:text-7xl font-black mb-3 leading-none text-transparent bg-clip-text bg-gradient-to-br from-on-background to-primary dark:from-white dark:to-primary-fixed drop-shadow-sm dark:drop-shadow-[0_0_15px_rgba(255,138,101,0.3)]">
+                Memory <span className="text-primary italic dark:text-primary-fixed">Feed</span>
               </h1>
               <p className="text-on-surface-variant text-lg max-w-lg">Photos and videos from our final year together.</p>
             </div>
@@ -729,12 +729,12 @@ export default function MemoryFeedClient({ items, uploadsEnabled, userId }: { it
 
         {/* Upload */}
         {uploadsEnabled ? (
-          <form onSubmit={handleUpload} className="bg-surface-container-lowest rounded-[2rem] p-8 md:p-10 editorial-shadow mb-16 border border-outline-variant/20 relative overflow-hidden">
+          <form onSubmit={handleUpload} className="bg-surface-container-lowest/80 dark:bg-surface-container-lowest/40 backdrop-blur-3xl rounded-[2rem] p-8 md:p-10 editorial-shadow mb-16 border border-outline-variant/30 dark:border-outline-variant/10 relative overflow-hidden hover:border-primary/30 transition-colors">
             {/* Decorative BG element */}
             <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl -z-10" />
 
             <div className="flex items-center gap-4 mb-8">
-              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-primary-container flex items-center justify-center shadow-sm">
+              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-primary-container dark:from-primary-fixed dark:to-primary/50 flex items-center justify-center shadow-[0_0_15px_rgba(255,138,101,0.4)]">
                 <span className="material-symbols-outlined text-white">add_a_photo</span>
               </div>
               <div>
@@ -743,7 +743,7 @@ export default function MemoryFeedClient({ items, uploadsEnabled, userId }: { it
               </div>
             </div>
             
-            <div onClick={() => fileRef.current?.click()} className="border-2 border-dashed border-outline-variant/60 rounded-[1.5rem] p-10 md:p-12 text-center cursor-pointer hover:border-primary/50 hover:bg-surface-container-low/50 transition-all mb-6 group relative overflow-hidden bg-white/50">
+            <div onClick={() => fileRef.current?.click()} className="border-2 border-dashed border-outline-variant/60 dark:border-outline-variant/30 rounded-[1.5rem] p-10 md:p-12 text-center cursor-pointer hover:border-primary/50 hover:bg-surface-container-low/50 transition-all mb-6 group relative overflow-hidden bg-white/50 dark:bg-black/20">
               {preview ? (
                 <div className="relative inline-block">
                   {file?.type.startsWith("video") ? (

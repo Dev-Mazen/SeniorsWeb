@@ -1,10 +1,12 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
 
-type Author = { full_name: string | null; photo_url: string | null };
+type Author = { full_name: string | null; nickname?: string | null; photo_url: string | null };
 type MemoryItem = {
   id: string;
   caption: string | null;
@@ -27,6 +29,7 @@ type FeedMode = "feed" | "explore" | "reels";
 type FilterMode = "all" | "photo" | "video";
 
 const PAGE_SIZE = 10;
+gsap.registerPlugin(useGSAP);
 
 function authorOf(value: Author | Author[] | null | undefined) {
   return Array.isArray(value) ? (value[0] ?? null) : (value ?? null);
@@ -50,6 +53,21 @@ function initials(name: string | null | undefined) {
   return (name ?? "?").trim().charAt(0).toUpperCase();
 }
 
+function shortDisplayName(name: string | null | undefined) {
+  const parts = (name ?? "").split(" ").filter(Boolean);
+  if (parts.length >= 2) return parts[1];
+  if (parts.length === 1) return parts[0];
+  return "Student";
+}
+
+function displayIdentity(author: Author | Author[] | null | undefined) {
+  const resolved = authorOf(author);
+  return {
+    name: shortDisplayName(resolved?.full_name),
+    nickname: resolved?.nickname?.trim() || "",
+  };
+}
+
 function Avatar({ author, ring = false, size = "h-12 w-12" }: { author: Author | null; ring?: boolean; size?: string }) {
   if (author?.photo_url) {
     return (
@@ -69,51 +87,65 @@ function UploadModal({
   onClose: () => void;
   userId: string;
 }) {
-  const supabase = createClient();
+  const supabase = useMemo(() => createClient(), []);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [caption, setCaption] = useState("");
-  const [file, setFile] = useState<File | null>(null);
-  const [preview, setPreview] = useState<string | null>(null);
+  const [files, setFiles] = useState<File[]>([]);
+  const [previews, setPreviews] = useState<string[]>([]);
   const [uploading, setUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState<{ done: number; total: number }>({ done: 0, total: 0 });
   const [message, setMessage] = useState<{ text: string; type: "success" | "error" } | null>(null);
 
+  useEffect(() => {
+    return () => {
+      previews.forEach((url) => URL.revokeObjectURL(url));
+    };
+  }, [previews]);
+
   function pickFile(event: React.ChangeEvent<HTMLInputElement>) {
-    const nextFile = event.target.files?.[0] ?? null;
-    setFile(nextFile);
-    if (preview) URL.revokeObjectURL(preview);
-    setPreview(nextFile ? URL.createObjectURL(nextFile) : null);
+    const nextFiles = Array.from(event.target.files ?? []).slice(0, 12);
+    previews.forEach((url) => URL.revokeObjectURL(url));
+    setFiles(nextFiles);
+    setPreviews(nextFiles.map((f) => URL.createObjectURL(f)));
   }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!file) return;
+    if (files.length === 0) return;
     setUploading(true);
     setMessage(null);
+    setUploadProgress({ done: 0, total: files.length });
 
-    const ext = file.name.split(".").pop() ?? "jpg";
-    const path = `${userId}/${crypto.randomUUID()}.${ext}`;
-    const { error: uploadError } = await supabase.storage.from("memories-media").upload(path, file, { contentType: file.type });
+    try {
+      const rows: { author_id: string; caption: string; media_url: string; media_type: "photo" | "video" }[] = [];
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const uploadForm = new FormData();
+        uploadForm.append("file", file);
+        uploadForm.append("folder", `memories/${userId}`);
+        const uploadRes = await fetch("/api/media/upload", { method: "POST", body: uploadForm });
+        const uploadData = await uploadRes.json();
+        if (!uploadRes.ok) {
+          throw new Error(uploadData?.error || `Upload failed for ${file.name}`);
+        }
 
-    if (uploadError) {
-      setMessage({ text: uploadError.message, type: "error" });
-      setUploading(false);
-      return;
-    }
+        const mediaType: "photo" | "video" = file.type.startsWith("video") ? "video" : "photo";
+        rows.push({ author_id: userId, caption, media_url: uploadData.url, media_type: mediaType });
+        setUploadProgress({ done: i + 1, total: files.length });
+      }
 
-    const { data: publicUrlData } = supabase.storage.from("memories-media").getPublicUrl(path);
-    const mediaType = file.type.startsWith("video") ? "video" : "photo";
-    const { error: insertError } = await supabase.from("memories").insert({ author_id: userId, caption, media_url: publicUrlData.publicUrl, media_type: mediaType });
+      const { error: insertError } = await supabase.from("memories").insert(rows);
+      if (insertError) throw insertError;
 
-    if (insertError) {
-      setMessage({ text: insertError.message, type: "error" });
-    } else {
-      setMessage({ text: "Submitted for review! It will appear once approved.", type: "success" });
+      setMessage({ text: `${rows.length} uploads submitted for review.`, type: "success" });
       setCaption("");
-      setFile(null);
-      if (preview) URL.revokeObjectURL(preview);
-      setPreview(null);
+      setFiles([]);
+      previews.forEach((url) => URL.revokeObjectURL(url));
+      setPreviews([]);
       if (fileInputRef.current) fileInputRef.current.value = "";
       setTimeout(() => onClose(), 2000);
+    } catch (error) {
+      setMessage({ text: error instanceof Error ? error.message : "Upload failed", type: "error" });
     }
     setUploading(false);
   }
@@ -144,19 +176,26 @@ function UploadModal({
             onClick={() => fileInputRef.current?.click()}
             className="w-full min-h-[200px] flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-outline-variant/40 bg-surface-container-low/50 hover:border-primary/50 hover:bg-surface-container-low transition-all cursor-pointer group overflow-hidden"
           >
-            {preview ? (
-              <div className="relative w-full flex items-center justify-center p-4">
-                {file?.type.startsWith("video") ? (
-                  <video src={preview} controls className="max-h-[200px] rounded-xl shadow-lg" />
-                ) : (
-                  <img src={preview} alt="preview" className="max-h-[200px] rounded-xl object-cover shadow-lg" />
-                )}
+            {previews.length > 0 ? (
+              <div className="relative w-full p-4">
+                <div className="grid grid-cols-3 gap-3 max-h-[240px] overflow-y-auto">
+                  {previews.map((src, idx) => (
+                    <div key={src} className="relative rounded-xl overflow-hidden bg-black/10 aspect-square">
+                      {files[idx]?.type.startsWith("video") ? (
+                        <video src={src} className="w-full h-full object-cover" />
+                      ) : (
+                        <img src={src} alt="preview" className="w-full h-full object-cover" />
+                      )}
+                    </div>
+                  ))}
+                </div>
                 <div
-                  onClick={(e) => { e.stopPropagation(); setFile(null); setPreview(null); }}
+                  onClick={(e) => { e.stopPropagation(); setFiles([]); previews.forEach((url) => URL.revokeObjectURL(url)); setPreviews([]); }}
                   className="absolute top-6 right-6 w-8 h-8 rounded-full bg-black/60 text-white flex items-center justify-center hover:bg-black/80 cursor-pointer z-10"
                 >
                   <span className="material-symbols-outlined text-sm">close</span>
                 </div>
+                <p className="mt-3 text-xs font-semibold text-on-surface-variant text-left">{files.length} file(s) selected</p>
               </div>
             ) : (
               <>
@@ -164,11 +203,11 @@ function UploadModal({
                   <span className="material-symbols-outlined text-3xl text-outline group-hover:text-primary transition-colors">cloud_upload</span>
                 </div>
                 <p className="text-on-surface font-semibold mb-1">Click to browse</p>
-                <p className="text-on-surface-variant text-xs">JPEG, PNG, GIF, MP4 — Max 50MB</p>
+                <p className="text-on-surface-variant text-xs">JPEG, PNG, GIF, MP4 — select up to 12 files</p>
               </>
             )}
           </button>
-          <input ref={fileInputRef} type="file" accept="image/*,video/*" onChange={pickFile} className="hidden" />
+          <input ref={fileInputRef} type="file" accept="image/*,video/*" multiple onChange={pickFile} className="hidden" />
 
           {/* Caption */}
           <textarea
@@ -185,6 +224,11 @@ function UploadModal({
               {message.text}
             </div>
           )}
+          {uploading && uploadProgress.total > 0 && (
+            <div className="mt-3 text-xs font-semibold text-on-surface-variant">
+              Uploading {uploadProgress.done}/{uploadProgress.total}
+            </div>
+          )}
 
           {/* Info + Submit */}
           <div className="mt-5 flex items-center justify-between">
@@ -194,7 +238,7 @@ function UploadModal({
             </p>
             <button
               type="submit"
-              disabled={!file || uploading}
+              disabled={files.length === 0 || uploading}
               className="sunset-gradient px-6 py-3 rounded-full text-white font-bold text-sm disabled:opacity-50 hover:scale-[1.03] transition-transform shadow-lg flex items-center gap-2"
             >
               <span className="material-symbols-outlined text-sm">upload</span>
@@ -239,6 +283,7 @@ export default function MemoryFeedExperience({
   // Infinite scroll
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const loadMoreRef = useRef<HTMLDivElement>(null);
+  const feedRootRef = useRef<HTMLDivElement>(null);
 
   const [likeCounts, setLikeCounts] = useState<Record<string, number>>(() =>
     initialLikes.reduce<Record<string, number>>((acc, like) => {
@@ -255,6 +300,17 @@ export default function MemoryFeedExperience({
     }, {})
   );
 
+  useGSAP(
+    () => {
+      gsap.fromTo(
+        ".memory-card",
+        { opacity: 0, y: 20 },
+        { opacity: 1, y: 0, duration: 0.45, stagger: 0.05, ease: "power2.out" }
+      );
+    },
+    { scope: feedRootRef, dependencies: [feedMode, filterMode, searchQuery], revertOnUpdate: true }
+  );
+
   const normalizedItems = useMemo(() => items.map((item) => ({ ...item, profiles: authorOf(item.profiles) })), [items]);
   const filteredItems = useMemo(() => {
     const query = searchQuery.trim().toLowerCase();
@@ -263,7 +319,8 @@ export default function MemoryFeedExperience({
       const matchesQuery =
         !query ||
         item.caption?.toLowerCase().includes(query) ||
-        item.profiles?.full_name?.toLowerCase().includes(query);
+        item.profiles?.full_name?.toLowerCase().includes(query) ||
+        item.profiles?.nickname?.toLowerCase().includes(query);
       return matchesType && matchesQuery;
     });
   }, [filterMode, normalizedItems, searchQuery]);
@@ -291,6 +348,63 @@ export default function MemoryFeedExperience({
     observer.observe(loadMoreRef.current);
     return () => observer.disconnect();
   }, [hasMore, filteredItems.length]);
+
+  useEffect(() => {
+    const channel = supabase
+      .channel("memory-feed-live")
+      .on("postgres_changes", { event: "*", schema: "public", table: "memory_likes" }, (payload) => {
+        const memoryId = (payload.new as { memory_id?: string })?.memory_id || (payload.old as { memory_id?: string })?.memory_id;
+        if (!memoryId) return;
+        const likeUser = (payload.new as { user_id?: string })?.user_id || (payload.old as { user_id?: string })?.user_id;
+        if (likeUser === userId) return;
+        if (payload.eventType === "INSERT") {
+          setLikeCounts((prev) => ({ ...prev, [memoryId]: (prev[memoryId] ?? 0) + 1 }));
+        }
+        if (payload.eventType === "DELETE") {
+          setLikeCounts((prev) => ({ ...prev, [memoryId]: Math.max(0, (prev[memoryId] ?? 1) - 1) }));
+        }
+      })
+      .on("postgres_changes", { event: "*", schema: "public", table: "memory_comments" }, async (payload) => {
+        const eventUserId = (payload.new as { user_id?: string })?.user_id || (payload.old as { user_id?: string })?.user_id;
+        if (eventUserId === userId && payload.eventType !== "DELETE") return;
+        if (payload.eventType === "DELETE") {
+          const deletedId = (payload.old as { id?: string })?.id;
+          const memoryId = (payload.old as { memory_id?: string })?.memory_id;
+          if (!deletedId || !memoryId) return;
+          setCommentsByMemory((prev) => ({
+            ...prev,
+            [memoryId]: (prev[memoryId] ?? []).filter((comment) => comment.id !== deletedId),
+          }));
+          return;
+        }
+
+        const commentId = (payload.new as { id?: string })?.id;
+        const memoryId = (payload.new as { memory_id?: string })?.memory_id;
+        if (!commentId || !memoryId) return;
+        const { data } = await supabase
+          .from("memory_comments")
+          .select("id, memory_id, content, created_at, user_id, profiles:user_id(full_name, nickname, photo_url)")
+          .eq("id", commentId)
+          .single();
+        if (!data) return;
+
+        setCommentsByMemory((prev) => {
+          const existing = prev[memoryId] ?? [];
+          if (existing.some((comment) => comment.id === data.id)) {
+            return {
+              ...prev,
+              [memoryId]: existing.map((comment) => (comment.id === data.id ? (data as MemoryComment) : comment)),
+            };
+          }
+          return { ...prev, [memoryId]: [...existing, data as MemoryComment] };
+        });
+      })
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [supabase, userId]);
 
   const activeItem = filteredItems.find((item) => item.id === activeId) ?? null;
   const photoCount = normalizedItems.filter((item) => item.media_type === "photo").length;
@@ -340,7 +454,7 @@ export default function MemoryFeedExperience({
     const { data, error } = await supabase
       .from("memory_comments")
       .insert({ memory_id: memoryId, user_id: userId, content })
-      .select("id, memory_id, content, created_at, user_id, profiles:user_id(full_name, photo_url)")
+      .select("id, memory_id, content, created_at, user_id, profiles:user_id(full_name, nickname, photo_url)")
       .single();
 
     if (error || !data) return;
@@ -376,8 +490,9 @@ export default function MemoryFeedExperience({
   function shareItem(item: MemoryItem) {
     if (typeof window === "undefined") return;
     const url = `${window.location.origin}/memory-feed`;
+    const identity = displayIdentity(authorOf(item.profiles));
     const text = `Check out this memory from ${
-        Array.isArray(item.profiles) ? item.profiles[0]?.full_name : item.profiles?.full_name ?? "Seniors 2026"
+        identity.nickname ? `${identity.name} (${identity.nickname})` : identity.name
       }.`;
     if (navigator.share) {
       navigator.share({ title: "Seniors 2026 Memory", text, url }).catch(() => undefined);
@@ -410,7 +525,7 @@ export default function MemoryFeedExperience({
               <button onClick={() => { setEditingCommentId(null); setEditingContent(""); }} className="text-xs text-white/40 hover:text-white/60">Cancel</button>
             </div>
           ) : (
-            <p className="text-sm text-white/88"><span className="mr-1 font-bold">{commentAuthor?.full_name ?? "Anonymous"}</span>{comment.content}</p>
+            <p className="text-sm text-white/88"><span className="mr-1 font-bold">{displayIdentity(commentAuthor).name}</span>{comment.content}</p>
           )}
           <div className="mt-1 flex items-center gap-3">
             <span className="text-[11px] uppercase tracking-[0.18em] text-white/35">{timeAgo(comment.created_at)}</span>
@@ -448,69 +563,13 @@ export default function MemoryFeedExperience({
     );
   }
 
-  /* ─── Comment Row for Feed (light theme) ─── */
-  function CommentRowLight({ comment, memoryId }: { comment: MemoryComment; memoryId: string }) {
-    const commentAuthor = authorOf(comment.profiles);
-    const canModify = canModifyComment(comment);
-    const isEditing = editingCommentId === comment.id;
-    const [showMenu, setShowMenu] = useState(false);
-
-    return (
-      <div className="group flex items-start gap-3 hover:bg-surface-container-lowest p-2 -mx-2 rounded-xl transition-colors">
-        <Avatar author={commentAuthor} size="h-8 w-8" />
-        <div className="flex-1 min-w-0">
-          {isEditing ? (
-            <div className="flex items-center gap-2">
-              <input
-                autoFocus
-                value={editingContent}
-                onChange={(e) => setEditingContent(e.target.value)}
-                onKeyDown={(e) => { if (e.key === "Enter") updateComment(comment.id, memoryId, editingContent); if (e.key === "Escape") { setEditingCommentId(null); setEditingContent(""); } }}
-                className="flex-1 rounded-full bg-surface-container-high px-3 py-1.5 text-sm text-on-surface outline-none focus:ring-1 focus:ring-primary/20"
-              />
-              <button onClick={() => updateComment(comment.id, memoryId, editingContent)} className="text-xs font-bold text-primary">Save</button>
-              <button onClick={() => { setEditingCommentId(null); setEditingContent(""); }} className="text-xs text-on-surface-variant">Cancel</button>
-            </div>
-          ) : (
-            <div className="bg-surface-container-low px-4 py-3 rounded-[1.25rem] rounded-tl-sm">
-              <p className="text-sm text-on-surface leading-relaxed"><span className="font-bold mr-2 text-primary">{commentAuthor?.full_name ?? "Anonymous"}</span>{comment.content}</p>
-            </div>
-          )}
-          <div className="mt-1 flex items-center gap-3 px-1">
-            <span className="text-[10px] uppercase tracking-wider font-bold text-on-surface-variant/50">{timeAgo(comment.created_at)}</span>
-            {canModify && !isEditing && (
-              <div className="relative">
-                <button onClick={() => setShowMenu(!showMenu)} className="opacity-0 group-hover:opacity-100 transition-opacity text-on-surface-variant/40 hover:text-on-surface-variant">
-                  <span className="material-symbols-outlined text-sm">more_horiz</span>
-                </button>
-                {showMenu && (
-                  <>
-                    <div className="fixed inset-0 z-10" onClick={() => setShowMenu(false)} />
-                    <div className="absolute left-0 bottom-6 z-20 bg-surface-container-lowest rounded-xl shadow-xl border border-outline-variant/20 py-1 min-w-[120px]">
-                      <button onClick={() => { setEditingCommentId(comment.id); setEditingContent(comment.content); setShowMenu(false); }} className="w-full text-left px-4 py-2 text-sm text-on-surface hover:bg-surface-container-high flex items-center gap-2">
-                        <span className="material-symbols-outlined text-sm">edit</span>Edit
-                      </button>
-                      <button onClick={() => { deleteComment(comment.id, memoryId); setShowMenu(false); }} className="w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-red-50 flex items-center gap-2">
-                        <span className="material-symbols-outlined text-sm">delete</span>Delete
-                      </button>
-                    </div>
-                  </>
-                )}
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className="mx-auto max-w-7xl px-4 pb-32 pt-8 md:px-8">
+    <div ref={feedRootRef} className="mx-auto max-w-7xl px-4 pb-32 pt-8 md:px-8">
       {/* Upload Modal */}
       {showUploadModal && <UploadModal onClose={() => setShowUploadModal(false)} userId={userId} />}
 
       {/* Hero Header */}
-      <section className="section-shell rounded-[2rem] px-6 py-8 md:px-10">
+      <section className="section-shell scroll-reveal rounded-[2rem] px-6 py-8 md:px-10 ambient-anim">
         <div className="grid gap-8 lg:grid-cols-[1.15fr_0.85fr]">
           <div>
             <div className="pill-badge inline-flex rounded-full px-4 py-2 text-[11px] font-extrabold uppercase tracking-[0.24em] text-on-surface-variant">Social archive</div>
@@ -518,7 +577,7 @@ export default function MemoryFeedExperience({
             <p className="mt-5 max-w-2xl text-base leading-7 text-on-surface-variant md:text-lg">Switch between feed, explore, and reels views. Like, comment, and share memories from the class.</p>
             <div className="mt-8 flex flex-wrap gap-3">
               {[{ label: "Memories", value: normalizedItems.length }, { label: "Likes", value: totalLikes }, { label: "Comments", value: totalComments }, { label: "Videos", value: videoCount }].map((stat) => (
-                <div key={stat.label} className="pill-badge rounded-[1.25rem] px-4 py-4">
+                <div key={stat.label} className="pill-badge rounded-[1.25rem] px-4 py-4 interactive-card">
                   <p className="text-[11px] font-extrabold uppercase tracking-[0.24em] text-on-surface-variant">{stat.label}</p>
                   <p className="mt-2 text-2xl font-black text-on-surface">{stat.value}</p>
                 </div>
@@ -528,7 +587,7 @@ export default function MemoryFeedExperience({
               {storyAuthors.map((author, index) => (
                 <button key={`${author?.full_name}-${index}`} className="flex min-w-[88px] flex-col items-center gap-2">
                   <Avatar author={author} ring />
-                  <span className="max-w-[72px] truncate text-xs font-semibold text-on-surface-variant">{author?.full_name?.split(" ")[0]}</span>
+                  <span className="max-w-[72px] truncate text-xs font-semibold text-on-surface-variant">{displayIdentity(author).name}</span>
                 </button>
               ))}
             </div>
@@ -542,7 +601,7 @@ export default function MemoryFeedExperience({
                   { key: "explore", label: "Explore", icon: "grid_view" },
                   { key: "reels", label: "Reels", icon: "smart_display" },
                 ].map((mode) => (
-                  <button key={mode.key} onClick={() => setFeedMode(mode.key as FeedMode)} className={`rounded-[1.25rem] px-4 py-4 text-left ${feedMode === mode.key ? "bg-stone-900 text-white" : "bg-white text-on-surface"}`}>
+                  <button key={mode.key} onClick={() => setFeedMode(mode.key as FeedMode)} className={`interactive-card rounded-[1.25rem] px-4 py-4 text-left transition-all ${feedMode === mode.key ? "bg-primary text-on-primary shadow-lg shadow-primary/20 scale-105 ring-2 ring-primary/50" : "bg-surface-container-highest text-on-surface hover:bg-surface-variant hover:scale-[1.02]"}`}>
                     <span className="material-symbols-outlined text-lg">{mode.icon}</span>
                     <p className="mt-2 text-sm font-black uppercase tracking-[0.18em]">{mode.label}</p>
                   </button>
@@ -552,13 +611,13 @@ export default function MemoryFeedExperience({
             <div className="section-shell rounded-[1.75rem] p-5">
               <p className="section-kicker mb-4">Quick jump</p>
               <div className="space-y-3">
-                <Link href="/" className="flex items-center justify-between rounded-[1.25rem] bg-white px-4 py-4 text-sm font-semibold text-on-surface">
+                <Link href="/" className="flex items-center justify-between rounded-[1.25rem] bg-surface-container-highest hover:bg-surface-variant transition-colors px-4 py-4 text-sm font-semibold text-on-surface">
                   <span>Back to home</span>
-                  <span className="material-symbols-outlined">arrow_forward</span>
+                  <span className="material-symbols-outlined text-on-surface-variant">arrow_forward</span>
                 </Link>
-                <Link href="/wall" className="flex items-center justify-between rounded-[1.25rem] bg-white px-4 py-4 text-sm font-semibold text-on-surface">
+                <Link href="/wall" className="flex items-center justify-between rounded-[1.25rem] bg-surface-container-highest hover:bg-surface-variant transition-colors px-4 py-4 text-sm font-semibold text-on-surface">
                   <span>Open the wall</span>
-                  <span className="material-symbols-outlined">arrow_forward</span>
+                  <span className="material-symbols-outlined text-on-surface-variant">arrow_forward</span>
                 </Link>
               </div>
             </div>
@@ -567,7 +626,7 @@ export default function MemoryFeedExperience({
       </section>
 
       {/* Filter toolbar */}
-      <section className="mt-8">
+      <section className="mt-8 scroll-scale">
         <div className="section-shell rounded-[1.75rem] p-4 md:p-5">
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <div className="flex flex-wrap gap-2">
@@ -576,14 +635,14 @@ export default function MemoryFeedExperience({
                 { key: "photo", label: `Photos ${photoCount}` },
                 { key: "video", label: `Videos ${videoCount}` },
               ].map((filter) => (
-                <button key={filter.key} onClick={() => setFilterMode(filter.key as FilterMode)} className={`rounded-full px-4 py-2 text-xs font-black uppercase tracking-[0.18em] ${filterMode === filter.key ? "bg-stone-900 text-white" : "bg-white text-on-surface-variant"}`}>
+                <button key={filter.key} onClick={() => setFilterMode(filter.key as FilterMode)} className={`rounded-full px-4 py-2 text-xs font-black uppercase tracking-[0.18em] transition-all ${filterMode === filter.key ? "bg-primary text-on-primary shadow-md shadow-primary/20" : "bg-surface-container-highest text-on-surface-variant hover:text-on-surface"}`}>
                   {filter.label}
                 </button>
               ))}
             </div>
             <div className="relative w-full md:max-w-sm">
               <span className="material-symbols-outlined absolute left-4 top-3.5 text-outline">search</span>
-              <input value={searchQuery} onChange={(event) => setSearchQuery(event.target.value)} placeholder="Search people or captions..." className="w-full rounded-full bg-white px-12 py-3 text-sm text-on-surface outline-none" />
+              <input value={searchQuery} onChange={(event) => setSearchQuery(event.target.value)} placeholder="Search people or captions..." className="w-full rounded-full bg-surface-container-highest focus:bg-surface-variant focus:ring-2 focus:ring-primary/30 transition-all px-12 py-3 text-sm text-on-surface outline-none placeholder:text-on-surface-variant/70" />
             </div>
           </div>
         </div>
@@ -597,27 +656,27 @@ export default function MemoryFeedExperience({
         ) : feedMode === "explore" ? (
           <div className="mt-6 grid grid-cols-2 gap-3 md:grid-cols-3">
             {paginatedItems.map((item) => (
-              <button key={item.id} onClick={() => setActiveId(item.id)} className="group relative aspect-[0.9] overflow-hidden rounded-[1.5rem] bg-surface-container-high text-left">
+              <button key={item.id} onClick={() => setActiveId(item.id)} className="memory-card group relative aspect-[0.9] overflow-hidden rounded-[1.5rem] bg-surface-container-high text-left scroll-reveal hover-glow">
                 {item.media_type === "video" ? (
-                  <video src={item.media_url} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" muted loop autoPlay playsInline />
+                  <video src={item.media_url} className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" muted loop autoPlay playsInline />
                 ) : (
-                  <img src={item.media_url} alt={item.caption ?? item.profiles?.full_name ?? "Memory"} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                  <img src={item.media_url} alt={item.caption ?? item.profiles?.full_name ?? "Memory"} className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" />
                 )}
-                <div className="absolute inset-0 bg-gradient-to-t from-stone-950/90 via-stone-950/10 to-transparent" />
-                <div className="absolute bottom-0 left-0 right-0 p-4">
-                  <p className="truncate text-xs font-black uppercase tracking-[0.18em] text-white/70">{item.profiles?.full_name ?? "Student"}</p>
+                <div className="absolute inset-0 bg-gradient-to-t from-stone-950/90 via-stone-950/20 to-transparent opacity-80 group-hover:opacity-100 transition-opacity" />
+                <div className="absolute bottom-0 left-0 right-0 p-4 transform translate-y-2 group-hover:translate-y-0 transition-transform">
+                  <p className="truncate text-xs font-black uppercase tracking-[0.18em] text-white/70">{displayIdentity(item.profiles).name}</p>
                   {item.caption && <p className="mt-2 line-clamp-2 text-sm text-white">{item.caption}</p>}
                 </div>
               </button>
             ))}
           </div>
         ) : feedMode === "reels" ? (
-          <div className="mt-6 h-[78vh] snap-y snap-mandatory space-y-4 overflow-y-auto pr-2">
+          <div className="mt-6 h-[78vh] snap-y snap-mandatory space-y-4 overflow-y-auto pr-2 mobile-snap-y no-scrollbar">
             {paginatedItems.map((item) => {
               const liked = likedIds.has(item.id);
               const comments = commentsByMemory[item.id] ?? [];
               return (
-                <div key={item.id} className="relative flex h-[74vh] snap-start items-end overflow-hidden rounded-[2rem] bg-stone-900">
+                <div key={item.id} className="memory-card relative flex h-[74vh] md:h-[78vh] snap-start items-end overflow-hidden rounded-[2rem] bg-stone-900 mobile-snap-child shadow-2xl">
                   {item.media_type === "video" ? (
                     <video src={item.media_url} className="absolute inset-0 h-full w-full object-cover" muted loop autoPlay playsInline />
                   ) : (
@@ -629,7 +688,12 @@ export default function MemoryFeedExperience({
                       <div className="mb-4 flex items-center gap-3">
                         <Avatar author={item.profiles} ring />
                         <div>
-                          <p className="font-black">{item.profiles?.full_name ?? "Student"}</p>
+                          <p className="font-black">{displayIdentity(item.profiles).name}</p>
+                          {displayIdentity(item.profiles).nickname && (
+                            <p className="mt-1 text-[10px] font-bold uppercase tracking-[0.18em] text-white/60">
+                              @{displayIdentity(item.profiles).nickname}
+                            </p>
+                          )}
                           <p className="text-xs uppercase tracking-[0.18em] text-white/55">{timeAgo(item.created_at)} ago</p>
                         </div>
                       </div>
@@ -657,16 +721,16 @@ export default function MemoryFeedExperience({
               const comments = commentsByMemory[item.id] ?? [];
               const liked = likedIds.has(item.id);
               return (
-                <article key={item.id} className="section-shell overflow-hidden rounded-[2rem]">
+                <article key={item.id} className="memory-card section-shell overflow-hidden rounded-[2rem] scroll-reveal">
                   <div className="flex items-center justify-between px-5 py-4 md:px-6">
                     <div className="flex items-center gap-3">
                       <Avatar author={item.profiles} ring />
                       <div>
-                        <p className="font-black text-on-surface">{item.profiles?.full_name ?? "Student"}</p>
+                        <p className="font-black text-on-surface">{displayIdentity(item.profiles).name}</p>
                         <p className="text-xs uppercase tracking-[0.18em] text-on-surface-variant">{fullDate(item.created_at)} • {timeAgo(item.created_at)}</p>
                       </div>
                     </div>
-                    <button onClick={() => setActiveId(item.id)} className="rounded-full bg-white px-4 py-2 text-xs font-black uppercase tracking-[0.18em] text-on-surface">Details</button>
+                    <button onClick={() => setActiveId(item.id)} className="rounded-full bg-surface-container-highest hover:bg-surface-variant transition-colors px-4 py-2 text-xs font-black uppercase tracking-[0.18em] text-on-surface">Details</button>
                   </div>
                   <button onClick={() => setActiveId(item.id)} className="block w-full bg-black/5">
                     {item.media_type === "video" ? (
@@ -689,7 +753,7 @@ export default function MemoryFeedExperience({
                         <span className="material-symbols-outlined text-2xl">share</span>
                       </button>
                     </div>
-                    {item.caption && <p className="mt-4 text-sm leading-7 text-on-surface"><span className="mr-1 font-black">{item.profiles?.full_name ?? "Student"}</span>{item.caption}</p>}
+                    {item.caption && <p className="mt-4 text-sm leading-7 text-on-surface"><span className="mr-1 font-black">{displayIdentity(item.profiles).name}</span>{item.caption}</p>}
                     
                     {/* Inline comments preview */}
                     {comments.length > 0 && (
@@ -697,7 +761,7 @@ export default function MemoryFeedExperience({
                         {comments.slice(-2).map((c) => {
                           const ca = authorOf(c.profiles);
                           return (
-                            <p key={c.id} className="text-sm text-on-surface"><span className="font-bold mr-1">{ca?.full_name ?? "Anon"}</span>{c.content}</p>
+                            <p key={c.id} className="text-sm text-on-surface"><span className="font-bold mr-1">{displayIdentity(ca).name}</span>{c.content}</p>
                           );
                         })}
                         {comments.length > 2 && (
@@ -706,9 +770,9 @@ export default function MemoryFeedExperience({
                       </div>
                     )}
                     
-                    <div className="mt-4 flex items-center gap-2 rounded-full bg-white p-2">
-                      <input value={commentDrafts[item.id] ?? ""} onChange={(event) => setCommentDrafts((prev) => ({ ...prev, [item.id]: event.target.value }))} onKeyDown={(e) => { if (e.key === "Enter") addComment(item.id); }} placeholder="Add a comment..." className="flex-1 bg-transparent px-3 text-sm text-on-surface outline-none placeholder:text-outline" />
-                      <button onClick={() => addComment(item.id)} disabled={!commentDrafts[item.id]?.trim()} className="rounded-full bg-stone-900 px-4 py-2 text-xs font-black uppercase tracking-[0.18em] text-white disabled:opacity-40">Post</button>
+                    <div className="mt-4 flex items-center gap-2 rounded-full bg-surface-container-highest p-2 focus-within:ring-2 focus-within:ring-primary/20 transition-all">
+                      <input value={commentDrafts[item.id] ?? ""} onChange={(event) => setCommentDrafts((prev) => ({ ...prev, [item.id]: event.target.value }))} onKeyDown={(e) => { if (e.key === "Enter") addComment(item.id); }} placeholder="Add a comment..." className="flex-1 bg-transparent px-3 text-sm text-on-surface outline-none placeholder:text-on-surface-variant/70" />
+                      <button onClick={() => addComment(item.id)} disabled={!commentDrafts[item.id]?.trim()} className="rounded-full bg-primary px-4 py-2 text-xs font-black uppercase tracking-[0.18em] text-on-primary disabled:opacity-40 transition-colors">Post</button>
                     </div>
                   </div>
                 </article>
@@ -735,7 +799,7 @@ export default function MemoryFeedExperience({
       {/* Detail Modal (with editable/deletable comments) */}
       {activeItem && (
         <div className="fixed inset-0 z-[180] bg-black/70 backdrop-blur-md" onClick={() => setActiveId(null)}>
-          <div className="mx-auto mt-8 flex max-h-[90vh] w-[min(1180px,95vw)] overflow-hidden rounded-[2rem] bg-stone-950 text-white shadow-2xl" onClick={(event) => event.stopPropagation()}>
+          <div className="mx-auto mt-4 md:mt-8 flex max-h-[94vh] w-[min(1180px,96vw)] flex-col overflow-hidden rounded-[1.25rem] md:rounded-[2rem] bg-stone-950 text-white shadow-2xl md:flex-row" onClick={(event) => event.stopPropagation()}>
             <div className="relative flex min-h-[70vh] flex-1 items-center justify-center bg-black">
               {activeItem.media_type === "video" ? (
                 <video src={activeItem.media_url} controls autoPlay playsInline className="h-full max-h-[90vh] w-full object-contain" />
@@ -746,11 +810,16 @@ export default function MemoryFeedExperience({
                 <span className="material-symbols-outlined">close</span>
               </button>
             </div>
-            <div className="flex w-[380px] max-w-[40vw] flex-col border-l border-white/10 bg-stone-950">
+            <div className="flex w-full md:w-[380px] md:max-w-[40vw] flex-col border-t md:border-t-0 md:border-l border-white/10 bg-stone-950">
               <div className="flex items-center gap-3 border-b border-white/10 px-5 py-4">
                 <Avatar author={activeItem.profiles} ring />
                 <div className="min-w-0">
-                  <p className="truncate text-sm font-bold">{activeItem.profiles?.full_name ?? "Student"}</p>
+                  <p className="truncate text-sm font-bold">{displayIdentity(activeItem.profiles).name}</p>
+                  {displayIdentity(activeItem.profiles).nickname && (
+                    <p className="mt-1 text-[10px] font-bold uppercase tracking-[0.18em] text-white/50">
+                      @{displayIdentity(activeItem.profiles).nickname}
+                    </p>
+                  )}
                   <p className="text-xs text-white/45">{fullDate(activeItem.created_at)}</p>
                 </div>
               </div>

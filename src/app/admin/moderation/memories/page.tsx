@@ -6,7 +6,7 @@ export default async function MemoriesModerationPage() {
   
   const { data: memories } = await supabase
     .from("memories")
-    .select("*, profiles(full_name, email)")
+    .select("*, profiles(full_name, nickname, email)")
     .order("created_at", { ascending: false });
 
   // Pass all data to client to allow rapid local filtering

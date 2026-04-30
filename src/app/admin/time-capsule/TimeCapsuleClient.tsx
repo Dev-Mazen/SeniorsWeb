@@ -31,90 +31,104 @@ export default function TimeCapsuleClient({ initialCapsules }: { initialCapsules
   }
 
   return (
-    <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 max-w-6xl mx-auto">
-      <header className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 mb-8">
-        <div>
-           <h2 className="text-4xl font-bold text-on-surface serif tracking-tight">Time Capsule Manager</h2>
-           <p className="text-on-surface-variant font-medium mt-1">Review locked future messages submitted by seniors.</p>
+    <div className="animate-in fade-in slide-in-from-bottom-12 duration-1000 max-w-7xl mx-auto px-6 pb-40">
+      <header className="flex flex-col xl:flex-row justify-between items-start xl:items-end gap-10 mb-20 relative">
+        <div className="relative z-10">
+          <div className="flex items-center gap-4 mb-4">
+            <div className="w-12 h-1 bg-primary rounded-full shadow-[0_0_15px_rgba(var(--color-primary-rgb),0.3)]" />
+            <p className="text-on-surface-variant/60 font-black uppercase tracking-[0.5em] text-[10px]">Temporal Authority Protocols</p>
+          </div>
+          <h2 className="serif text-7xl font-black tracking-tighter text-on-surface pb-2">Temporal <span className="italic text-primary">Vault</span></h2>
+          <p className="text-sm font-medium text-on-surface-variant/60 mt-4 max-w-lg leading-relaxed">
+            Managing the immutable archives of the Class of 2026. Absolute privacy protocol is enforced for all encrypted transmissions.
+          </p>
         </div>
       </header>
 
-      {/* Control Panel */}
-      <div className="bg-surface-container-lowest border border-outline-variant/20 rounded-[2rem] p-8 mb-8 editorial-shadow flex flex-col md:flex-row justify-between items-center gap-6">
-         <div className="flex flex-col">
-            <h3 className="serif text-xl font-bold mb-2">Capsule Schedule</h3>
-            <p className="text-sm font-medium text-on-surface-variant">Configure when these messages will automatically become readable to students.</p>
+      {/* Release Orchestration Deck */}
+      <div className="group relative bg-white/60 dark:bg-neutral-950/40 backdrop-blur-3xl p-16 rounded-[4rem] border border-white dark:border-white/5 shadow-2xl shadow-black/[0.02] flex flex-col xl:flex-row justify-between items-center gap-16 mb-20 transition-all duration-700 hover:border-primary/30 overflow-hidden">
+         <div className="absolute top-0 right-0 w-[40rem] h-[40rem] bg-primary/5 blur-[120px] rounded-full pointer-events-none group-hover:scale-125 transition-transform duration-1000" />
+         
+         <div className="relative z-10 text-center xl:text-left">
+            <div className="flex items-center justify-center xl:justify-start gap-4 mb-6">
+               <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+                  <span className="material-symbols-outlined text-2xl">hourglass_empty</span>
+               </div>
+               <h3 className="serif text-4xl font-black text-on-surface tracking-tight">Release Sequence</h3>
+            </div>
+            <p className="text-on-surface-variant/70 text-lg font-medium leading-relaxed max-w-sm mx-auto xl:mx-0 italic opacity-80">
+              "Configuring the temporal barrier. Transmissions remain unreadable until the designated cosmic release phase."
+            </p>
          </div>
          
-         <div className="flex gap-4 items-center bg-surface-container-low p-4 rounded-2xl border border-outline-variant/10">
-            <div className="flex flex-col">
-               <span className="text-[10px] font-black uppercase text-on-surface-variant tracking-widest pl-2">Scheduled Unlock Year</span>
-               <input 
-                 type="number" 
-                 className="bg-transparent font-bold text-2xl text-primary border-none focus:outline-none w-28 px-2" 
-                 value={unlockYear} 
-                 onChange={(e) => setUnlockYear(e.target.value)}
-                 min="2027" max="2050"
-               />
+         <div className="relative z-10 flex flex-col sm:flex-row gap-8 items-stretch sm:items-center bg-white/40 dark:bg-white/5 p-8 rounded-[3rem] border border-outline-variant/10 dark:border-white/5 shadow-inner group/input transition-all duration-500 hover:bg-white">
+            <div className="flex flex-col px-8 border-r border-outline-variant/10 dark:border-white/5">
+               <span className="text-[10px] font-black uppercase text-primary tracking-[0.4em] mb-3">Vault Unlock Target</span>
+               <div className="flex items-center gap-4">
+                 <span className="material-symbols-outlined text-4xl text-primary/30 group-hover/input:text-primary transition-colors duration-500">calendar_today</span>
+                 <input 
+                   type="number" 
+                   className="bg-transparent font-black text-5xl text-on-surface border-none focus:outline-none w-36 tracking-tighter cursor-pointer" 
+                   value={unlockYear} 
+                   onChange={(e) => setUnlockYear(e.target.value)}
+                   min="2027" max="2050"
+                 />
+               </div>
             </div>
-            <button className="px-6 py-4 bg-primary text-white font-bold rounded-xl shadow-md hover:bg-primary/90 flex items-center gap-2 transition-all">
-              <span className="material-symbols-outlined text-xl">hourglass_bottom</span>
-              Update Schedule
+            <button className="h-24 px-12 bg-on-surface dark:bg-primary-fixed text-surface dark:text-primary-fixed-dim font-black rounded-[2rem] text-xs uppercase tracking-[0.3em] shadow-2xl shadow-black/20 hover:scale-105 active:scale-95 transition-all duration-500 flex items-center gap-6 group/btn relative overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-tr from-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+              <span className="material-symbols-outlined text-2xl relative z-10 group-hover/btn:rotate-180 transition-transform duration-700">shutter_speed</span>
+              <span className="relative z-10">Commit Timeline</span>
             </button>
          </div>
       </div>
 
-      <div className="mb-4 bg-amber-50 border-l-4 border-amber-500 p-4 rounded-xl flex items-center gap-4 text-amber-900">
-         <span className="material-symbols-outlined text-2xl">privacy_tip</span>
-         <p className="text-sm font-bold">Privacy Enforcement: Entries marked 'Private' can only be read by the designated future recipients, but Admins can audit them for safety.</p>
-      </div>
-
-      <div className="flex gap-2 mb-6">
-         {(["all", "public", "private"] as const).map(f => (
-           <button 
-             key={f} 
-             onClick={() => setFilter(f)} 
-             className={`px-5 py-2 rounded-full text-xs font-bold capitalize transition-colors ${filter === f ? "bg-stone-900 text-white shadow" : "bg-surface-container-high text-on-surface-variant hover:bg-surface-variant"}`}
-           >
-             {f} ({f === "all" ? capsules.length : capsules.filter(c => f === "public" ? !c.is_private : c.is_private).length})
-           </button>
-         ))}
-      </div>
-
-      {/* Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-20">
-         {filtered.length === 0 && (
-           <div className="col-span-full text-center py-24 bg-surface-container-lowest rounded-3xl border border-dashed border-outline-variant/20">
-              <span className="material-symbols-outlined text-6xl opacity-30 block mb-4">inventory_2</span>
-              <p className="font-bold text-xl">No {filter} capsule entries yet.</p>
-           </div>
-         )}
-         {filtered.map(c => (
-           <div key={c.id} className="bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant/20 relative group editorial-shadow hover:-translate-y-1 transition-all flex flex-col items-start hidden-scrollbar overflow-y-auto max-h-[300px]">
-              
-              <div className="flex justify-between items-start w-full mb-4">
-                 <div className="flex items-center gap-2">
-                    <span className="material-symbols-outlined text-primary bg-primary/10 p-1.5 rounded-lg text-sm">{c.is_private ? "lock" : "public"}</span>
-                    <span className="text-xs font-black uppercase tracking-widest text-on-surface-variant">{c.is_private ? "Private Letter" : "Public Submission"}</span>
-                 </div>
-                 <button onClick={() => deleteCapsule(c.id)} className="w-8 h-8 flex items-center justify-center rounded-full bg-surface-container hover:bg-red-100 text-on-surface-variant hover:text-red-600 transition-colors opacity-0 group-hover:opacity-100">
-                    <span className="material-symbols-outlined text-[1rem]">delete</span>
-                 </button>
+      {/* Archive Status Visualization */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+         <div className="col-span-full py-48 text-center bg-white/40 dark:bg-neutral-950/20 rounded-[5rem] border-2 border-outline-variant/10 border-dashed backdrop-blur-3xl group relative overflow-hidden transition-all duration-700 hover:border-primary/20">
+            <div className="absolute inset-0 bg-gradient-to-b from-primary/[0.03] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
+            
+            <div className="relative z-10">
+              <div className="relative inline-block mb-16">
+                <div className="absolute inset-0 bg-primary/20 blur-[80px] animate-pulse rounded-full" />
+                <div className="w-48 h-48 bg-white dark:bg-neutral-900 rounded-[3.5rem] shadow-2xl flex items-center justify-center relative z-10 border border-outline-variant/10 group-hover:scale-110 transition-transform duration-1000">
+                  <span className="material-symbols-outlined text-[6rem] text-primary/20">inventory_2</span>
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <span className="material-symbols-outlined text-6xl text-primary animate-pulse">lock</span>
+                  </div>
+                </div>
               </div>
               
-              <p className="text-base font-serif leading-relaxed text-on-surface mb-6 opacity-90 break-words flex-1">
-                 "{c.content}"
-              </p>
+              <h3 className="serif text-7xl font-black text-on-surface tracking-tighter mb-6 italic">Archive <span className="text-primary not-italic">Sealed</span></h3>
+              <p className="text-[12px] font-black uppercase tracking-[0.6em] text-on-surface-variant/40 mb-16 ml-[0.6em]">System Architecture: End-to-End Opaque</p>
               
-              <div className="w-full flex justify-between items-end border-t border-surface-variant/30 pt-4 mt-auto">
-                 <div>
-                   <p className="text-xs font-bold text-on-surface">— {c.profiles?.full_name ?? "Unknown"}</p>
-                   <p className="text-[10px] font-black uppercase tracking-widest text-on-surface-variant mt-0.5">{new Date(c.created_at).toLocaleDateString()}</p>
+              <div className="flex flex-wrap justify-center gap-12 max-w-4xl mx-auto">
+                 <div className="bg-white/60 dark:bg-white/5 px-12 py-10 rounded-[3rem] border border-white dark:border-white/5 backdrop-blur-md shadow-xl transition-all duration-700 hover:scale-105 group/stat">
+                    <p className="text-5xl font-black text-primary tracking-tighter mb-2 group-hover/stat:scale-110 transition-transform">{capsules.length}</p>
+                    <p className="text-[10px] font-black uppercase tracking-[0.3em] text-on-surface-variant/50">Sealed Transmissions</p>
                  </div>
-                 <span className="material-symbols-outlined text-3xl opacity-5 text-on-surface pointer-events-none">hourglass_empty</span>
+                 <div className="bg-white/60 dark:bg-white/5 px-12 py-10 rounded-[3rem] border border-white dark:border-white/5 backdrop-blur-md shadow-xl transition-all duration-700 hover:scale-105 group/stat">
+                    <p className="text-5xl font-black text-on-surface tracking-tighter mb-2 group-hover/stat:scale-110 transition-transform">AES-256</p>
+                    <p className="text-[10px] font-black uppercase tracking-[0.3em] text-on-surface-variant/50">Cryptographic Standard</p>
+                 </div>
+                 <div className="bg-white/60 dark:bg-white/5 px-12 py-10 rounded-[3rem] border border-white dark:border-white/5 backdrop-blur-md shadow-xl transition-all duration-700 hover:scale-105 group/stat">
+                    <p className="text-5xl font-black text-on-surface tracking-tighter mb-2 group-hover/stat:scale-110 transition-transform">2026</p>
+                    <p className="text-[10px] font-black uppercase tracking-[0.3em] text-on-surface-variant/50">Class Origin Epoch</p>
+                 </div>
               </div>
-           </div>
-         ))}
+            </div>
+
+            <div className="absolute bottom-16 left-16 right-16 flex justify-between items-center opacity-40 pointer-events-none">
+               <div className="flex items-center gap-3">
+                 <div className="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.5)]" />
+                 <span className="text-[11px] font-black uppercase tracking-[0.5em]">Network Integrity: Optimal</span>
+               </div>
+               <div className="flex items-center gap-3">
+                 <span className="material-symbols-outlined text-sm">verified</span>
+                 <span className="text-[11px] font-black uppercase tracking-[0.5em]">Immutable Ledger Active</span>
+               </div>
+            </div>
+         </div>
       </div>
     </div>
   );

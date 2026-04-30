@@ -8,13 +8,13 @@ export default async function MemoryFeedPage() {
   const { data: profile } = await supabase.from("profiles").select("role").eq("id", user!.id).single();
   const { data: items } = await supabase
     .from("memories")
-    .select("*, profiles(full_name, photo_url)")
+    .select("*, profiles(full_name, nickname, photo_url)")
     .eq("status", "approved")
     .order("created_at", { ascending: false });
   const { data: likes } = await supabase.from("memory_likes").select("memory_id, user_id");
   const { data: comments } = await supabase
     .from("memory_comments")
-    .select("id, memory_id, content, created_at, user_id, profiles:user_id(full_name, photo_url)")
+    .select("id, memory_id, content, created_at, user_id, profiles:user_id(full_name, nickname, photo_url)")
     .order("created_at", { ascending: true });
 
   return (

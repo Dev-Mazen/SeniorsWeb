@@ -4,6 +4,7 @@ import Navbar from "@/components/layout/Navbar";
 import MobileNav from "@/components/layout/MobileNav";
 import HotReloader from "@/components/layout/HotReloader";
 import GlobalScrollToTop from "@/components/layout/GlobalScrollToTop";
+import AppGuide from "@/components/AppGuide";
 
 export default async function MainLayout({ children }: { children: React.ReactNode }) {
   const supabase = await createClient();
@@ -22,9 +23,10 @@ export default async function MainLayout({ children }: { children: React.ReactNo
     <div className="min-h-screen bg-surface">
       <HotReloader />
       <Navbar role={profile?.role} photoUrl={profile?.photo_url || null} />
-      <main className="overflow-x-hidden pt-20 pb-28 md:pb-0">{children}</main>
+      <main className="app-main-shell overflow-x-hidden pt-20 pb-28 md:pb-0">{children}</main>
       <MobileNav />
       <GlobalScrollToTop />
+      <AppGuide />
     </div>
   );
 }
